@@ -1,36 +1,49 @@
 spring:
   rabbitmq:
-    host: www.deschen.cn
+    host: management.deschen.cn
     port: 5672
     username: deschen
     password: 123456
 eureka:
- instance:
-   prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
-   instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复  
-#   ip-address: management.deschen.cn
- # Spring Cloud Feign 支持对请求和响应进行GZIP压缩，以减少通信过程中的性能损耗。通过下面的参数即可开启请求与响应的压缩功能
- # 使用文件比较大时，如下载文件
- compression:
-   request:
-     enabled: true   # 开启请求压缩，默认false
-     mime-types:  text/html,application/xml,application/json # 默认设置压缩的数据类型
-     min-request-size: 2048 # 默认设置触发压缩的大小下限
-   response:
-     enabled: true   # 开启响应压缩，默认false
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    #    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+    instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+    status-page-url: http://127.0.0.1:${server.port}/swagger-ui.html
+  # Spring Cloud Feign 支持对请求和响应进行GZIP压缩，以减少通信过程中的性能损耗。通过下面的参数即可开启请求与响应的压缩功能
+  # 使用文件比较大时，如下载文件
+  compression:
+    request:
+      enabled: true   # 开启请求压缩，默认false
+      mime-types:  text/html,application/xml,application/json # 默认设置压缩的数据类型
+      min-request-size: 2048 # 默认设置触发压缩的大小下限
+    response:
+      enabled: true   # 开启响应压缩，默认false
 # `@FeignClient`注解修改的客户端在被代理时，都会创建一个新的Fegin.Logger实例。我们需要额外指定这个日志的级别才可以。
 logging:
- level:
-   org.springframework.cloud.openfeign: debug
-   cn.ep: debug
+  level:
+    org.springframework.cloud.openfeign: debug
 #新版配置，否则后面dashboard无法找到hystrix.stream
 management:
- endpoints:
-   web:
-     exposure:
-       include: '*'
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 # 开启feign熔断，不然不能在Hystrix-dashoard
 feign:
- hystrix:
-   enabled: true
-
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:  # 默认全局
+      execution:
+        timeout:
+          enable: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 12000 # 设置hystrix的超时时间为6000ms，默认1000ms
+ribbon:
+  ConnectTimeout: 1000 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
+  MaxAutoRetries: 1 # 同一实例的重试次数
