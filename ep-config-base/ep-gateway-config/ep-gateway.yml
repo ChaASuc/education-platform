@@ -1,7 +1,20 @@
+spring:
+  rabbitmq:
+    host: management.deschen.cn
+    port: 5672
+    username: deschen
+    password: root123
 eureka:
   instance:
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
     instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+  compression:
+    request:
+      enabled: true   # 开启请求压缩，默认false
+      mime-types:  text/html,application/xml,application/json # 默认设置压缩的数据类型
+      min-request-size: 2048 # 默认设置触发压缩的大小下限
+    response:
+      enabled: true   # 开启响应压缩，默认false
 zuul:
   prefix: /api   # 路由前缀
   ignored-services: "*"  # 忽略的应用，不暴露接口
@@ -14,12 +27,6 @@ zuul:
       path: /product/**
       serviceId: ep-product
       strip-prefix: false
-spring:
-  rabbitmq:
-    host: www.deschen.cn
-    password: 123456
-    port: 5672
-    username: deschen
 # Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：
 # 设置全局Hystrix超时时间，Ribbon< hystrix, 因为ribbon重试没完，熔断了就麻烦了
 # 超时：(1 + MaxAutoRetries ）*（1+ MaxAutoRetriesNextServer) *（ReadTimeout +ConnectTimeout）
@@ -43,7 +50,3 @@ ribbon:
   ReadTimeout: 2000 # 通信超时时间(ms)
   MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数，不包括首次调用
   MaxAutoRetries: 1 # 同一实例的重试次数，不包括首次调用
-info:
-  app:
-    version: 1.1
-    name: ep-gatway

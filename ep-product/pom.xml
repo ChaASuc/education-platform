@@ -11,10 +11,12 @@
 
     <groupId>cn.education-platform.service</groupId>
     <artifactId>ep-product</artifactId>
+    <packaging>pom</packaging>
 
     <modules>
         <module>ep-product-client</module>
         <module>ep-product-server</module>
+        <module>ep-product-common</module>
     </modules>
 
     <dependencies>

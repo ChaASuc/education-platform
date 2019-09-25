@@ -1,5 +1,6 @@
 package cn.ep.controller;
 
+import cn.ep.exception.GlobalException;
 import com.netflix.discovery.DiscoveryClient;
 import com.netflix.discovery.converters.Auto;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ public class ProductController {
 
     @RequestMapping("/{id}")
     public String getMessageById(@PathVariable Long id) throws InterruptedException {
-        return "hi";
+        throw new GlobalException(1, "自定义");
     }
 
 }

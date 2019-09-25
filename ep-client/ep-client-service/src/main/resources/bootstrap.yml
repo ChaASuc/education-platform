@@ -9,9 +9,13 @@ spring:
       discovery:
         enabled: true
         service-id: ep-config
+    # 解决github /monitor自动刷新失败
+    bus:
+      id: ${spring.application.name}:${spring.cloud.config.profile}:${random.value}
+
 eureka:
   client:
     service-url:
-      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
+      defaultZone: http://management.deschen.cn:10000/eureka/,  http://coding.deschen.cn:10002/eureka/
   instance:
     status-page-url: http://localhost:${server.port}/swagger-ui.html

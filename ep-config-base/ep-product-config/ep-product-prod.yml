@@ -1,28 +1,3 @@
 env: prod  # 测试用的
 server:
-  port: 10100 # 端口 10XXX属于微服务端口
-hystrix:
-  command:
-    default:  # 默认全局
-      execution:
-        timeout:
-          enable: true
-        isolation:
-          thread:
-            timeoutInMilliseconds: 6000 # 设置hystrix的超时时间为6000ms，默认1000ms
-  #    getHystrixMessage:  # 方法名
-  #      execution:
-  #        isolation:
-  #          thread:
-  #            timeoutInMilliseconds: 6000 # 设置hystrix的超时时间为6000ms，默认1000ms
-  # Spring Cloud Feign 支持对请求和响应进行GZIP压缩，以减少通信过程中的性能损耗。通过下面的参数即可开启请求与响应的压缩功能
-# 代表Ribbon使用的负载均衡策略
-ribbon:
-  ConnectTimeout: 1000 # 连接超时时间(ms)
-  ReadTimeout: 2000 # 通信超时时间(ms)
-  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
-  MaxAutoRetries: 1 # 同一实例的重试次数
-# 修改负载均衡规则的配置入口
-ep-product:
-  ribbon:
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule  # 随机算法，默认轮询算法#
+  port: 10110 # 端口 10XXX属于微服务端口
