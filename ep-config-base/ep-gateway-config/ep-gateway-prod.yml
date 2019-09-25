@@ -1,0 +1,2 @@
+server:
+  port: 10021 # 端口 1001X属于gateway端口

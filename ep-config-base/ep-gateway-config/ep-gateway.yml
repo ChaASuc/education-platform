@@ -1,0 +1,49 @@
+eureka:
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+zuul:
+  prefix: /api   # 路由前缀
+  ignored-services: "*"  # 忽略的应用，不暴露接口
+  routes:
+    ep-client:
+      path: /client/**
+      serviceId: ep-client
+      strip-prefix: false 
+    ep-product:
+      path: /product/**
+      serviceId: ep-product
+      strip-prefix: false
+spring:
+  rabbitmq:
+    host: www.deschen.cn
+    password: 123456
+    port: 5672
+    username: deschen
+# Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：
+# 设置全局Hystrix超时时间，Ribbon< hystrix, 因为ribbon重试没完，熔断了就麻烦了
+# 超时：(1 + MaxAutoRetries ）*（1+ MaxAutoRetriesNextServer) *（ReadTimeout +ConnectTimeout）
+hystrix:
+  command:
+    default:  # 默认全局
+      execution:
+        timeout:
+          enable: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 12000 # 设置hystrix的超时时间为6000ms，默认1000ms
+
+# `@FeignClient`注解修改的客户端在被代理时，都会创建一个新的Fegin.Logger实例。我们需要额外指定这个日志的级别才可以。
+logging:
+  level:
+    com.ep: debug
+# 参数计算重试的次数：MaxAutoRetries+MaxAutoRetriesNextServer+(MaxAutoRetries *MaxAutoRetriesNextServer) 即重试3次 则一共产生4次调用
+ribbon:
+  ConnectTimeout: 1000 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数，不包括首次调用
+  MaxAutoRetries: 1 # 同一实例的重试次数，不包括首次调用
+info:
+  app:
+    version: 1.1
+    name: ep-gatway

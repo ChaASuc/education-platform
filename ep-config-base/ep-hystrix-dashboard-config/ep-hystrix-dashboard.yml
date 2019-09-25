@@ -1,0 +1,10 @@
+eureka:
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+spring:
+  rabbitmq:
+    host: www.deschen.cn
+    password: 123456
+    port: 5672
+    username: deschen

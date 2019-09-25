@@ -1,0 +1,13 @@
+server:
+  port: 10002 # 端口 1000X属于eureka端口
+eureka:
+  client:
+    service-url:
+      defaultZone: http://management.deschen.cn:10000/eureka, http://www.deschen.cn:10001/eureka
+  # 有些时候，我们的服务提供方并不一定会正常下线，可能因为内存溢出、网络故障等原因导致服务无法正常工作。Eureka Server需要将这样的服务剔除出服务列表。因此它会开启一个定时任务，每隔60秒对所有失效的服务（超过90秒未响应）进行剔除。
+  server:
+    eviction-interval-timer-in-ms: 1000 #单位是毫秒
+    # 这是触发了Eureka的自我保护机制。当一个服务未按时进行心跳续约时，Eureka会统计最近15分钟心跳失败的服务实例的比例是否超过了85%。在生产环境下，因为网络延迟等原因，心跳失败实例的比例很有可能超标，但是此时就把服务剔除列表并不妥当，因为服务可能没有宕机。Eureka就会把当前实例的注册信息保护起来，不予剔除。生产环境下这很有效，保证了大多数服务依然可用。但是这给我们的开发带来了麻烦， 因此开发阶段我们都会关闭自我保护模式：
+    enable-self-preservation: false
+  instance:
+    ip-address: coding.deschen.cn
