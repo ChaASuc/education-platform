@@ -1,6 +1,6 @@
 env: product-dev  # 测试用的
 server:
-  port: 10110 # 端口 101XX属于微服务端口
+  port: 10112 # 端口 101XX属于微服务端口
 eureka:
   client:
     # 当服务消费者启动是，会检测`eureka.client.fetch-registry=true`参数的值，如果为true，则会从Eureka Server服务的列表只读备份，然后缓存在本地。并且`每隔30秒`会重新获取并更新数据。我们可以通过下面的参数来修改：
