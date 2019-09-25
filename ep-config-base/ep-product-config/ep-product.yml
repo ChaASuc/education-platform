@@ -1,5 +1,3 @@
-server:
-  port: 10200 # 端口 10XXX属于微服务端口
 spring:
   rabbitmq:
     host: www.deschen.cn
