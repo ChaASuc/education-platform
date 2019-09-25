@@ -1,4 +1,6 @@
 env: prod
+server:
+  port: 10100 # 端口 10XXX属于微服务端口
 hystrix:
   command:
     default:  # 默认全局

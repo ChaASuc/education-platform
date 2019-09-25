@@ -1,6 +1,6 @@
 env: client-dev1
 server:
-  port: 10100 # 端口 10XXX属于微服务端口
+  port: 10102 # 端口 10XXX属于微服务端口
 eureka:
   client:
     # 当服务消费者启动是，会检测`eureka.client.fetch-registry=true`参数的值，如果为true，则会从Eureka Server服务的列表只读备份，然后缓存在本地。并且`每隔30秒`会重新获取并更新数据。我们可以通过下面的参数来修改：
@@ -14,8 +14,8 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
-    # 显示域名,使用本机不能使用
-    # ip-address: management.deschen.cn
+    # 显示域名
+    ip-address: management.descchen.cn
 # 设置全局Hystrix超时时间
 hystrix:
   command:
