@@ -1,4 +1,4 @@
-env: client-dev11
+env: client-dev1
 server:
   port: 10100 # 端口 10XXX属于微服务端口
 eureka:
