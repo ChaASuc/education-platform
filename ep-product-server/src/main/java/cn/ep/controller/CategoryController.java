@@ -94,7 +94,7 @@ public class CategoryController {
      */
     @ApiOperation(value="列举所有类别", notes="已测试")
     @GetMapping(value = "/categories/listAll")
-    public ResultVO list(HttpServletResponse response){
+    public ResultVO list(){
         // 查看是否有缓存
         // 没有缓存，添加缓存
         List<Category> categories = categoryService.selectAll();

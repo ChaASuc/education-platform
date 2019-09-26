@@ -2,9 +2,8 @@ package cn.ep.mapper;
 
 import cn.ep.bean.Category;
 import cn.ep.bean.CategoryExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface CategoryMapper {
     int countByExample(CategoryExample example);

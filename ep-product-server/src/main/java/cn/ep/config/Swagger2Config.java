@@ -1,4 +1,4 @@
-package com.ep.server.config;
+package cn.ep.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

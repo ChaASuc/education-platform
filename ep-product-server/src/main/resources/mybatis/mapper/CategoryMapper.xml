@@ -82,7 +82,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from category
     where id = #{id,jdbcType=INTEGER}
@@ -152,8 +152,8 @@
   <update id="updateByExample" parameterType="map" >
     update category
     set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR},
-      deleted = #{record.deleted,jdbcType=BIT}
+    name = #{record.name,jdbcType=VARCHAR},
+    deleted = #{record.deleted,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -173,7 +173,7 @@
   <update id="updateByPrimaryKey" parameterType="cn.ep.bean.Category" >
     update category
     set name = #{name,jdbcType=VARCHAR},
-      deleted = #{deleted,jdbcType=BIT}
+        deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -8,11 +8,9 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <packaging>jar</packaging>
 
-    <groupId>cn.education-platform.service</groupId>
-    <artifactId>ep-product-client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <groupId>cn.education-platform.product</groupId>
+    <artifactId>ep-product-api</artifactId>
 
     <dependencies>
         <dependency>
@@ -29,10 +27,9 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>cn.education-platform.service</groupId>
+            <groupId>cn.education-platform.product</groupId>
             <artifactId>ep-product-common</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 </project>
