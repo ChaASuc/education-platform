@@ -11,7 +11,8 @@
 
     <groupId>cn.education-platform.service</groupId>
     <artifactId>ep-product</artifactId>
-    <packaging>pom</packaging>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <modules>
         <module>ep-product-client</module>

@@ -11,9 +11,13 @@
 
     <groupId>cn.education-platform.service</groupId>
     <artifactId>ep-product-common</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-
-    <build>
-        <finalName>ep-product-common</finalName>
-    </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
 </project>

@@ -5,6 +5,8 @@ public class Category {
 
     private String name;
 
+    private Boolean deleted;
+
     public Integer getId() {
         return id;
     }
@@ -21,11 +23,11 @@ public class Category {
         this.name = name == null ? null : name.trim();
     }
 
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }
