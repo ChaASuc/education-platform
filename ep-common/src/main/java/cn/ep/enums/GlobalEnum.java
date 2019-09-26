@@ -1,5 +1,7 @@
 package cn.ep.enums;
 
+import cn.ep.utils.ResultVO;
+
 /**
  * @Author deschen
  * @Create 2019/7/14
@@ -12,9 +14,16 @@ public enum GlobalEnum implements IEnum{
      * https://blog.csdn.net/q1056843325/article/details/53147180
      * Http状态码
      * */
+    SUCCESS(200, "成功"),
+
     PARAMS_ERROR(1000, "参数错误: %s"),
 
-    SERVICE_ERROR(1001, "系统异常：%s"),
+    OPERATION_ERROR(10001, "操作失败：%s"),
+
+    SERVICE_ERROR(500, "系统异常"),
+
+
+
     ;
 
     private Integer code;
@@ -33,10 +42,5 @@ public enum GlobalEnum implements IEnum{
     @Override
     public String getMessage() {
         return this.message;
-    }
-
-    public GlobalEnum setGlobalMessage(String arg) {
-        this.message = String.format(this.message, arg);
-        return this;
     }
 }

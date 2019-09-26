@@ -1,5 +1,6 @@
 package cn.ep;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableDiscoveryClient  // 开启EurekaClient功能,兼容不同技术 zookeeper等
 @EnableSwagger2
+@MapperScan({"cn.ep.mapper"})
 public class EpProductApplication {
 
     public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package cn.ep;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.client.SpringCloudApplication;
@@ -14,6 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableFeignClients // 启动Feign组件
 @EnableHystrix
 @EnableSwagger2
+@MapperScan({"cn.ep.mapper"})
 public class EpClientApplication {
 
     public static void main(String[] args) {

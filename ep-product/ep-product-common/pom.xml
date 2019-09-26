@@ -13,4 +13,7 @@
     <artifactId>ep-product-common</artifactId>
 
 
+    <build>
+        <finalName>ep-product-common</finalName>
+    </build>
 </project>
