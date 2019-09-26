@@ -9,15 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.education-platform.service</groupId>
-    <artifactId>ep-client</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <modules>
-        <module>ep-client-client</module>
-        <module>ep-client-service</module>
-        <module>ep-client-common</module>
-    </modules>
+    <groupId>cn.education-platform.client</groupId>
+    <artifactId>ep-client-api</artifactId>
 
 
 </project>

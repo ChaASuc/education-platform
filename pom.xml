@@ -14,10 +14,12 @@
         <module>ep-config</module>
         <module>ep-gateway</module>
         <module>ep-hystrix-dashboard</module>
-        <module>ep-client</module>
         <module>ep-product-api</module>
         <module>ep-product-common</module>
         <module>ep-product-server</module>
+        <module>ep-client-api</module>
+        <module>ep-client-common</module>
+        <module>ep-client-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -37,7 +39,7 @@
         <mysql.version>8.0.16</mysql.version>
         <pageHelper.starter.version>1.2.5</pageHelper.starter.version>
         <fastDFS.client.version>1.26.1-RELEASE</fastDFS.client.version>
-        <swagger2.version>2.9.2</swagger2.version>
+        <swagger2.version>2.6.1</swagger2.version>
     </properties>
 
     <dependencyManagement>

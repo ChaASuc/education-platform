@@ -20,11 +20,11 @@ public enum GlobalEnum implements IEnum{
 
     OPERATION_ERROR(10001, "操作失败：%s"),
 
-    SERVICE_ERROR(500, "系统异常"),
+    EXIST_ERROR(10002, "不存在：%s"),
+
+    SERVICE_ERROR(500, "系统异常");
 
 
-
-    ;
 
     private Integer code;
 

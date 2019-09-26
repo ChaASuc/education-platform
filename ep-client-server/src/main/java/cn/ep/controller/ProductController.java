@@ -2,6 +2,7 @@ package cn.ep.controller;
 
 
 import cn.ep.bean.Product;
+import cn.ep.bean.ProductDto;
 import cn.ep.service.ProductService;
 import cn.ep.utils.ResultVO;
 import com.github.pagehelper.PageInfo;
@@ -10,8 +11,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.cache.RedisCache;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -149,32 +148,33 @@ public class ProductController {
 //        response.getWriter().write(json);
 //    }
 //
-//    /**
-//     * 根据类别id和页码来分页查询商品
-//     * @param cid
-//     * @param pageNum
-//     * @param response
-//     * @throws IOException
-//     */
-//    @ApiOperation(value = "根据类别id和页码来分页查询商品", notes = "测试中")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name="cid", value = "类别id", required = true, dataType = "Integer", paramType = "path"),
-//            @ApiImplicitParam(name="pageNum", value = "页码", required = true, dataType = "Integer", paramType = "path")
-//    })
-//    @GetMapping(value = "/products/listByCid/{cid}/{pageNum}")
-//    public void listByCid(@PathVariable Integer cid,
-//                          @PathVariable Integer pageNum,
-//                          HttpServletResponse response) throws IOException {
-//        response.setContentType("application/json;charset=utf-8");
-//        String cacheName = CacheNameHelper.ListByCid_CacheNamePrefix + cid + "_" + pageNum;
-//        String json = cache.get(cacheName);
-//        if(json == null){
-//            PageInfo<Product> pageInfo = productService.selectPageByCategory(pageNum, cid);
-//            json = Result.build(ResultType.Success).appendData("pageInfo", pageInfo).convertIntoJSON();
-//            if(pageInfo != null) {
-//                cache.set(cacheName, json);
-//            }
-//        }
-//        response.getWriter().write(json);
-//    }
+
+    /**
+     * 根据类别id和页码来分页查询商品
+     *
+     * @param cid
+     * @param pageNum
+     * @param response
+     * @throws IOException
+     */
+    @ApiOperation(value = "根据类别id和页码来分页查询商品", notes = "测试中")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cid", value = "类别id", required = true, dataType = "Integer", paramType = "path"),
+            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "Integer", paramType = "path")
+    })
+    @GetMapping(value = "/products/listByCid/{cid}/{pageNum}")
+    public ResultVO listByCid(@PathVariable Integer cid,
+                          @PathVariable Integer pageNum,
+                          HttpServletResponse response) throws IOException {
+        // 获取缓存
+
+        // 判断空
+
+        PageInfo<ProductDto> productDtoPageInfo = productService.selectPageByCategory(pageNum, cid);
+
+        // 添加缓存
+
+        // 响应
+        return ResultVO.success(productDtoPageInfo);
+    }
 }

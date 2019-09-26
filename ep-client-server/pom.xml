@@ -3,19 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ep-client</artifactId>
-        <groupId>cn.education-platform.service</groupId>
+        <artifactId>education-platform</artifactId>
+        <groupId>cn.education-platform.parent</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.education-platform.service</groupId>
-    <artifactId>ep-client-service</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <groupId>cn.education-platform.client</groupId>
+    <artifactId>ep-client-server</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>cn.education-platform.service</groupId>
+            <groupId>cn.education-platform.client</groupId>
             <artifactId>ep-client-common</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -55,8 +54,8 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.education-platform.service</groupId>
-            <artifactId>ep-product-client</artifactId>
+            <groupId>cn.education-platform.product</groupId>
+            <artifactId>ep-product-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
@@ -131,6 +130,12 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
         </dependency>
     </dependencies>
 

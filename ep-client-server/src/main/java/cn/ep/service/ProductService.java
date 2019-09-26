@@ -1,7 +1,10 @@
 package cn.ep.service;
 
 import cn.ep.bean.Product;
+import cn.ep.bean.ProductDto;
 import com.github.pagehelper.PageInfo;
+
+import java.io.IOException;
 
 public interface ProductService {
     /**
@@ -37,7 +40,7 @@ public interface ProductService {
      * @param pageNum
      * @return
      */
-    PageInfo<Product> selectPage(int pageNum);
+    PageInfo<ProductDto> selectPage(int pageNum);
 
     /**
      * 分类分页查询商品
@@ -45,5 +48,5 @@ public interface ProductService {
      * @param categoryId
      * @return
      */
-    PageInfo<Product> selectPageByCategory(int pageNum, int categoryId);
+    PageInfo<ProductDto> selectPageByCategory(int pageNum, int categoryId) throws IOException;
 }

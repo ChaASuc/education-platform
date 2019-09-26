@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api(description = "示例模块")
 @RestController
-@RequestMapping("json/example")
+@RequestMapping("/ep")
 public class CategoryController {
 
     @Autowired

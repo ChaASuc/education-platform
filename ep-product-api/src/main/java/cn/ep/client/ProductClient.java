@@ -30,7 +30,7 @@ public interface ProductClient {
      * @param category
      * @return
      */
-    @PostMapping("/json/example/category")
+    @PostMapping("/ep/category")
     public ResultVO create(@RequestBody(required = false) Category category);
 
     /**
@@ -38,7 +38,7 @@ public interface ProductClient {
      * @param category
      * @return
      */
-    @PutMapping("/json/example/category")
+    @PutMapping("/ep/category")
     public ResultVO update(@RequestBody(required = false) Category category);
 
     /**
@@ -46,7 +46,7 @@ public interface ProductClient {
      * @param id
      * @throws IOException
      */
-    @GetMapping("/json/example/category/{id}")
+    @GetMapping("/ep/category/{id}")
     public ResultVO receive(@PathVariable Integer id);
 
     /**
@@ -54,6 +54,6 @@ public interface ProductClient {
      * @param response
      * @throws IOException
      */
-    @GetMapping(value = "/json/example/categories/listAll")
+    @GetMapping(value = "/ep/categories/listAll")
     public ResultVO list(HttpServletResponse response);
 }
