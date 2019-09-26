@@ -22,7 +22,7 @@ eureka:
 # `@FeignClient`注解修改的客户端在被代理时，都会创建一个新的Fegin.Logger实例。我们需要额外指定这个日志的级别才可以。
 logging:
  level:
-   org.springframework.cloud.openfeign: debug
+   cn.ep: debug
 #新版配置，否则后面dashboard无法找到hystrix.stream
 management:
  endpoints:
