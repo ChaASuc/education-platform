@@ -16,11 +16,11 @@ public enum GlobalEnum implements IEnum{
      * */
     SUCCESS(200, "成功"),
 
-    PARAMS_ERROR(1000, "参数错误: %s"),
+    PARAMS_ERROR(1000, "参数错误 %s"),
 
-    OPERATION_ERROR(10001, "操作失败：%s"),
+    OPERATION_ERROR(10001, "操作失败 %s"),
 
-    EXIST_ERROR(10002, "不存在：%s"),
+    EXIST_ERROR(10002, "%s不存在"),
 
     SERVICE_ERROR(500, "系统异常");
 

@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.education-platform.client</groupId>
-    <artifactId>ep-client-common</artifactId>
+    <groupId>cn.education-platform.category</groupId>
+    <artifactId>ep-category-common</artifactId>
 
     <dependencies>
         <dependency>

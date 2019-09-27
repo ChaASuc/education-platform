@@ -100,9 +100,7 @@ public class ResultVO implements Serializable {
     }
 
     public static ResultVO failure(IEnum iEnum) {
-        return new ResultVO()
-                .setCode(iEnum.getCode())
-                .setMsg(iEnum.getMessage());
+        return failure(iEnum, "");
     }
 
     public static ResultVO failure(Integer code, String message) {

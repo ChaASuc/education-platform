@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.ep.mapper.ProductMapper" >
-  <resultMap id="BaseResultMap" type="cn.ep.bean.Product" >
+<mapper namespace="cn.ep.mapper.CategoryMapper" >
+  <resultMap id="BaseResultMap" type="cn.ep.bean.Category" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="description" property="description" jdbcType="VARCHAR" />
-    <result column="cid" property="cid" jdbcType="INTEGER" />
     <result column="deleted" property="deleted" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -67,15 +65,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, name, description, cid, deleted
+    id, name, deleted
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.ProductExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.CategoryExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from product
+    from category
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -84,44 +82,36 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
-    from product
+    from category
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from product
+    delete from category
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="cn.ep.bean.ProductExample" >
-    delete from product
+  <delete id="deleteByExample" parameterType="cn.ep.bean.CategoryExample" >
+    delete from category
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.ep.bean.Product" >
+  <insert id="insert" parameterType="cn.ep.bean.Category" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into product (name, description, cid, 
-      deleted)
-    values (#{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{cid,jdbcType=INTEGER}, 
-      #{deleted,jdbcType=BIT})
+    insert into category (name, deleted)
+    values (#{name,jdbcType=VARCHAR}, #{deleted,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="cn.ep.bean.Product" >
+  <insert id="insertSelective" parameterType="cn.ep.bean.Category" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into product
+    insert into category
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="name != null" >
         name,
-      </if>
-      <if test="description != null" >
-        description,
-      </if>
-      <if test="cid != null" >
-        cid,
       </if>
       <if test="deleted != null" >
         deleted,
@@ -131,37 +121,25 @@
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="description != null" >
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="cid != null" >
-        #{cid,jdbcType=INTEGER},
-      </if>
       <if test="deleted != null" >
         #{deleted,jdbcType=BIT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="cn.ep.bean.ProductExample" resultType="java.lang.Integer" >
-    select count(*) from product
+  <select id="countByExample" parameterType="cn.ep.bean.CategoryExample" resultType="java.lang.Integer" >
+    select count(*) from category
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update product
+    update category
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
       <if test="record.name != null" >
         name = #{record.name,jdbcType=VARCHAR},
-      </if>
-      <if test="record.description != null" >
-        description = #{record.description,jdbcType=VARCHAR},
-      </if>
-      <if test="record.cid != null" >
-        cid = #{record.cid,jdbcType=INTEGER},
       </if>
       <if test="record.deleted != null" >
         deleted = #{record.deleted,jdbcType=BIT},
@@ -172,27 +150,19 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update product
+    update category
     set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR},
-      description = #{record.description,jdbcType=VARCHAR},
-      cid = #{record.cid,jdbcType=INTEGER},
-      deleted = #{record.deleted,jdbcType=BIT}
+    name = #{record.name,jdbcType=VARCHAR},
+    deleted = #{record.deleted,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.ep.bean.Product" >
-    update product
+  <update id="updateByPrimaryKeySelective" parameterType="cn.ep.bean.Category" >
+    update category
     <set >
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="cid != null" >
-        cid = #{cid,jdbcType=INTEGER},
       </if>
       <if test="deleted != null" >
         deleted = #{deleted,jdbcType=BIT},
@@ -200,12 +170,10 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.ep.bean.Product" >
-    update product
+  <update id="updateByPrimaryKey" parameterType="cn.ep.bean.Category" >
+    update category
     set name = #{name,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      cid = #{cid,jdbcType=INTEGER},
-      deleted = #{deleted,jdbcType=BIT}
+        deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

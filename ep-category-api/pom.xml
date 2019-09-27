@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.education-platform.product</groupId>
-    <artifactId>ep-product-api</artifactId>
+    <groupId>cn.education-platform.category</groupId>
+    <artifactId>ep-category-api</artifactId>
 
     <dependencies>
         <dependency>
@@ -27,9 +27,10 @@
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>cn.education-platform.product</groupId>
-            <artifactId>ep-product-common</artifactId>
+            <groupId>cn.education-platform.category</groupId>
+            <artifactId>ep-category-common</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
+
 </project>
