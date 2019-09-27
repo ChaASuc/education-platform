@@ -55,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
         Category category = new Category();
         category.setId(cid);
         category.setName("小米");
-        categoryClient.create(category);
+        categoryClient.insert(category);
     }
 
     /**
@@ -190,7 +190,7 @@ public class ProductServiceImpl implements ProductService {
 
     private Category getCategory(int categoryId){
         // 根据种类id获取种类，调用其他服务接口
-        ResultVO resultVO = categoryClient.receive(categoryId);
+        ResultVO resultVO = categoryClient.getById(categoryId);
         // 判断是否正确返回
         if (!resultVO.getCode().equals(GlobalEnum.SUCCESS.getCode())) {
             throw new GlobalException(GlobalEnum.EXIST_ERROR, "种类");

@@ -20,7 +20,7 @@ import java.util.List;
  * @Since 1.0.0
  */
 @FeignClient(
-        name = "ep-product",
+        name = "ep-category",
         configuration = FeignConfig.class
 )
 public interface CategoryClient {
@@ -30,30 +30,30 @@ public interface CategoryClient {
      * @param category
      * @return
      */
-    @PostMapping("/ep/category")
-    ResultVO create(@RequestBody(required = false) Category category);
+    @PostMapping("")
+    ResultVO insert(@RequestBody Category category);
 
     /**
-     * 更新和删除类别
+     * 根据主键id更新和逻辑删除种类
      * @param category
      * @return
      */
-    @PutMapping("/ep/category")
-    ResultVO update(@RequestBody(required = false) Category category);
+    @PutMapping("")
+    ResultVO update(@RequestBody Category category);
 
+//
+//
     /**
      * 获取类别详情
      * @param id
      * @throws IOException
      */
-    @GetMapping("/ep/category/{id}")
-    ResultVO receive(@PathVariable Integer id);
+    @GetMapping("/{id}")
+    ResultVO getById(@PathVariable Integer id);
 
     /**
      * 列举所有类别
-     * @param response
-     * @throws IOException
      */
-    @GetMapping(value = "/ep/categories/listAll")
-    ResultVO list(HttpServletResponse response);
+    @GetMapping(value = "/listAll")
+    ResultVO getListAll();
 }

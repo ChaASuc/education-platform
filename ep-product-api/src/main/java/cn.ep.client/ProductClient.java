@@ -27,7 +27,7 @@ public interface ProductClient {
      * @param product
      * @return
      */
-    @PostMapping("")
+    @PostMapping("/ep/product")
     ResultVO insert(@RequestBody(required = false) Product product);
 
     /**
@@ -35,7 +35,7 @@ public interface ProductClient {
      * @param product
      * @return
      */
-    @PutMapping("")
+    @PutMapping("/ep/product")
     ResultVO update(@RequestBody Product product);
 
 
@@ -44,7 +44,7 @@ public interface ProductClient {
      * @param cid
      * @return
      */
-    @PutMapping("/list/{cid}")
+    @PutMapping("/ep/product/list/{cid}")
     ResultVO updateListByCid(@PathVariable Integer cid);
 
 //
@@ -52,14 +52,14 @@ public interface ProductClient {
      * 获取产品详情
      * @param id
      */
-    @GetMapping("/{id}")
+    @GetMapping("/ep/product/{id}")
     ResultVO getById(@PathVariable Integer id);
 //
     /**
      * 根据页码分页查询所有商品
      * @param pageNum
      */
-    @GetMapping(value = "/list/{pageNum}")
+    @GetMapping(value = "/ep/product/list/{pageNum}")
     ResultVO getListByPageNum(@PathVariable Integer pageNum);
 //
 
@@ -69,7 +69,7 @@ public interface ProductClient {
      * @param cid
      * @param pageNum
      */
-    @GetMapping(value = "/list/{cid}/{pageNum}")
+    @GetMapping(value = "/ep/product/list/{cid}/{pageNum}")
     ResultVO getListByCidAndPageNum(@PathVariable Integer cid, @PathVariable Integer pageNum);
 
 }

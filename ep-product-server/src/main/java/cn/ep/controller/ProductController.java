@@ -21,7 +21,7 @@ import java.util.List;
 
 @Api(description = "示例模块")
 @RestController
-@RequestMapping("ep/product")
+@RequestMapping("/ep/product")
 public class ProductController {
 
     @Autowired

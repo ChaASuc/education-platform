@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api(description = "示例模块")
 @RestController
-@RequestMapping("/ep")
+@RequestMapping("/ep/category")
 public class CategoryController {
 
     @Autowired
@@ -42,9 +42,8 @@ public class CategoryController {
      */
     @ApiOperation(value="新增类别", notes="已测试")
     @ApiImplicitParam(name = "category", value = "类别详情实体", required = true, dataType = "Category")
-    @PostMapping("/category")
-    @ResponseBody
-    public ResultVO create(@RequestBody(required = false) Category category){
+    @PostMapping("")
+    public ResultVO insert(@RequestBody Category category){
 
         categoryService.insert(category);
 
@@ -54,22 +53,19 @@ public class CategoryController {
     }
 
     /**
-     * 更新类别
+     * 根据主键id更新和逻辑删除种类
      * @param category
      * @return
      */
     @ApiOperation(value="更新类别id更新类别信息或逻辑删除类", notes="已测试")
     @ApiImplicitParam(name = "category", value = "类别实体", required = true, dataType = "Category")
-    @PutMapping("/category")
-    public ResultVO update(@RequestBody(required = false) Category category) {
-        if (category != null && category.getId() != null) {
-            // 若是逻辑删除,就要更改其deleted字段
-            categoryService.update(category);
-            // 清空缓存
-            return ResultVO.success();
-        }
-        return ResultVO.failure(GlobalEnum.PARAMS_ERROR, "种类不为空或无id");
+    @PutMapping("")
+    public ResultVO update(@RequestBody Category category) {
+        categoryService.update(category);
+        // 清空缓存
+        return ResultVO.success();
     }
+
 //
 //
     /**
@@ -79,22 +75,20 @@ public class CategoryController {
      */
     @ApiOperation(value="根据类别id获取类别详情", notes="已测试")
     @ApiImplicitParam(name = "id", value = "类别id", required = false, dataType = "Integer", paramType = "path")
-    @GetMapping("/category/{id}")
-    public ResultVO receive(@PathVariable Integer id){
+    @GetMapping("/{id}")
+    public ResultVO getById(@PathVariable Integer id){
         // 查看是否有缓存
         // 没有缓存，添加缓存
         Category category = categoryService.select(id);
         return ResultVO.success(category);
     }
 
-    /**
+    /**we
      * 列举所有类别
-     * @param response
-     * @throws IOException
      */
     @ApiOperation(value="列举所有类别", notes="已测试")
-    @GetMapping(value = "/categories/listAll")
-    public ResultVO list(){
+    @GetMapping(value = "/listAll")
+    public ResultVO getListAll(){
         // 查看是否有缓存
         // 没有缓存，添加缓存
         List<Category> categories = categoryService.selectAll();
