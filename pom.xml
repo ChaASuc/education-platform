@@ -14,12 +14,6 @@
         <module>ep-config</module>
         <module>ep-gateway</module>
         <module>ep-hystrix-dashboard</module>
-        <module>ep-product-api</module>
-        <module>ep-product-common</module>
-        <module>ep-product-server</module>
-        <module>ep-client-api</module>
-        <module>ep-client-common</module>
-        <module>ep-client-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
