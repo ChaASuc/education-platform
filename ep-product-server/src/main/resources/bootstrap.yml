@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: ep-product # 应用名称，会在Eureka中显示
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://management.deschen.cn:3306/example?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root123
+    initialSize: 5
+    minIdle: 5
+    maxWait: 60000
+    maxActive: 20
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+  cloud:
+    config:
+      # 服务环境名称  例如 {name}-{profile} = ep-client-gateway-dev.yml
+      name: ep-product
+      profile: dev
+      discovery:
+        enabled: true
+        service-id: ep-config
+    # 解决github /monitor自动刷新失败
+    bus:
+      id: ${spring.application.name}:${spring.cloud.config.profile}:${random.value}
+eureka:
+  client:
+    service-url:
+      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
+  instance:
+    status-page-url: http://localhost:${server.port}/swagger-ui.html
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/mybatis-config.xml
+  type-aliases-package: cn.ep.bean
+## pageHelper插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+ep:
+  client:
+    pageSize: 12

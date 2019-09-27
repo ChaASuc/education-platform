@@ -17,6 +17,9 @@
         <module>ep-category-api</module>
         <module>ep-category-common</module>
         <module>ep-category-server</module>
+        <module>ep-product-api</module>
+        <module>ep-product-common</module>
+        <module>ep-product-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
