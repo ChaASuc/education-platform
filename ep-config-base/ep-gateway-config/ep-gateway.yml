@@ -20,11 +20,11 @@ zuul:
   ignored-services: "*"  # 忽略的应用，不暴露接口
   routes:
     ep-client:
-      path: /client/**
-      serviceId: ep-client
+      path: /ep/category/**
+      serviceId: ep-category
       strip-prefix: false 
     ep-product:
-      path: /product/**
+      path: /ep/product/**
       serviceId: ep-product
       strip-prefix: false
 # Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：
