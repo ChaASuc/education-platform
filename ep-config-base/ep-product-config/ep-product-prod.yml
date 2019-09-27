@@ -1,3 +1,3 @@
 env: prod  # 测试用的
 server:
-  port: 10110 # 端口 10XXX属于微服务端口
+  port: 10120 # 端口 10XXX属于微服务端口
