@@ -1,4 +1,4 @@
-env: category-dev  # 测试用的
+env: category-dev1  # 测试用的
 server:
   port: 10111 # 端口 101XX属于微服务端口
 eureka:
