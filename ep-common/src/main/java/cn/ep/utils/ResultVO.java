@@ -45,8 +45,6 @@ public class ResultVO implements Serializable {
     @ApiModelProperty(value = "返回失败的数据", name = "extra")
     private Map<String, Object> extra;
 
-
-
     public Integer getCode() {
         return code;
     }
@@ -62,6 +60,11 @@ public class ResultVO implements Serializable {
 
     public ResultVO setMsg(String msg) {
         this.msg = msg;
+        return this;
+    }
+
+    public ResultVO setMsg(IEnum iEnum, String msg) {
+        this.msg = String.format(iEnum.getMessage(), msg);
         return this;
     }
 

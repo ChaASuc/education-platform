@@ -4,6 +4,19 @@ spring:
     port: 5672
     username: deschen
     password: root123
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://management.deschen.cn:3306/example?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root123
+    initialSize: 5
+    minIdle: 5
+    maxWait: 60000
+    maxActive: 20
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
 eureka:
   instance:
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
@@ -47,3 +60,16 @@ ribbon:
   ReadTimeout: 2000 # 通信超时时间(ms)
   MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
   MaxAutoRetries: 1 # 同一实例的重试次数
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/mybatis-config.xml
+  type-aliases-package: cn.ep.bean
+## pageHelper插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+ep:
+  client:
+    pageSize: 12

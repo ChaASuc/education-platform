@@ -4,12 +4,20 @@ import cn.ep.enums.GlobalEnum;
 import cn.ep.utils.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @Author deschen
@@ -46,9 +54,45 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({GlobalException.class})
     public ResultVO handleGlobalException(HttpServletRequest request, GlobalException e) {
-        log.error("execute methond exception error.url is {}", request.getRequestURI(), e);
+        log.error("错误请求url = {}", request.getRequestURI(), e);
         return ResultVO.failure(e.getCode(), e.getMessage())
                 .addExtra("stackTrace", e.getStackTrace())
                 .addExtra("exceptionMessage", e.getClass().getName() + ": " + e.getMessage());
+    }
+
+
+    /**
+     * 参数异常处理
+     * @param request
+     * @param e
+     * @return
+     */
+    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class, ConstraintViolationException.class})
+    public ResultVO handleJSR303Exception(HttpServletRequest request, Exception e) {
+        log.error("错误请求url = {}", request.getRequestURI(), e);
+        BindingResult br = null;
+
+        ResultVO resultVO = ResultVO.failure(GlobalEnum.PARAMS_ERROR)
+                .addExtra("stackTrace", e.getStackTrace())
+                .addExtra("exceptionMessage", e.getClass().getName() + ": " + e.getMessage());
+        if (e instanceof BindException) {
+            br = ((BindException) e).getBindingResult();
+        }
+        if (e instanceof MethodArgumentNotValidException) {
+            br = ((MethodArgumentNotValidException) e).getBindingResult();
+        }
+        if (br != null) {
+            return resultVO.setMsg(GlobalEnum.PARAMS_ERROR,
+                    br.getFieldErrors().stream()
+                            .map(f -> f.getField().concat(f.getDefaultMessage()))
+                            .collect(Collectors.joining(","))
+            );
+        }
+        if (e instanceof ConstraintViolationException) {
+            Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) e).getConstraintViolations();
+            return resultVO
+                    .setMsg(GlobalEnum.PARAMS_ERROR, e.getMessage());
+        }
+        return resultVO;
     }
 }

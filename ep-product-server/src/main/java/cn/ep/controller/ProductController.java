@@ -6,11 +6,13 @@ import cn.ep.bean.ProductDto;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.service.ProductService;
 import cn.ep.utils.ResultVO;
+import com.alibaba.druid.sql.visitor.functions.Substring;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.bouncycastle.util.Integers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
+import java.util.Scanner;
 
 @Api(description = "示例模块")
 @RestController
@@ -107,6 +110,8 @@ public class ProductController {
         ProductDto productDto = productService.select(id);
 
         // 添加缓存
+        Scanner scanner = new Scanner(System.in);
+//        scanner.nextInt()
 
         // 响应
         return ResultVO.success(productDto);
@@ -159,4 +164,88 @@ public class ProductController {
         // 响应
         return ResultVO.success(productDtoPageInfo);
     }
+
+    public static void main(String[] args){
+
+//        test2();
+//        test3();
+        String str = "ab";
+        System.out.println(str.substring(0,1));
+    }
+
+    private static void test3() {
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNext()) {
+            int a = scanner.nextInt();
+            String s = scanner.nextLine();
+            for (int i = 0; i <= s.length() - a; i++) {
+                for (int j = i + a - 1; j <= s.length(); j++) {
+                    s.substring(i, j);
+                }
+            }
+
+        }
+
+    }
+
+    public static void test2() {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine();
+        int n = Integer.valueOf(s.charAt(0)) - 48;
+        int m = Integer.valueOf(s.charAt(2)) -  48;
+        String[] str = new String[n];
+        int[] sum = new int[n];
+        int[] value = new int[m];
+        int max = 0;
+        int bigSum = 0;
+        for (int i = 0; i < n; i++) {
+            str[i] = sc.nextLine();
+        }
+
+        for (int i = 0; i < m; i++) {
+            value[i] = sc.nextInt();
+            bigSum += value[i];
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j) {
+                    continue;
+                }
+                for (int k = 0; k < m; k++) {
+                    if (str[i].charAt(k) == str[j].charAt(k)) {
+                        sum[j] += value[k];
+                    }
+                }
+                bigSum += sum[j];
+            }
+            if (bigSum > max) {
+                max = bigSum;
+            }
+        }
+
+        System.out.println(max);
+    }
+
+//    public static void test() {
+//        Scanner sc = new Scanner(System.in);
+//        int k = sc.nextInt();
+//        String str = sc.nextLine();
+//        char[] chars = str.toCharArray();
+//        int sum = 0;
+//        for (char c:
+//                chars) {
+//            if (c == '1') {
+//                sum++;
+//            }
+//        }
+//
+//        if (sum < k) {
+//            System.out.println(0);
+//        }else {
+//            char
+//        }
+//    }
+//    public static int add(int a, int b){
+//        return a + b;
+//    }
 }

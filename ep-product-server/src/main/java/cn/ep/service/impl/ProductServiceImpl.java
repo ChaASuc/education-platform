@@ -8,13 +8,12 @@ import cn.ep.client.CategoryClient;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.ProductMapper;
-import cn.ep.utils.JsonUtils;
+import cn.ep.utils.JsonUtil;
 import cn.ep.utils.ResultVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import cn.ep.config.ExampleConfig;
 import cn.ep.service.ProductService;
-import com.netflix.ribbon.proxy.annotation.TemplateName;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -198,7 +197,7 @@ public class ProductServiceImpl implements ProductService {
 
         Category category = null;
         try {
-            category = JsonUtils.obj2Class(resultVO.getData(), Category.class);
+            category = JsonUtil.obj2Class(resultVO.getData(), Category.class);
         } catch (IOException e) {
             throw new GlobalException(GlobalEnum.OPERATION_ERROR, "类型转换失败");
         }
