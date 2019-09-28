@@ -48,5 +48,11 @@ public interface ProductService {
      */
     PageInfo<ProductDto> selectPageByCategory(int pageNum, int categoryId);
 
+    /**
+     * 根据外键信息和产品信息更新信息
+     * @param id
+     * @param product
+     * @param foreignKey
+     */
     void updateListByProductAndForeignKey(Integer id, Product product, Integer foreignKey);
 }

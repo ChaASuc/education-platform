@@ -81,12 +81,12 @@ public class ProductController {
      */
     @ApiOperation(value="根据种类id逻辑删除产品信息",notes = "已测试")
     @ApiImplicitParam(name="cid", value = "种类id", required = true, dataType = "Integer", paramType = "path")
-    @PutMapping("/list/{cid}")
-    public ResultVO updateListByCid(@PathVariable Integer cid){
+    @DeleteMapping("/list/{cid}")
+    public ResultVO deleteListByCid(@PathVariable Integer cid){
         Product product = new Product();
         product.setDeleted(true);
         productService.updateListByProductAndForeignKey(cid, product, ProductService.ForeignKey_CATEGORY);
-            // 删除缓存
+        // 删除缓存
         return ResultVO.success();
     }
 
