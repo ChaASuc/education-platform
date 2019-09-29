@@ -6,7 +6,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix="ep.client")
+@ConfigurationProperties(prefix="ep")
 public class ExampleConfig {
 
     private Integer pageSize;

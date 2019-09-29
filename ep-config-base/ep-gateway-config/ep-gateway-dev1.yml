@@ -1,0 +1,25 @@
+server:
+  port: 10021 # 端口 1002X属于zuul端口
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5
+  instance:
+    #在注册服务完成以后，服务提供者会维持一个心跳（定时向EurekaServer发起Rest请求），告诉EurekaServer：“我还活着”。这个我们称为服务的续约（renew）；
+    # 默认情况下每个30秒服务会向注册中心发送一次心跳，证明自己还活着。如果超过90秒没有发送心跳，EurekaServer就会认为该服务宕机，“失效剔除”从服务列表中移除，这两个值在生产环境不要修改，默认即可。
+    # 在开发时，这个值有点太长了
+    # 服务续约(renew)的间隔，默认为30秒
+    lease-renewal-interval-in-seconds: 5
+    # 服务失效时间，默认值90秒
+    lease-expiration-duration-in-seconds: 10
+#    ip-address: management.deschen.cn
+# Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：
+# 设置全局Hystrix超时时间，Ribbon< hystrix, 因为ribbon重试没完，熔断了就麻烦了
+# 超时：(1 + MaxAutoRetries ）*（1+ MaxAutoRetriesNextServer) *（ReadTimeout +ConnectTimeout）
+hystrix:
+  command:
+    default:  # 默认全局
+      circuitBreaker:
+        requestVolumeThreshold: 10 #  触发熔断的最小请求次数，默认20
+        errorThresholdPercentage: 50  # 触发熔断的失败请求最小占比，默认50%
+        sleepWindowInMilliseconds: 1000  # 休眠时长，默认是5000毫秒
+
