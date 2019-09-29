@@ -16,5 +16,5 @@ eureka:
   client:
     service-url:
       defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
-  instance:
-    status-page-url: http://localhost:${server.port}/swagger-ui.html
+#  instance:
+    # status-page-url.: http://localhost:${server.port}/swagger-ui.html

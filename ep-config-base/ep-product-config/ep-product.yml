@@ -22,7 +22,7 @@ eureka:
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
     #    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
     instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
-    status-page-url: http://127.0.0.1:${server.port}/swagger-ui.html
+    # status-page-url.: http://127.0.0.1:${server.port}/swagger-ui.html
   # Spring Cloud Feign 支持对请求和响应进行GZIP压缩，以减少通信过程中的性能损耗。通过下面的参数即可开启请求与响应的压缩功能
   # 使用文件比较大时，如下载文件
   compression:
