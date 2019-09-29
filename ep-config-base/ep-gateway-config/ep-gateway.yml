@@ -19,7 +19,7 @@ zuul:
   prefix: /api   # 路由前缀
   ignored-services: "*"  # 忽略的应用，不暴露接口
   routes:
-    ep-client:
+    ep-category:
       path: /ep/category/**
       serviceId: ep-category
       strip-prefix: false 

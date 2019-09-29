@@ -6,10 +6,13 @@ spring:
     config:
       # 服务环境名称  例如 {name}-{profile} = ep-client-gateway-dev.yml
       name: ep-hystrix-dashboard
-      profile: prod
+      profile: dev
       discovery:
         enabled: true
         service-id: ep-config
+    # 解决github /monitor自动刷新失败
+    bus:
+      id: ${spring.application.name}:${spring.cloud.config.profile}:${random.value}
 eureka:
   client:
     service-url:
