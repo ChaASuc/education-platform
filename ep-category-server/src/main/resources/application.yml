@@ -1,4 +1,0 @@
-##启动服务时，服务器会自动加载的配置文件
-#spring:
-#  profiles:
-#    active: dev
