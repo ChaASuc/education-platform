@@ -1,12 +1,16 @@
 package cn.ep.exception;
 
 import cn.ep.enums.GlobalEnum;
+import cn.ep.utils.JsonUtil;
 import cn.ep.utils.ResultVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,7 +30,7 @@ import java.util.stream.Collectors;
  * @Since 1.0.0
  */
 @RestControllerAdvice
-@Slf4j
+ @Slf4j
 public class GlobalExceptionHandler {
 
 //    @ExceptionHandler(value = Throwable.class)
@@ -67,6 +71,13 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
+    /**
+     * 异常 对应 注解
+     * MethodArgumentNotValidException  方法参数 @RequestBody @Valid
+     * BindException  方法参数 @Validated
+     * ConstraintViolationException controller层类上面添加@Validated  方法参数@NotNull类型注解
+     * 这两个注解都是实现JSR-303规范，不同的是@Validated是spring的注解支持groups以及可以用在spring mvc处理器的方法级别入参验证 ，@Valid是Javax提供的注解，可以支持多个bean嵌套验证。
+     */
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class, ConstraintViolationException.class})
     public ResultVO handleJSR303Exception(HttpServletRequest request, Exception e) {
         log.error("错误请求url = {}", request.getRequestURI(), e);
@@ -91,8 +102,15 @@ public class GlobalExceptionHandler {
         if (e instanceof ConstraintViolationException) {
             Set<ConstraintViolation<?>> constraintViolations = ((ConstraintViolationException) e).getConstraintViolations();
             return resultVO
-                    .setMsg(GlobalEnum.PARAMS_ERROR, e.getMessage());
+                    .setMsg(GlobalEnum.PARAMS_ERROR,
+                            constraintViolations.stream()
+                                    .map(c -> {
+                                        String path = c.getPropertyPath().toString();
+                                        return path.substring(path.lastIndexOf(".") + 1).concat(c.getMessage());
+                                    })
+                                    .collect(Collectors.joining(",")));
         }
         return resultVO;
     }
+
 }

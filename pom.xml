@@ -20,6 +20,7 @@
         <module>ep-product-api</module>
         <module>ep-product-common</module>
         <module>ep-product-server</module>
+        <module>ep-uploadFile</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -33,7 +34,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
-        <mybatis.starter.version>2.0.1</mybatis.starter.version>
+        <mybatis.starter.version>2.0.0</mybatis.starter.version>
         <mapper.starter.version>2.0.2</mapper.starter.version>
         <druid.starter.version>1.1.9</druid.starter.version>
         <mysql.version>8.0.16</mysql.version>

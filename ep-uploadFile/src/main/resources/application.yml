@@ -1,0 +1,76 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: ep-uploadFile
+  rabbitmq:
+    host: management.deschen.cn
+    port: 5672
+    username: deschen
+    password: root123
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://management.deschen.cn:3306/ep_file?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root123
+    initialSize: 5
+    minIdle: 5
+    maxWait: 60000
+    maxActive: 20
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+  servlet:
+    multipart:
+      max-file-size: 1024MB  # 最大文件大小
+      max-request-size: 1024MB # 最大请求大小
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 5
+      # 服务失效时间，默认值90秒
+    lease-expiration-duration-in-seconds: 10
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+      #    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+    instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+ep:
+  upload:
+    allowTypes:
+      - image/jpeg
+      - image/png
+      - image/bmp
+      - image/gif
+      - video/x-msvideo  # avi
+      - video/mpeg  # mpg
+      - audio/mpeg  # mp3
+    baseUrl: http://139.196.120.94/
+  worker:
+    workerId: 1
+    datacenterId: 1
+fdfs:
+  connect-timeout: 600
+  so-timeout: 2500
+  thumb-image:
+    height: 60
+    width: 60
+  tracker-list:
+    - 139.196.120.94:22122
+logging:
+  level:
+    cn.ep: debug
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/mybatis-config.xml
+  type-aliases-package: cn.ep.bean
+## pageHelper插件配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+#ep:
+#  pageSize: 12

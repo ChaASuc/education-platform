@@ -6,6 +6,7 @@ import cn.ep.bean.ProductDto;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.service.ProductService;
 import cn.ep.utils.ResultVO;
+//import cn.ep.utils.StringRedisCache;
 import com.alibaba.druid.sql.visitor.functions.Substring;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -14,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.bouncycastle.util.Integers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +33,7 @@ public class ProductController {
     private ProductService productService;
 
 //    @Autowired
-//    private RedisCache cache;
+//    private StringRedisCache stringRedisCache;
 //
 //    /**
 //     * 内部类，专门用来管理每个方法所对应缓存的名称。
@@ -226,26 +228,8 @@ public class ProductController {
         System.out.println(max);
     }
 
-//    public static void test() {
-//        Scanner sc = new Scanner(System.in);
-//        int k = sc.nextInt();
-//        String str = sc.nextLine();
-//        char[] chars = str.toCharArray();
-//        int sum = 0;
-//        for (char c:
-//                chars) {
-//            if (c == '1') {
-//                sum++;
-//            }
-//        }
-//
-//        if (sum < k) {
-//            System.out.println(0);
-//        }else {
-//            char
-//        }
-//    }
-//    public static int add(int a, int b){
-//        return a + b;
-//    }
+    @RequestMapping("/redis/test")
+    public void redisTest() {
+
+    }
 }

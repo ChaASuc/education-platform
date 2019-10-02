@@ -3,6 +3,7 @@ package cn.ep;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
@@ -16,6 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableHystrix
 @EnableSwagger2
 @MapperScan({"cn.ep.mapper"})
+@EnableConfigurationProperties
 public class EpProductApplication {
 
     public static void main(String[] args) {

@@ -14,6 +14,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import cn.ep.config.ExampleConfig;
 import cn.ep.service.ProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private CategoryClient categoryClient;   // 提供者模块,跟本模块无关
@@ -49,12 +51,12 @@ public class ProductServiceImpl implements ProductService {
             throw new GlobalException(GlobalEnum.OPERATION_ERROR, "商品添加失败");
         }
 
-        // 添加商品,有需要关联别的模块数据库,调用其他模块的categoryClient
-        Integer cid = product.getCid();
-        Category category = new Category();
-        category.setId(cid);
-        category.setName("小米");
-        categoryClient.insert(category);
+//        // 添加商品,有需要关联别的模块数据库,调用其他模块的categoryClient
+//        Integer cid = product.getCid();
+//        Category category = new Category();
+//        category.setId(cid);
+//        category.setName("小米");
+//        categoryClient.insert(category);
     }
 
     /**
@@ -201,6 +203,7 @@ public class ProductServiceImpl implements ProductService {
         } catch (IOException e) {
             throw new GlobalException(GlobalEnum.OPERATION_ERROR, "类型转换失败");
         }
+
         if (null == category) {
             throw new GlobalException(GlobalEnum.EXIST_ERROR, "种类");
         }

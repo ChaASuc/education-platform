@@ -30,7 +30,7 @@ public interface CategoryClient {
      * @param category
      * @return
      */
-    @PostMapping("")
+    @PostMapping("/ep/category")
     ResultVO insert(@RequestBody Category category);
 
     /**
@@ -38,7 +38,7 @@ public interface CategoryClient {
      * @param category
      * @return
      */
-    @PutMapping("")
+    @PutMapping("/ep/category")
     ResultVO update(@RequestBody Category category);
 
 //
@@ -48,12 +48,12 @@ public interface CategoryClient {
      * @param id
      * @throws IOException
      */
-    @GetMapping("/{id}")
+    @GetMapping("/ep/category/{id}")
     ResultVO getById(@PathVariable Integer id);
 
     /**
      * 列举所有类别
      */
-    @GetMapping(value = "/listAll")
+    @GetMapping(value = "/ep/category/listAll")
     ResultVO getListAll();
 }

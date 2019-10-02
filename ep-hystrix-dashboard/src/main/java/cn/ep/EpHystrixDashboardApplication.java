@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 
+import java.util.Scanner;
+
 @SpringBootApplication
 @EnableHystrixDashboard
 @RefreshScope
