@@ -1,10 +1,16 @@
 package cn.ep.bean;
 
+import cn.ep.serializer.Long2StringSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class EpFile {
+public class EpFile implements Serializable {
+    @JsonSerialize(using = Long2StringSerializer.class)
     private Long fileId;
 
+    @JsonSerialize(using = Long2StringSerializer.class)
     private Long dirId;
 
     private String fileIp;

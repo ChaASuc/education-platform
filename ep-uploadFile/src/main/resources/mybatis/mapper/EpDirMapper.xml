@@ -7,6 +7,7 @@
     <result column="dir_type" property="dirType" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="dir_parent_id" property="dirParentId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -67,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    dir_id, dir_name, dir_type, create_time, update_time
+    dir_id, dir_name, dir_type, create_time, update_time, dir_parent_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpDirExample" >
     select
@@ -84,7 +85,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from ep_dir
     where dir_id = #{dirId,jdbcType=BIGINT}
@@ -100,10 +101,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.ep.bean.EpDir" >
-    insert into ep_dir (dir_id, dir_name, dir_type, 
-      create_time, update_time)
-    values (#{dirId,jdbcType=BIGINT}, #{dirName,jdbcType=VARCHAR}, #{dirType,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into ep_dir (dir_id, dir_name, dir_type,
+                        create_time, update_time, dir_parent_id
+    )
+    values (#{dirId,jdbcType=BIGINT}, #{dirName,jdbcType=VARCHAR}, #{dirType,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{dirParentId,jdbcType=BIGINT}
+           )
   </insert>
   <insert id="insertSelective" parameterType="cn.ep.bean.EpDir" >
     insert into ep_dir
@@ -123,6 +126,9 @@
       <if test="updateTime != null" >
         update_time,
       </if>
+      <if test="dirParentId != null" >
+        dir_parent_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="dirId != null" >
@@ -139,6 +145,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dirParentId != null" >
+        #{dirParentId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -166,6 +175,9 @@
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.dirParentId != null" >
+        dir_parent_id = #{record.dirParentId,jdbcType=BIGINT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -174,10 +186,11 @@
   <update id="updateByExample" parameterType="map" >
     update ep_dir
     set dir_id = #{record.dirId,jdbcType=BIGINT},
-      dir_name = #{record.dirName,jdbcType=VARCHAR},
-      dir_type = #{record.dirType,jdbcType=VARCHAR},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    dir_name = #{record.dirName,jdbcType=VARCHAR},
+    dir_type = #{record.dirType,jdbcType=VARCHAR},
+    create_time = #{record.createTime,jdbcType=TIMESTAMP},
+    update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+    dir_parent_id = #{record.dirParentId,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -197,15 +210,19 @@
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="dirParentId != null" >
+        dir_parent_id = #{dirParentId,jdbcType=BIGINT},
+      </if>
     </set>
     where dir_id = #{dirId,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="cn.ep.bean.EpDir" >
     update ep_dir
     set dir_name = #{dirName,jdbcType=VARCHAR},
-      dir_type = #{dirType,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+        dir_type = #{dirType,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        dir_parent_id = #{dirParentId,jdbcType=BIGINT}
     where dir_id = #{dirId,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -424,6 +424,66 @@ public class EpDirExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andDirParentIdIsNull() {
+            addCriterion("dir_parent_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdIsNotNull() {
+            addCriterion("dir_parent_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdEqualTo(Long value) {
+            addCriterion("dir_parent_id =", value, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdNotEqualTo(Long value) {
+            addCriterion("dir_parent_id <>", value, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdGreaterThan(Long value) {
+            addCriterion("dir_parent_id >", value, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("dir_parent_id >=", value, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdLessThan(Long value) {
+            addCriterion("dir_parent_id <", value, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdLessThanOrEqualTo(Long value) {
+            addCriterion("dir_parent_id <=", value, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdIn(List<Long> values) {
+            addCriterion("dir_parent_id in", values, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdNotIn(List<Long> values) {
+            addCriterion("dir_parent_id not in", values, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdBetween(Long value1, Long value2) {
+            addCriterion("dir_parent_id between", value1, value2, "dirParentId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDirParentIdNotBetween(Long value1, Long value2) {
+            addCriterion("dir_parent_id not between", value1, value2, "dirParentId");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

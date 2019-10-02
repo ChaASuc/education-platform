@@ -1,6 +1,7 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpDir;
+import cn.ep.dto.EpDirDto;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public interface EpDirService {
      * 查看所有文件夹
      * @return
      */
-    List<EpDir> selectAll();
+    List<EpDirDto> selectAll();
 
     /**
      * 查看文件夹

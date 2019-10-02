@@ -1,10 +1,13 @@
 package cn.ep.controller;
 
 import cn.ep.bean.EpDir;
+import cn.ep.bean.EpFile;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.service.EpDirService;
 import cn.ep.service.UploadService;
 import cn.ep.utils.ResultVO;
+import cn.ep.validate.groups.Insert;
+import cn.ep.validate.groups.Update;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -41,10 +44,10 @@ public class FileController {
      * @param epDir
      * @return
      */
-    @ApiOperation(value="新增文件夹", notes = "未测试")
+    @ApiOperation(value="新增文件夹", notes = "已测试")
     @ApiImplicitParam(name= "epDir",value = "文件夹实体类", dataType = "EpDir")
     @PostMapping("/dir")
-    public ResultVO insert(@RequestBody @Valid EpDir epDir){
+    public ResultVO insert(@RequestBody @Validated({Insert.class}) EpDir epDir){
         epDirService.insert(epDir);
         // 删除缓存
         return ResultVO.success();
@@ -81,13 +84,41 @@ public class FileController {
      * @param epDir
      * @return
      */
-    @ApiOperation(value="根据主键修改文件夹",notes = "未测试")
+    @ApiOperation(value="根据主键修改文件夹",notes = "已测试")
     @ApiImplicitParam(name="epDir", value = "文件夹实体类", dataType = "EpDir")
     @PutMapping("/dir")
-    public ResultVO update(@RequestBody @NotNull EpDir epDir){
+    public ResultVO update(@RequestBody @Validated({Update.class}) EpDir epDir){
         epDirService.update(epDir);
         // 删除缓存
         return ResultVO.success();
+
+    }
+
+    /**
+     * 根据主键物理删除文件夹
+     * @param dirId
+     * @return
+     */
+    @ApiOperation(value="根据主键物理删除文件夹",notes = "已测试")
+    @ApiImplicitParam(name="dirId", value = "文件夹id", paramType = "path")
+    @DeleteMapping("/dir/{dirId}")
+    public ResultVO deleteByDirId(@NotNull @PathVariable Long dirId){
+        epDirService.deleteById(dirId);
+        // 删除缓存
+        return ResultVO.success();
+
+    }
+
+    /**
+     * 获取所有文件夹
+     * @return
+     */
+    @ApiOperation(value="获取所有文件夹",notes = "已测试")
+    @GetMapping("/dir/listAll")
+    public ResultVO getDirListAll(){
+
+        // 删除缓存
+        return ResultVO.success(epDirService.selectAll());
 
     }
 
@@ -96,18 +127,31 @@ public class FileController {
      * @param file
      * @return
      */
-    @ApiOperation(value="上传文件", notes = "未测试")
+    @ApiOperation(value="上传文件", notes = "已测试")
     @ApiImplicitParams({
             @ApiImplicitParam(name= "dirId",value = "文件夹Id", required = true, paramType = "path"),
-            @ApiImplicitParam(name= "file",value = "文件", required = true, dataType = "MultipartFile")
+            @ApiImplicitParam(name= "file",value = "文件", required = true, dataType = "file", paramType = "form")
     })
     @PostMapping(value = "/upload/{dirId}", headers = "content-type=multipart/form-data")
-    public ResultVO upload(@PathVariable Long dirId, MultipartFile file){
-        String fileUrl = uploadService.uploadFile(file, dirId);
+    public ResultVO upload(@NotNull @PathVariable Long dirId, @NotNull MultipartFile file){
+        EpFile epFile = uploadService.uploadFile(file, dirId);
         // 删除缓存
-        return ResultVO.success(fileUrl);
+        return ResultVO.success(epFile);
     }
 
+    /**
+     * 根据文件id物理删除文件
+     * @param epFileId
+     * @return
+     */
+    @ApiOperation(value="根据文件id物理删除文件", notes = "已测试")
+    @ApiImplicitParam(name= "epFileId",value = "文件id", required = true, paramType = "path")
+    @DeleteMapping(value = "/delete/{epFileId}")
+    public ResultVO delete(@PathVariable @NotNull Long epFileId){
+        uploadService.deleteByEpFileId(epFileId);
+        // 删除缓存
+        return ResultVO.success();
+    }
 
 }
 
