@@ -16,9 +16,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @Author deschen
@@ -141,16 +146,43 @@ public class FileController {
 
     /**
      * 根据文件id物理删除文件
-     * @param epFileId
+     * @param fileId
      * @return
      */
     @ApiOperation(value="根据文件id物理删除文件", notes = "已测试")
-    @ApiImplicitParam(name= "epFileId",value = "文件id", required = true, paramType = "path")
-    @DeleteMapping(value = "/delete/{epFileId}")
-    public ResultVO delete(@PathVariable @NotNull Long epFileId){
-        uploadService.deleteByEpFileId(epFileId);
+    @ApiImplicitParam(name= "fileId",value = "文件id", required = true, paramType = "path")
+    @DeleteMapping(value = "/delete/{fileId}")
+    public ResultVO delete(@PathVariable @NotNull Long fileId){
+        uploadService.deleteByEpFileId(fileId);
         // 删除缓存
         return ResultVO.success();
+    }
+
+    @ApiOperation(value="根据文件路径不包含ip下载文件", notes = "已测试")
+    @ApiImplicitParam(name= "fileUrl",value = "文件路径", required = true, paramType = "query")
+    @GetMapping(value = "/download")
+    public void downloadFile(@RequestParam @NotNull String fileUrl, HttpServletResponse response) throws UnsupportedEncodingException {
+        byte[] bytes = uploadService.downloadFile(fileUrl);
+        // 文件格式
+        response.setHeader(
+                "Content-disposition",
+                "attachment;filename=" + URLEncoder.encode(
+                        fileUrl.substring(fileUrl.lastIndexOf("/") + 1), "UTF-8"));
+        response.setCharacterEncoding("UTF-8");
+        ServletOutputStream outputStream = null;
+        try {
+            outputStream = response.getOutputStream();
+            outputStream.write(bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                outputStream.flush();
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }
