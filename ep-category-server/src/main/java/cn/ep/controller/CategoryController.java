@@ -3,7 +3,9 @@ package cn.ep.controller;
 import cn.ep.bean.Category;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.service.CategoryService;
+import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
+import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -22,18 +24,18 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-//    @Autowired
-//    private RedisCache cache;
+    @Autowired
+    private RedisUtil redisUtil;
 //
-//    /**
-//     * 内部类，专门用来管理每个get方法所对应缓存的名称。
-//     */
-//    static class CacheNameHelper{
-//        // e_c_category_{类别id}
-//        public static final String Receive_CacheNamePrefix = "e_category_";
-//        // e_c_categories_listAll
-//        public static final String ListAll_CacheName = "e_categories_listAll";
-//    }
+    /**
+     * 内部类，专门用来管理每个get方法所对应缓存的名称。
+     */
+    static class CacheNameHelper{
+        // ep_category_{类别id}
+        public static final String Receive_CacheNamePrefix = "e_category_";
+        // e_c_categories_listAll
+        public static final String ListAll_CacheName = "e_categories_listAll";
+    }
 
     /**
      * 新增类别
