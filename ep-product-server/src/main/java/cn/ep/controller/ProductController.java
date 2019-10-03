@@ -4,7 +4,9 @@ package cn.ep.controller;
 import cn.ep.bean.Product;
 import cn.ep.bean.ProductDto;
 import cn.ep.enums.GlobalEnum;
+import cn.ep.exception.GlobalException;
 import cn.ep.service.ProductService;
+import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 //import cn.ep.utils.StringRedisCache;
 import com.alibaba.druid.sql.visitor.functions.Substring;
@@ -23,6 +25,7 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
 
 @Api(description = "示例模块")
 @RestController
@@ -32,20 +35,22 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-//    @Autowired
-//    private StringRedisCache stringRedisCache;
+    @Autowired
+    private RedisUtil redisUtil;
 //
-//    /**
-//     * 内部类，专门用来管理每个方法所对应缓存的名称。
-//     */
-//    static class CacheNameHelper{
-//        // e_p_product_{商品id}
-//        private static final String Receive_CacheNamePrefix = "ep_product_";
-//        // e_p_products_list_{页码}
-//        private static final String List_CacheNamePrefix = "ep_products_list_";
-//        // e_p_products_listByCid_{类别id}_{页码}
-//        private static final String ListByCid_CacheNamePrefix = "ep_products_listByCid_";
-//    }
+    /**
+     * 内部类，专门用来管理每个方法所对应缓存的名称。
+     */
+    static class CacheNameHelper{
+        // ep_product_prefix_getById_{商品id}
+        private static final String EP_PRODUCT_PREFIX_GETBYID = "ep_product_prefix_getById_%s";
+        // ep_product_prefix_getListByPageNum_{页码}
+        private static final String EP_PRODUCT_PREFIX_GETLISTBYPAGENUM = "ep_product_prefix_getListByPageNum_%s";
+        // ep_product_prefix_getlistByCidAndPageNum_{类别id}_{页码}
+        private static final String EP_PRODUCT_PREFIX_GETLISTBYCIDANDPAGENUM = "ep_product_prefix_getlistByCidAndPageNum_%s_%s";
+        // ep_product_prefix_*
+        private static final String EP_PRODUCT_PREFIX = "ep_product_prefix_*";
+    }
 
     /**
      * 新增产品
@@ -57,7 +62,8 @@ public class ProductController {
     @PostMapping("")
     public ResultVO insert(@RequestBody(required = false) Product product){
         productService.insert(product);
-        // 删除缓存
+        // 清空相关缓存
+        redisUtil.delFuz(CacheNameHelper.EP_PRODUCT_PREFIX);
         return ResultVO.success();
     }
 
@@ -72,7 +78,8 @@ public class ProductController {
     public ResultVO update(@RequestBody Product product){
         if(product != null && product.getId() != null){
             productService.update(product);
-            // 删除缓存
+            // 清空相关缓存
+            redisUtil.delFuz(CacheNameHelper.EP_PRODUCT_PREFIX);
             return ResultVO.success();
         }
         return ResultVO.failure(GlobalEnum.PARAMS_ERROR);
@@ -91,7 +98,8 @@ public class ProductController {
         Product product = new Product();
         product.setDeleted(true);
         productService.updateListByProductAndForeignKey(cid, product, ProductService.ForeignKey_CATEGORY);
-        // 删除缓存
+        // 清空相关缓存
+        redisUtil.delFuz(CacheNameHelper.EP_PRODUCT_PREFIX);
         return ResultVO.success();
     }
 
@@ -105,17 +113,24 @@ public class ProductController {
     @ApiImplicitParam(name = "id", value = "产品id", required = true, dataType = "Integer", paramType = "path")
     @GetMapping("/{id}")
     public ResultVO getById(@PathVariable Integer id) {
-        // 获取缓存
+        // 获取reids的key
+        String key = String.format(CacheNameHelper.EP_PRODUCT_PREFIX_GETBYID, id);
+        // 统一返回值
+        ProductDto productDto = null;
+        // 查看是否有缓存
+        Object obj = redisUtil.get(key);
+        if (null == obj) {
+            // 没有缓存，添加缓存
+            productDto = productService.select(id);
+            boolean success = redisUtil.set(key, productDto);
+            if (!success) {
+                throw new GlobalException(GlobalEnum.OPERATION_ERROR, "商品缓存失败");
+            }
+        }else {
+            // 有缓存
+            productDto = (ProductDto) obj;
+        }
 
-        // 判断空
-
-        ProductDto productDto = productService.select(id);
-
-        // 添加缓存
-        Scanner scanner = new Scanner(System.in);
-//        scanner.nextInt()
-
-        // 响应
         return ResultVO.success(productDto);
     }
 //
@@ -128,15 +143,24 @@ public class ProductController {
     @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "Integer", paramType = "path")
     @GetMapping(value = "/list/{pageNum}")
     public ResultVO getListByPageNum(@PathVariable Integer pageNum){
-        // 获取缓存
+        // 获取reids的key
+        String key = String.format(CacheNameHelper.EP_PRODUCT_PREFIX_GETLISTBYPAGENUM, pageNum);
+        // 统一返回值
+        PageInfo<ProductDto> productDtoPageInfo = null;
+        // 查看是否有缓存
+        Object obj = redisUtil.get(key);
+        if (null == obj) {
+            // 没有缓存，添加缓存
+            productDtoPageInfo = productService.selectPage(pageNum);
+            boolean success = redisUtil.set(key, productDtoPageInfo);
+            if (!success) {
+                throw new GlobalException(GlobalEnum.OPERATION_ERROR, "商品缓存失败");
+            }
+        }else {
+            // 有缓存
+            productDtoPageInfo = (PageInfo<ProductDto>) obj;
+        }
 
-        // 判断空
-
-        PageInfo<ProductDto> productDtoPageInfo = productService.selectPage(pageNum);
-
-        // 添加缓存
-
-        // 响应
         return ResultVO.success(productDtoPageInfo);
     }
 //
@@ -155,15 +179,24 @@ public class ProductController {
     })
     @GetMapping(value = "/list/{cid}/{pageNum}")
     public ResultVO getListByCidAndPageNum(@PathVariable Integer cid, @PathVariable Integer pageNum) {
-        // 获取缓存
+        // 获取reids的key
+        String key = String.format(CacheNameHelper.EP_PRODUCT_PREFIX_GETLISTBYCIDANDPAGENUM, cid, pageNum);
+        // 统一返回值
+        PageInfo<ProductDto> productDtoPageInfo = null;
+        // 查看是否有缓存
+        Object obj = redisUtil.get(key);
+        if (null == obj) {
+            // 没有缓存，添加缓存
+            productDtoPageInfo = productService.selectPageByCategory(pageNum, cid);
+            boolean success = redisUtil.set(key, productDtoPageInfo);
+            if (!success) {
+                throw new GlobalException(GlobalEnum.OPERATION_ERROR, "商品缓存失败");
+            }
+        }else {
+            // 有缓存
+            productDtoPageInfo = (PageInfo<ProductDto>) obj;
+        }
 
-        // 判断空
-
-        PageInfo<ProductDto> productDtoPageInfo = productService.selectPageByCategory(pageNum, cid);
-
-        // 添加缓存
-
-        // 响应
         return ResultVO.success(productDtoPageInfo);
     }
 

@@ -1,0 +1,38 @@
+env: product-dev  # 测试用的
+server:
+  port: 10123 # 端口 101XX属于微服务端口
+eureka:
+  client:
+    # 当服务消费者启动是，会检测`eureka.client.fetch-registry=true`参数的值，如果为true，则会从Eureka Server服务的列表只读备份，然后缓存在本地。并且`每隔30秒`会重新获取并更新数据。我们可以通过下面的参数来修改：
+    # 在开发时，这个值有点太长了
+    registry-fetch-interval-seconds: 5
+    #在注册服务完成以后，服务提供者会维持一个心跳（定时向EurekaServer发起Rest请求），告诉EurekaServer：“我还活着”。这个我们称为服务的续约（renew）；
+    # 默认情况下每个30秒服务会向注册中心发送一次心跳，证明自己还活着。如果超过90秒没有发送心跳，EurekaServer就会认为该服务宕机，“失效剔除”从服务列表中移除，这两个值在生产环境不要修改，默认即可。
+    # 在开发时，这个值有点太长了
+    # 服务续约(renew)的间隔，默认为30秒
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    # 服务失效时间，默认值90秒
+    lease-expiration-duration-in-seconds: 10
+# 设置全局Hystrix超时时间
+hystrix:
+  command:
+    default:  # 默认全局
+      circuitBreaker:
+        requestVolumeThreshold: 10 #  触发熔断的最小请求次数，默认20
+        errorThresholdPercentage: 50  # 触发熔断的失败请求最小占比，默认50%
+        sleepWindowInMilliseconds: 1000  # 休眠时长，默认是5000毫秒
+#    getHystrixMessage:  # 方法名
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 6000 # 设置hystrix的超时时间为6000ms，默认1000ms
+
+spring:
+  zipkin:
+    base-url: http://127.0.0.1:9411  # zipkin的链接
+    sender:
+      type: web
+  sleuth:
+    sampler:
+      percentage: 1  # 接受百分之几的总请求，开发环境100%

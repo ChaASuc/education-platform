@@ -36,14 +36,14 @@ public class CategoryController {
      */
     static class CacheNameHelper{
 
-        // EP_CATEGORY_PREFIX_GETBYID_{类别id}
-        public static final String EP_CATEGORY_PREFIX_GETBYID = "EP_CATEGORY_PREFIX_GETBYID_%s";
+        // ep_category_prefix_getById_{类别id}
+        public static final String EP_CATEGORY_PREFIX_GETBYID = "ep_category_prefix_getById_%s";
 
-        // EP_CATEGORY_PREFIX_GETLISTALL
-        public static final String EP_CATEGORY_PREFIX_GETLISTALL = "EP_CATEGORY_PREFIX_GETLISTALL";
+        // ep_category_prefix_getListAll
+        public static final String EP_CATEGORY_PREFIX_GETLISTALL = "ep_category_prefix_getListAll";
 
-        //EP_CATEGORY_PREFIX_*  用于全部删除，避免缓存
-        public static final String EP_CATEGORY_PREFIX = "EP_CATEGORY_PREFIX_*";
+        //ep_category_prefix_*  用于全部删除，避免缓存
+        public static final String EP_CATEGORY_PREFIX = "ep_category_prefix_*";
     }
 
     /**
