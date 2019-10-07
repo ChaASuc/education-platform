@@ -1,10 +1,23 @@
 package cn.ep.bean;
 
-public class Product {
+import cn.ep.serializer.Long2StringSerializer;
+import cn.ep.validate.groups.Insert;
+import cn.ep.validate.groups.Update;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import javax.validation.constraints.NotNull;
+import java.io.Serializable;
+
+public class Product implements Serializable {
+
+    @NotNull(groups = {Update.class})
+    @JsonSerialize(using = Long2StringSerializer.class)
     private Integer id;
 
+    @NotNull(groups = {Insert.class})
     private String name;
 
+    @NotNull(groups = {Insert.class})
     private String description;
 
     private Integer cid;

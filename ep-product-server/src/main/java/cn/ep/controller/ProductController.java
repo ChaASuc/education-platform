@@ -9,6 +9,8 @@ import cn.ep.service.ProductService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 //import cn.ep.utils.StringRedisCache;
+import cn.ep.validate.groups.Insert;
+import cn.ep.validate.groups.Update;
 import com.alibaba.druid.sql.visitor.functions.Substring;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -18,9 +20,11 @@ import io.swagger.annotations.ApiOperation;
 import org.bouncycastle.util.Integers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.cache.RedisCache;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +34,7 @@ import java.util.function.Function;
 @Api(description = "示例模块")
 @RestController
 @RequestMapping("/ep/product")
+@Validated
 public class ProductController {
 
     @Autowired
@@ -60,7 +65,7 @@ public class ProductController {
     @ApiOperation(value="新增产品", notes = "已测试")
     @ApiImplicitParam(name= "product",value = "产品实体类", required = true, dataType = "Product")
     @PostMapping("")
-    public ResultVO insert(@RequestBody(required = false) Product product){
+    public ResultVO insert(@RequestBody @Validated({Insert.class}) Product product){
         productService.insert(product);
         // 清空相关缓存
         redisUtil.delFuz(CacheNameHelper.EP_PRODUCT_PREFIX);
@@ -75,7 +80,7 @@ public class ProductController {
     @ApiOperation(value="根据产品id修改跟新产品信息",notes = "已测试")
     @ApiImplicitParam(name="product", value = "产品实体类", required = true, dataType = "Product")
     @PutMapping("")
-    public ResultVO update(@RequestBody Product product){
+    public ResultVO update(@RequestBody @Validated({Update.class}) Product product){
         if(product != null && product.getId() != null){
             productService.update(product);
             // 清空相关缓存
@@ -94,7 +99,7 @@ public class ProductController {
     @ApiOperation(value="根据种类id逻辑删除产品信息",notes = "已测试")
     @ApiImplicitParam(name="cid", value = "种类id", required = true, dataType = "Integer", paramType = "path")
     @DeleteMapping("/list/{cid}")
-    public ResultVO deleteListByCid(@PathVariable Integer cid){
+    public ResultVO deleteListByCid(@PathVariable @NotNull @Min(value = 0) Integer cid){
         Product product = new Product();
         product.setDeleted(true);
         productService.updateListByProductAndForeignKey(cid, product, ProductService.ForeignKey_CATEGORY);
@@ -112,7 +117,7 @@ public class ProductController {
     @ApiOperation(value = "根据产品id获取产品详情", notes = "已测试")
     @ApiImplicitParam(name = "id", value = "产品id", required = true, dataType = "Integer", paramType = "path")
     @GetMapping("/{id}")
-    public ResultVO getById(@PathVariable Integer id) {
+    public ResultVO getById(@PathVariable @NotNull @Min(value = 0) Integer id) {
         // 获取reids的key
         String key = String.format(CacheNameHelper.EP_PRODUCT_PREFIX_GETBYID, id);
         // 统一返回值
@@ -142,7 +147,7 @@ public class ProductController {
     @ApiOperation(value = "根据页码分页查询所有商品", notes = "已测试")
     @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "Integer", paramType = "path")
     @GetMapping(value = "/list/{pageNum}")
-    public ResultVO getListByPageNum(@PathVariable Integer pageNum){
+    public ResultVO getListByPageNum(@PathVariable @NotNull @Min(value = 0) Integer pageNum){
         // 获取reids的key
         String key = String.format(CacheNameHelper.EP_PRODUCT_PREFIX_GETLISTBYPAGENUM, pageNum);
         // 统一返回值
@@ -178,7 +183,8 @@ public class ProductController {
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "Integer", paramType = "path")
     })
     @GetMapping(value = "/list/{cid}/{pageNum}")
-    public ResultVO getListByCidAndPageNum(@PathVariable Integer cid, @PathVariable Integer pageNum) {
+    public ResultVO getListByCidAndPageNum(@PathVariable @NotNull @Min(value = 0) Integer cid,
+                                           @PathVariable @NotNull @Min(value = 0) Integer pageNum) {
         // 获取reids的key
         String key = String.format(CacheNameHelper.EP_PRODUCT_PREFIX_GETLISTBYCIDANDPAGENUM, cid, pageNum);
         // 统一返回值

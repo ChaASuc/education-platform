@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
      */
     /**
      * 异常 对应 注解
-     * MethodArgumentNotValidException  方法参数 @RequestBody @Valid
+     * MethodArgumentNotValidException  方法参数 @RequestBody @Valid\@Validated
      * BindException  方法参数 @Validated
      * ConstraintViolationException controller层类上面添加@Validated  方法参数@NotNull类型注解
      * 这两个注解都是实现JSR-303规范，不同的是@Validated是spring的注解支持groups以及可以用在spring mvc处理器的方法级别入参验证 ，@Valid是Javax提供的注解，可以支持多个bean嵌套验证。
