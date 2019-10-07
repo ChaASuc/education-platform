@@ -3,6 +3,7 @@ package cn.ep.service.impl;
 import cn.ep.bean.EpDir;
 import cn.ep.bean.EpFile;
 import cn.ep.bean.EpFileExample;
+import cn.ep.config.PageConfig;
 import cn.ep.config.UploadProperties;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
@@ -10,6 +11,8 @@ import cn.ep.mapper.EpFileMapper;
 import cn.ep.service.EpDirService;
 import cn.ep.service.UploadService;
 import cn.ep.utils.IdWorker;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.github.tobato.fastdfs.domain.StorePath;
 import com.github.tobato.fastdfs.proto.storage.DownloadByteArray;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
@@ -18,10 +21,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -42,6 +48,9 @@ public class UploadServiceImpl implements UploadService {
 
     @Autowired
     private IdWorker idWorker;
+
+    @Autowired
+    private PageConfig pageConfig;
 
     @Override
     public EpFile uploadFile(MultipartFile file, Long dirId) {
@@ -128,5 +137,29 @@ public class UploadServiceImpl implements UploadService {
                 new DownloadByteArray()
         );
         return bytes;
+    }
+
+    @Override
+    public PageInfo<String> selectByDirIdAndPageNum(Long dirId, Integer pageNum) {
+        PageHelper.startPage(pageNum, pageConfig.getPageSize());    // 开启分页查询，第一次切仅第一次查询时生效
+        // 创建查询条件
+        EpFileExample epFileExample = new EpFileExample();
+        epFileExample.createCriteria()
+                .andDirIdEqualTo(dirId);
+        // 根据条件查询
+        List<EpFile> epFiles = epFileMapper.selectByExample(epFileExample);
+
+        List<String> fileUrls = new ArrayList<>();
+        //  无商品
+        if(!CollectionUtils.isEmpty(epFiles)) {
+            fileUrls = epFiles.stream().map(
+                    epFile -> {
+                        return epFile.getFileIp() + epFile.getFileUrl();
+                    }
+            ).collect(Collectors.toList());
+            return new PageInfo<>(fileUrls);
+        } else {
+            return new PageInfo<>(fileUrls);
+        }
     }
 }

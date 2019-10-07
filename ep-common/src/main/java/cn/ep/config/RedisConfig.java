@@ -36,6 +36,7 @@ public class RedisConfig {
 
         // 不加报序列化异常
         ParserConfig.getGlobalInstance().addAccept("cn.ep");
+        ParserConfig.getGlobalInstance().addAccept("com.github.pagehelper.PageInfo");
 
         return redisTemplate;
     }

@@ -1,6 +1,7 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpFile;
+import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -44,4 +45,12 @@ public interface UploadService {
      * @param fileUrl
      */
     byte[] downloadFile(String fileUrl);
+
+    /**
+     * 获取该文件夹下所有图片
+     * @param dirId
+     * @param pageNum
+     * @return
+     */
+    PageInfo<String> selectByDirIdAndPageNum(Long dirId, Integer pageNum);
 }

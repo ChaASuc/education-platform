@@ -5,6 +5,7 @@ import cn.ep.bean.Product;
 import cn.ep.bean.ProductDto;
 import cn.ep.bean.ProductExample;
 import cn.ep.client.CategoryClient;
+import cn.ep.config.PageConfig;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.ProductMapper;
@@ -12,7 +13,6 @@ import cn.ep.utils.JsonUtil;
 import cn.ep.utils.ResultVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import cn.ep.config.ExampleConfig;
 import cn.ep.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Autowired
-    private ExampleConfig globalConfig;
+    private PageConfig pageConfig;
 
     /**
      * 新增产品
@@ -113,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     public PageInfo<ProductDto> selectPage(int pageNum){
-        PageHelper.startPage(pageNum, globalConfig.getPageSize());    // 开启分页查询，第一次切仅第一次查询时生效
+        PageHelper.startPage(pageNum, pageConfig.getPageSize());    // 开启分页查询，第一次切仅第一次查询时生效
         ProductExample productExample = new ProductExample();
         productExample.createCriteria().andDeletedEqualTo(false);
         List<Product> products = productMapper.selectByExample(productExample);   //  无条件查找商品
@@ -140,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     public PageInfo<ProductDto> selectPageByCategory(int pageNum, int categoryId){
-        PageHelper.startPage(pageNum, globalConfig.getPageSize());    // 开启分页查询，第一次切仅第一次查询时生效
+        PageHelper.startPage(pageNum, pageConfig.getPageSize());    // 开启分页查询，第一次切仅第一次查询时生效
         // 创建查询条件
         ProductExample example = new ProductExample();
         ProductExample.Criteria criteria = example.createCriteria();
