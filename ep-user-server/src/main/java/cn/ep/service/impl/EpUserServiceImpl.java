@@ -50,9 +50,13 @@ public class EpUserServiceImpl implements EpUserService {
     @Override
     @Transactional
     public void update(EpUser epUser) {
-        boolean success = epUserMapper.updateByPrimaryKey(epUser) > 0 ? true : false;
+        boolean success = epUserMapper.updateByPrimaryKeySelective(epUser) > 0 ? true : false;
         if (!success) {
             throw new GlobalException(GlobalEnum.OPERATION_ERROR, "更新用户失败");
+        }
+        ResultVO resultVO = productClient.updateListByCid(1);
+        if (resultVO.equals(GlobalEnum.SUCCESS.getCode())) {
+            System.out.println("xxx");
         }
     }
 

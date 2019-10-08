@@ -51,7 +51,6 @@
     </dependencies>
 
     <build>
-        <finalName>ep-hystrix-dashboard</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

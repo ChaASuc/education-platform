@@ -1,5 +1,5 @@
 server:
-  port: 10600 # 1006XX 用户模块的端口
+  port: 80 # 1006XX 用户模块的端口
 spring:
   application:
     name: ep-user
@@ -37,7 +37,7 @@ spring:
     database: 1
     password: rjgc2016
   zipkin:
-    base-url: http://127.0.0.1:9411  # zipkin的链接
+    base-url: http://coding.deschen.cn:9411  # zipkin的链接
     sender:
       type: web
   sleuth:
@@ -53,7 +53,7 @@ eureka:
       # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
-      #    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+    ip-address: v6rce9.natappfree.cc # 指定自己的ip信息，不指定的话会自己寻找
     instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
 ep:
   pageSize: 12
@@ -93,6 +93,10 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 12000 # 设置hystrix的超时时间为6000ms，默认1000ms
+      circuitBreaker:
+        requestVolumeThreshold: 10 #  触发熔断的最小请求次数，默认20
+        errorThresholdPercentage: 50  # 触发熔断的失败请求最小占比，默认50%
+        sleepWindowInMilliseconds: 1000  # 休眠时长，默认是5000毫秒
 ribbon:
   ConnectTimeout: 1000 # 连接超时时间(ms)
   ReadTimeout: 2000 # 通信超时时间(ms)

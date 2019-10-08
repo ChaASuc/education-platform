@@ -42,7 +42,7 @@
         <druid.starter.version>1.1.9</druid.starter.version>
         <mysql.version>8.0.16</mysql.version>
         <pageHelper.starter.version>1.2.5</pageHelper.starter.version>
-        <fastDFS.client.version>1.26.1-REL  EASE</fastDFS.client.version>
+        <fastDFS.client.version>1.26.1-RELEASE</fastDFS.client.version>
         <swagger2.version>2.6.1</swagger2.version>
     </properties>
 

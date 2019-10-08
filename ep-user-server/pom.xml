@@ -31,11 +31,6 @@
             <artifactId>ep-product-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>cn.education-platform.product</groupId>
-            <artifactId>ep-product-common</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>

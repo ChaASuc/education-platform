@@ -69,7 +69,7 @@ public class EpUserController {
      * @return
      */
     @ApiOperation(value="根据主键修改和逻辑删除用户",notes = "未测试")
-    @ApiImplicitParam(name="epDir", value = "文件夹实体类", dataType = "EpDir")
+    @ApiImplicitParam(name="user", value = "用户实体类", dataType = "EpUser")
     @PutMapping("")
     public ResultVO update(@RequestBody @Validated({Update.class}) EpUser user){
         epUserService.update(user);
