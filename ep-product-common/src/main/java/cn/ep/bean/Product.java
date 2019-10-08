@@ -8,10 +8,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class Product implements Serializable {
+public class Product {
 
     @NotNull(groups = {Update.class})
-    @JsonSerialize(using = Long2StringSerializer.class)
+//    @JsonSerialize(using = Long2StringSerializer.class)
     private Integer id;
 
     @NotNull(groups = {Insert.class})

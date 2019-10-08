@@ -1,14 +1,15 @@
 spring:
   application:
-    name: ep-category # 应用名称，会在Eureka中显示
+    name: ep-uploadFile # 应用名称，会在Eureka中显示
   cloud:
     config:
       # 服务环境名称  例如 {name}-{profile} = ep-category-dev.yml
-      name: ep-category
+      name: ep-uploadFile
       profile: dev
       discovery:
         enabled: true
         service-id: ep-config
+      label: development
     # 解决github /monitor自动刷新失败
     bus:
       id: ${spring.application.name}:${spring.cloud.config.profile}:${random.value}

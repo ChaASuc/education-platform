@@ -21,6 +21,9 @@
         <module>ep-product-common</module>
         <module>ep-product-server</module>
         <module>ep-uploadFile</module>
+        <module>ep-user-common</module>
+        <module>ep-user-api</module>
+        <module>ep-user-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -35,7 +38,7 @@
         <java.version>1.8</java.version>
         <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
         <mybatis.starter.version>2.0.0</mybatis.starter.version>
-        <mapper.starter.version>2.0.2</mapper.starter.version>
+        <cn.ep.mapper.starter.version>2.0.2</cn.ep.mapper.starter.version>
         <druid.starter.version>1.1.9</druid.starter.version>
         <mysql.version>8.0.16</mysql.version>
         <pageHelper.starter.version>1.2.5</pageHelper.starter.version>

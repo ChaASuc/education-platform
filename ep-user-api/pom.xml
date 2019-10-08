@@ -9,9 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.education-platform.category</groupId>
-    <artifactId>ep-category-api</artifactId>
-
+    <groupId>cn.education-platform.user</groupId>
+    <artifactId>ep-user-api</artifactId>
 
     <dependencies>
         <dependency>
@@ -23,9 +22,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>cn.education-platform.category</groupId>
-            <artifactId>ep-category-common</artifactId>
+            <groupId>cn.education-platform.user</groupId>
+            <artifactId>ep-user-common</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
+
     </dependencies>
+
 </project>

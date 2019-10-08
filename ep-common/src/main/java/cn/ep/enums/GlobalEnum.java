@@ -28,6 +28,7 @@ public enum GlobalEnum implements IEnum{
 
     UPLOAD_FILE_EXCEPTION(10004, "文件上传异常"),
 
+    INVALID_PARAM(10005, "参数错误"),
 
     ;
 
