@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -41,7 +42,6 @@ public class EpUserController {
         // ep_category_prefix_getByUserNicknameAnduserPwd_{用户名}_{密码}
         public static final String EP_USER_PREFIX_GETBYUSERNICKNAMEANDUSERPWD =
                 "ep_user_prefix_getByUserNicknameAnduserPwd_%s_%s";
-
 
         //ep_user_prefix_* 用于全部删除，避免缓存
         public static final String EP_USER_PREFIX = "ep_user_prefix_*";
