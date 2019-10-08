@@ -12,7 +12,7 @@ spring:
           username:
           password:
           basedir: ../config-base
-          search-paths: ep-config-base/ep-hystrix-dashboard-config, ep-config-base/ep-gateway-config, ep-config-base/ep-product-config, ep-config-base/ep-category-config
+          search-paths: ep-config-base/ep-hystrix-dashboard-config, ep-config-base/ep-gateway-config, ep-config-base/ep-product-config, ep-config-base/ep-category-config, ep-config-base/ep-uploadFile-config
   rabbitmq:
     host: management.deschen.cn
     port: 5672
