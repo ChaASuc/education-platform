@@ -37,9 +37,9 @@ import java.util.List;
 @RestController
 @Validated  // 校验参数，失败被ConstraintViolationException拦截
 @Slf4j
-@RequestMapping("/file")
+@RequestMapping("/ep/file")
 @Api(description = "文件模块")
-public class FileController {
+public class EpFileController {
 
     @Autowired
     private EpDirService epDirService;
