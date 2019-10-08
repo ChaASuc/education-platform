@@ -31,7 +31,7 @@ hystrix:
 
 spring:
   zipkin:
-    base-url: http://management.deschen.cn:9411  # zipkin的链接
+    base-url: http://coding.deschen.cn:9411  # zipkin的链接
     sender:
       type: web
   sleuth:
