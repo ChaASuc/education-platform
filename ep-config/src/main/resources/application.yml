@@ -9,10 +9,10 @@ spring:
       server:
         git:
           uri: https://github.com/ChaASuc/education-platform
-          username: 2042340074@qq.com
-          password: nlfdzccq9;,.
+          username:
+          password:
           basedir: ../config-base
-          search-paths: ep-config-base/ep-hystrix-dashboard-config, ep-config-base/ep-gateway-config, ep-config-base/ep-product-config, ep-config-base/ep-category-config, ep-config-base/ep-uploadFile-config
+          search-paths: ep-config-base/ep-hystrix-dashboard-config, ep-config-base/ep-gateway-config, ep-config-base/ep-product-config, ep-config-base/ep-category-config, ep-config-base/ep-uploadFile-config, ep-config-base/ep-user-config
   rabbitmq:
     host: management.deschen.cn
     port: 5672
