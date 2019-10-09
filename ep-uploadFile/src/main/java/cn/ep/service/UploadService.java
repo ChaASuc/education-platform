@@ -52,5 +52,5 @@ public interface UploadService {
      * @param pageNum
      * @return
      */
-    PageInfo<String> selectByDirIdAndPageNum(Long dirId, Integer pageNum);
+    PageInfo<EpFile> selectByDirIdAndPageNum(Long dirId, Integer pageNum);
 }

@@ -140,7 +140,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public PageInfo<String> selectByDirIdAndPageNum(Long dirId, Integer pageNum) {
+    public PageInfo<EpFile> selectByDirIdAndPageNum(Long dirId, Integer pageNum) {
         PageHelper.startPage(pageNum, pageConfig.getPageSize());    // 开启分页查询，第一次切仅第一次查询时生效
         // 创建查询条件
         EpFileExample epFileExample = new EpFileExample();
@@ -149,17 +149,17 @@ public class UploadServiceImpl implements UploadService {
         // 根据条件查询
         List<EpFile> epFiles = epFileMapper.selectByExample(epFileExample);
 
-        List<String> fileUrls = new ArrayList<>();
-        //  无商品
-        if(!CollectionUtils.isEmpty(epFiles)) {
-            fileUrls = epFiles.stream().map(
-                    epFile -> {
-                        return epFile.getFileIp() + epFile.getFileUrl();
-                    }
-            ).collect(Collectors.toList());
-            return new PageInfo<>(fileUrls);
-        } else {
-            return new PageInfo<>(fileUrls);
-        }
+//        List<String> fileUrls = new ArrayList<>();
+//        //  无商品
+//        if(!CollectionUtils.isEmpty(epFiles)) {
+//            fileUrls = epFiles.stream().map(
+//                    epFile -> {
+//                        return epFile.getFileIp() + epFile.getFileUrl();
+//                    }
+//            ).collect(Collectors.toList());
+//            return new PageInfo<>(fileUrls);
+//        } else {
+        return new PageInfo<>(epFiles);
+//        }
     }
 }
