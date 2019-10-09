@@ -10,6 +10,7 @@ spring:
       discovery:
         enabled: true
         service-id: ep-config
+      label: development
     # 解决github /monitor自动刷新失败
     bus:
       id: ${spring.application.name}:${spring.cloud.config.profile}:${random.value}
