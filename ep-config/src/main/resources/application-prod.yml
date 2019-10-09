@@ -13,4 +13,4 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
-    ip-address: www.deschen.cn
+#    ip-address: www.deschen.cn
