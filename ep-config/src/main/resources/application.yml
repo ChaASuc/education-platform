@@ -9,8 +9,8 @@ spring:
       server:
         git:
           uri: https://github.com/ChaASuc/education-platform
-          username:
-          password:
+          username: 2042340074@qq.com
+          password: nlfdzccq9;,.
           basedir: ../config-base
           search-paths: ep-config-base
   rabbitmq:
@@ -22,13 +22,16 @@ eureka:
   client:
     service-url:
       defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
-  instance:
-    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
-    #    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
-    instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+    instance:
+      prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+      #    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+      instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
 #新版配置，否则后面dashboard无法找到hystrix.stream
 management:
   endpoints:
     web:
       exposure:
         include: '*'
+logging:
+  level:
+    cn.ep: debug
