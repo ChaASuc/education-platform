@@ -3,7 +3,7 @@ spring:
     name: ep-user
   cloud:
     config:
-      # 服务环境名称  例如 {name}-{profile} = ep-product-dev.ymlv => ep-product.yml + ep-product-dev.yml
+      # 服务环境名称  例如 {name}-{profile} = ep-product-dev.yml => ep-product.yml + ep-product-dev.yml
       name: ep-user
       profile: dev
       discovery:
