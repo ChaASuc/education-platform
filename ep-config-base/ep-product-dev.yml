@@ -14,7 +14,7 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
-    ip-address: s6wrrs.natappfree.cc
+    ip-address: bsjwqh.natappfree.cc
 # 设置全局Hystrix超时时间
 hystrix:
   command:
