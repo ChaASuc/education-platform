@@ -30,6 +30,10 @@ public enum GlobalEnum implements IEnum{
 
     INVALID_PARAM(10005, "参数错误"),
 
+    //NO_PERMISSION(403, "无操作权限"),
+
+    //UNAUTHORIZED(401, "未登录"),
+
     ;
 
 
