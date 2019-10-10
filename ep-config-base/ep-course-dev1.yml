@@ -15,9 +15,9 @@ eureka:
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
     # swagger2页面
-    status-page-url.: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
+  #  status-page-url.: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
     # 上传服务器后显示域名
-    ip-address: u4ci46.natappfree.cc
+  #  ip-address: u4ci46.natappfree.cc
 # 设置全局Hystrix超时时间
 hystrix:
   command:

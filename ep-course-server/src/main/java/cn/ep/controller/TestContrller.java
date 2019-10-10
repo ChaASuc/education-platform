@@ -12,6 +12,6 @@ public class TestContrller {
     @ApiOperation(value="测试", notes="未测试")
     @GetMapping(value = "/test")
     String test(){
-        return "epsilon";
+        return "2";
     }
 }
