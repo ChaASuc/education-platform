@@ -17,6 +17,8 @@ public class EpWatchRecord {
 
     private Date createTime;
 
+    private Long courseId;
+
     public Long getId() {
         return id;
     }
@@ -71,5 +73,13 @@ public class EpWatchRecord {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
     }
 }

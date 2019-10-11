@@ -1,5 +1,6 @@
 package cn.ep.service;
 
+import cn.ep.bean.EpChapter;
 import cn.ep.bean.EpCheck;
 
 import java.util.List;
@@ -40,7 +41,22 @@ public interface ICheckService {
      */
     List<EpCheck> getListByWhoAndBelongAndBelongId(long userId, int belong, long belongId);
 
+    /**
+     * 根据epCheck非空条件查询记录
+     * @param epCheck
+     * @return List<EpCheck>
+     */
+    List<EpCheck> getListByEpCheck(EpCheck epCheck);
 
+    /**
+     * 根据审核人id查询类别(未审核|已审核(未|已通过))所属记录
+     * @param userId  审核人id
+     * @param belong    0为审核视频内容，1为审核课程内容
+     * @param status  0 未审核 1未通过 2 通过
+     * @param belongId  belong为0时，belongId为视频（章节）id，belong为1时，belongId为课程id，
+     * @return List<EpCheck>
+     */
+    List<EpCheck> getListByWhoAndBelongAndBelongIdAndStatus(long userId, int belong, long belongId,int status);
     /**
      *  审核记录
      * @param useId  审核人id
