@@ -1,8 +1,10 @@
 package cn.ep.bean;
 
-import java.math.BigDecimal;
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class EpCourse {
     private Long id;
 
@@ -26,7 +28,7 @@ public class EpCourse {
 
     private Long userId;
 
-    private BigDecimal price;
+    private Double price;
 
     private Integer watchCount;
 
@@ -118,11 +120,11 @@ public class EpCourse {
         this.userId = userId;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

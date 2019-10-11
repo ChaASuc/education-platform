@@ -1,7 +1,10 @@
 package cn.ep.bean;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class EpCheck {
     private Long id;
 
