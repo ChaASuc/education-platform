@@ -34,7 +34,7 @@ public class Swagger2Config {
                 .title("course文档")
                 .description("course接口说明文档")
                 .termsOfServiceUrl("")
-                .contact(new Contact("陈汉槟","2042340074@qq.com","2042340074@qq.com"))
+                .contact(new Contact("陈少鑫","2042340074@qq.com","2042340074@qq.com"))
                 .version("1.0")
                 .build();
     }
