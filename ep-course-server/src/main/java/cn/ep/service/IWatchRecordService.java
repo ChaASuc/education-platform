@@ -15,11 +15,16 @@ public interface IWatchRecordService {
      * user_id
      * chapter_id
      * create_time
+     * course_id
      * 单位毫秒，最长1000小时
      * 更新时间
      * 状态
      * 用户id
      * 章节id
      * 创建时间
+     * 课程id
      */
+    //增加一条观看记录
+    //通过用户id课程id查询该用户该课程的观看记录
+    //
 }
