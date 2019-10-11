@@ -13,7 +13,7 @@
     <result column="open_time" property="openTime" jdbcType="TIMESTAMP" />
     <result column="kind_id" property="kindId" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
-    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="watch_count" property="watchCount" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -78,6 +78,12 @@
     id, course_name, update_time, create_time, status, free, goal, overview, open_time, 
     kind_id, user_id, price, watch_count
   </sql>
+  <select id="selectByKey" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
+    select *
+    from ep_course
+    where match (course_name,goal,overview)
+          AGAINST (#{keyString} IN NATURAL LANGUAGE MODE) and `status`=#{status}
+  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
     select
     <if test="distinct" >
@@ -111,13 +117,13 @@
   <insert id="insert" parameterType="cn.ep.bean.EpCourse" >
     insert into ep_course (id, course_name, update_time, 
       create_time, status, free, 
-      goal, overview, open_time, 
+      goal, overview, open_time,
       kind_id, user_id, price, 
       watch_count)
     values (#{id,jdbcType=BIGINT}, #{courseName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{free,jdbcType=INTEGER}, 
       #{goal,jdbcType=VARCHAR}, #{overview,jdbcType=VARCHAR}, #{openTime,jdbcType=TIMESTAMP}, 
-      #{kindId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{price,jdbcType=DECIMAL}, 
+      #{kindId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{price,jdbcType=DOUBLE}, 
       #{watchCount,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.ep.bean.EpCourse" >
@@ -198,7 +204,7 @@
         #{userId,jdbcType=BIGINT},
       </if>
       <if test="price != null" >
-        #{price,jdbcType=DECIMAL},
+        #{price,jdbcType=DOUBLE},
       </if>
       <if test="watchCount != null" >
         #{watchCount,jdbcType=INTEGER},
@@ -248,7 +254,7 @@
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.price != null" >
-        price = #{record.price,jdbcType=DECIMAL},
+        price = #{record.price,jdbcType=DOUBLE},
       </if>
       <if test="record.watchCount != null" >
         watch_count = #{record.watchCount,jdbcType=INTEGER},
@@ -271,7 +277,7 @@
       open_time = #{record.openTime,jdbcType=TIMESTAMP},
       kind_id = #{record.kindId,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      price = #{record.price,jdbcType=DECIMAL},
+      price = #{record.price,jdbcType=DOUBLE},
       watch_count = #{record.watchCount,jdbcType=INTEGER}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -311,7 +317,7 @@
         user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="price != null" >
-        price = #{price,jdbcType=DECIMAL},
+        price = #{price,jdbcType=DOUBLE},
       </if>
       <if test="watchCount != null" >
         watch_count = #{watchCount,jdbcType=INTEGER},
@@ -331,7 +337,7 @@
       open_time = #{openTime,jdbcType=TIMESTAMP},
       kind_id = #{kindId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=BIGINT},
-      price = #{price,jdbcType=DECIMAL},
+      price = #{price,jdbcType=DOUBLE},
       watch_count = #{watchCount,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>

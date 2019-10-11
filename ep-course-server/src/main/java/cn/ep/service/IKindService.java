@@ -46,7 +46,7 @@ public interface IKindService {
      * @param root 父节点
      * @return List<EpCourseKind>
      */
-    List<EpCourseKind> getListByRootAndStatus(int status, int root);
+    List<EpCourseKind> getListByRootAndStatus(int status, long root);
 
     /**
      * 增加一个种类
@@ -56,9 +56,9 @@ public interface IKindService {
     boolean insert(EpCourseKind epCourseKind);
 
     /**
-     *  更新一个种类，逻辑删除也属于更新
+     *  根据id 更新一个种类，逻辑删除也属于更新
      * @param epCourseKind 课程种类实体类实例
      * @return 更新成功为true，否则为false
      */
-    boolean update(EpCourseKind epCourseKind);
+    boolean updateById(EpCourseKind epCourseKind);
 }

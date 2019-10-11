@@ -54,7 +54,7 @@ public interface ICourseService {
 
     /**
      * 查找含有关键字且status的课程列表，全文搜索
-     * @param key  关键字
+     * @param key  关键字 使用mysql的全文搜索
      * @param status  状态 status 0为无效，1为已通过，2为未通过
      * @return
      */
@@ -73,6 +73,6 @@ public interface ICourseService {
      * @param epCourse 课程实体类
      * @return
      */
-    boolean update(EpCourse epCourse);
+    boolean updateById(EpCourse epCourse);
 
 }

@@ -1,9 +1,13 @@
 package cn.ep.service.impl;
 
+import cn.ep.annotation.CanLook;
 import cn.ep.bean.EpCourseKind;
 import cn.ep.bean.EpCourseKindExample;
+import cn.ep.enums.GlobalEnum;
+import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpCourseKindMapper;
 import cn.ep.service.IKindService;
+import cn.ep.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +27,8 @@ public class IKindServiceImpl implements IKindService {
 
     @Autowired
     private EpCourseKindMapper kindMapper;
+    @Autowired
+    private IdWorker idWorker;
 
     @Override
     public Map<EpCourseKind, List<EpCourseKind>> getListByStatus(int status) {
@@ -49,18 +55,26 @@ public class IKindServiceImpl implements IKindService {
     }
 
     @Override
-    public List<EpCourseKind> getListByRootAndStatus(int status, int root) {
-        return null;
+    //@CanLook
+    public List<EpCourseKind> getListByRootAndStatus(int status, long root) {
+        EpCourseKindExample kindExample = new EpCourseKindExample();
+        EpCourseKindExample.Criteria criteria = kindExample.createCriteria();
+        criteria.andStatusEqualTo(status).andRootEqualTo(root);
+        List<EpCourseKind> kindList = kindMapper.selectByExample(kindExample);
+        return kindList;
     }
 
     @Override
     public boolean insert(EpCourseKind epCourseKind) {
-        return false;
+        epCourseKind.setId(idWorker.nextId());
+        System.out.println(epCourseKind);
+        return kindMapper.insertSelective(epCourseKind) > 0;
     }
 
     @Override
-    public boolean update(EpCourseKind epCourseKind) {
-        return false;
+    public boolean updateById(EpCourseKind epCourseKind) {
+        System.out.println(epCourseKind);
+        return kindMapper.updateByPrimaryKeySelective(epCourseKind) > 0;
     }
 
 }

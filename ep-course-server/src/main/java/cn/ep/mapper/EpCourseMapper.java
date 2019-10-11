@@ -27,4 +27,6 @@ public interface EpCourseMapper {
     int updateByPrimaryKeySelective(EpCourse record);
 
     int updateByPrimaryKey(EpCourse record);
+
+    List<EpCourse> selectByKey(@Param("keyString") String keyString, @Param("status") int status);
 }
