@@ -72,7 +72,7 @@ public class OperationHelper {
     //@Order(4)
     void lookAdvice(JoinPoint joinPoint){
 
-        boolean canLook = true;
+        boolean canLook = false;
         if (!canLook){
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"你没有查看的权限");
         }
