@@ -6,9 +6,10 @@ import cn.ep.mapper.EpWatchRecordMapper;
 import cn.ep.service.IWatchRecordService;
 import cn.ep.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class IWatchRecordServiceImpl implements IWatchRecordService {
 
     @Autowired
