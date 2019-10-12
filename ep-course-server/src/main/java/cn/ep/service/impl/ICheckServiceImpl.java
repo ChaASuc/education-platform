@@ -9,9 +9,10 @@ import cn.ep.mapper.EpCheckMapper;
 import cn.ep.service.ICheckService;
 import cn.ep.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public class ICheckServiceImpl implements ICheckService {
 
     @Autowired
