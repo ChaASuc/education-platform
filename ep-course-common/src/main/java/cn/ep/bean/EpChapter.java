@@ -1,31 +1,51 @@
 package cn.ep.bean;
 
+import cn.ep.serializer.Date2LongSerializer;
+import cn.ep.serializer.Long2StringSerializer;
+import cn.ep.validate.groups.Insert;
+import cn.ep.validate.groups.Update;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
 public class EpChapter {
+
+    @NotNull(groups = {Update.class, Insert.class})
+    @JsonSerialize(using = Long2StringSerializer.class)
     private Long id;
 
+    @NotNull(groups = {Insert.class})
     private String chapterName;
 
+    @JsonSerialize(using = Long2StringSerializer.class)
+    @NotNull(groups = {Insert.class})
     private Long courseId;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
     private String duration;
 
+    @NotNull(groups = {Insert.class})
     private Integer status;
 
+    @JsonSerialize(using = Long2StringSerializer.class)
     private Long intro;
 
+    @NotNull(groups = {Insert.class})
     private String url;
 
+    @JsonSerialize(using = Long2StringSerializer.class)
+    @NotNull(groups = {Insert.class})
     private Long root;
 
+    @NotNull(groups = {Insert.class})
     private Integer free;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
     public Long getId() {

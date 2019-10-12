@@ -1,21 +1,36 @@
 package cn.ep.bean;
 
+import cn.ep.serializer.Date2LongSerializer;
+import cn.ep.serializer.Long2StringSerializer;
+import cn.ep.validate.groups.Insert;
+import cn.ep.validate.groups.Update;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
 public class EpCourseKind {
+
+    @JsonSerialize(using = Long2StringSerializer.class)
+    @NotNull(groups = {Insert.class, Update.class})
     private Long id;
 
+    @NotNull(groups = {Insert.class})
     private String kindName;
 
+    @NotNull(groups = {Insert.class})
     private Integer status;
 
+    @JsonSerialize(using =Long2StringSerializer.class)
+    @NotNull(groups = {Insert.class})
     private Long root;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
     public Long getId() {

@@ -1,21 +1,36 @@
 package cn.ep.bean;
 
+import cn.ep.serializer.Date2LongSerializer;
+import cn.ep.serializer.Long2StringSerializer;
+import cn.ep.validate.groups.Insert;
+import cn.ep.validate.groups.Update;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.models.auth.In;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
 public class EpCourse {
+
+    @JsonSerialize(using = Long2StringSerializer.class)
+    @NotNull(groups = {Insert.class, Update.class})
     private Long id;
 
+    @NotNull(groups = {Insert.class})
     private String courseName;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
+    @NotNull(groups = {Insert.class})
     private Integer status;
 
+    @NotNull(groups = {Insert.class})
     private Integer free;
 
     private String goal;
@@ -24,10 +39,13 @@ public class EpCourse {
 
     private Date openTime;
 
+    @NotNull(groups = {Insert.class})
     private Long kindId;
 
+    @NotNull(groups = {Insert.class})
     private Long userId;
 
+    @NotNull(groups = {Insert.class})
     private Double price;
 
     private Integer watchCount;
