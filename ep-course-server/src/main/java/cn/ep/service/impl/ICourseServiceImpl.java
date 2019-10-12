@@ -48,6 +48,8 @@ public class ICourseServiceImpl implements ICourseService {
             criteria.andUpdateTimeEqualTo(epCourse.getUpdateTime());
         if (epCourse.getWatchCount() != null)
             criteria.andWatchCountEqualTo(epCourse.getWatchCount());
+        if (epCourse.getPictureUrl() != null)
+            criteria.andPictureUrlEqualTo(epCourse.getPictureUrl());
         return courseMapper.selectByExample(courseExample);
     }
 

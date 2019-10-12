@@ -79,8 +79,7 @@ mybatis:
   mapper-locations: classpath:/mybatis/mapper/*.xml
   config-location: classpath:/mybatis/mybatis-config.xml
   type-aliases-package: cn.ep.bean
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 ## pageHelper插件配置
 pagehelper:
   helperDialect: mysql
