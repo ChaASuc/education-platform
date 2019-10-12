@@ -1,6 +1,5 @@
 package cn.ep.service;
 
-import cn.ep.bean.EpChapter;
 import cn.ep.bean.EpCheck;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public interface ICheckService {
     List<EpCheck> getListByWhoAndBelongAndBelongId(long userId, int belong, long belongId);
 
     /**
-     * 根据epCheck非空条件查询记录
+     * 根据epCheck非null条件查询记录
      * @param epCheck
      * @return List<EpCheck>
      */
@@ -57,14 +56,15 @@ public interface ICheckService {
      * @return List<EpCheck>
      */
     List<EpCheck> getListByWhoAndBelongAndBelongIdAndStatus(long userId, int belong, long belongId,int status);
+
+
     /**
      *  审核记录
-     * @param useId  审核人id
      * @param id 记录id
      * @param status 0 未审核 1未通过 2 通过
      * @return 成功为true，否则为false
      */
-    boolean check(long useId, long id, int status);
+    boolean check(long id, int status);
     /**
      * 增加一条记录
      * @param epCheck 记录实体
@@ -74,7 +74,7 @@ public interface ICheckService {
 
     /**
      *  更新一个章节，逻辑删除也属于更新
-     * @param  epCheck 记录实体
+     * @param  epCheck 记录实体 id 必须不为null
      * @return 更新成功为true，否则为false
      */
     boolean update(EpCheck epCheck);

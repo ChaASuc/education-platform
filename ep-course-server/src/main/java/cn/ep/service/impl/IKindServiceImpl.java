@@ -11,10 +11,7 @@ import cn.ep.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
 * @author
@@ -37,7 +34,7 @@ public class IKindServiceImpl implements IKindService {
         criteria.andStatusEqualTo(status);
         List<EpCourseKind> kindList = kindMapper.selectByExample(kindExample);
         Map<EpCourseKind, List<EpCourseKind>> map = new HashMap<>();
-        Map<Long, EpCourseKind> root = new HashMap<>();
+        Map<Long, EpCourseKind> root = new LinkedHashMap<>();
         for (EpCourseKind kind :
                 kindList) {
             if (kind.getRoot() == 0){
