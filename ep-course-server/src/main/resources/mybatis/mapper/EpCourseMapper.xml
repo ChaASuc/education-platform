@@ -76,15 +76,18 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, course_name, update_time, create_time, status, free, goal, overview, open_time, 
+    id, course_name, update_time, create_time, `status`, free, goal, overview, open_time,
     kind_id, user_id, price, watch_count, picture_url
   </sql>
   <select id="selectByKey" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
     select
+    <if test="distinct" >
+      distinct
+    </if>
     <include refid="Base_Column_List" />
     from ep_course
     where MATCH (course_name,goal,overview)
-    AGAINST ('#{keyString}') and `status`=#{status}
+    AGAINST (#{keyString}) and `status`=#{status}
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
     select

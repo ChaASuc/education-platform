@@ -48,7 +48,7 @@ public interface IChapterService {
      * @param status  0为无效，1为未审核，2为通过，3为未通过
      * @return Map<EpChapter,List<EpChapter>>
      */
-    Map<EpChapter,List<EpChapter>> getListByIdAndStatus(long id, int status );
+    Map<EpChapter,List<EpChapter>> getListByCourseIdAndStatus(long id, int status );
     /**
      * 增加一个章节
      * @param epChapter 课程章节实体类实例
@@ -61,6 +61,6 @@ public interface IChapterService {
      * @param  epChapter 课程章节实体类实例
      * @return 更新成功为true，否则为false
      */
-    boolean update(EpChapter epChapter);
+    boolean updateById(EpChapter epChapter);
 
 }
