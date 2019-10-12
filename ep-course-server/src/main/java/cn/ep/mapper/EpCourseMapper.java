@@ -2,8 +2,9 @@ package cn.ep.mapper;
 
 import cn.ep.bean.EpCourse;
 import cn.ep.bean.EpCourseExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface EpCourseMapper {
     int countByExample(EpCourseExample example);
@@ -28,5 +29,5 @@ public interface EpCourseMapper {
 
     int updateByPrimaryKey(EpCourse record);
 
-    List<EpCourse> selectByKey(@Param("keyString") String keyString, @Param("status") int status);
+    List<EpCourse> selectByKey(@Param("keyString") String keyString,@Param("status")int status);
 }

@@ -15,6 +15,7 @@
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="price" property="price" jdbcType="DOUBLE" />
     <result column="watch_count" property="watchCount" jdbcType="INTEGER" />
+    <result column="picture_url" property="pictureUrl" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -76,13 +77,14 @@
   </sql>
   <sql id="Base_Column_List" >
     id, course_name, update_time, create_time, status, free, goal, overview, open_time, 
-    kind_id, user_id, price, watch_count
+    kind_id, user_id, price, watch_count, picture_url
   </sql>
   <select id="selectByKey" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
-    select *
+    select
+    <include refid="Base_Column_List" />
     from ep_course
-    where match (course_name,goal,overview)
-          AGAINST (#{keyString} IN NATURAL LANGUAGE MODE) and `status`=#{status}
+    where MATCH (course_name,goal,overview)
+    AGAINST ('#{keyString}') and `status`=#{status}
   </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
     select
@@ -117,14 +119,14 @@
   <insert id="insert" parameterType="cn.ep.bean.EpCourse" >
     insert into ep_course (id, course_name, update_time, 
       create_time, status, free, 
-      goal, overview, open_time,
+      goal, overview, open_time, 
       kind_id, user_id, price, 
-      watch_count)
+      watch_count, picture_url)
     values (#{id,jdbcType=BIGINT}, #{courseName,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{free,jdbcType=INTEGER}, 
       #{goal,jdbcType=VARCHAR}, #{overview,jdbcType=VARCHAR}, #{openTime,jdbcType=TIMESTAMP}, 
       #{kindId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{price,jdbcType=DOUBLE}, 
-      #{watchCount,jdbcType=INTEGER})
+      #{watchCount,jdbcType=INTEGER}, #{pictureUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.ep.bean.EpCourse" >
     insert into ep_course
@@ -168,6 +170,9 @@
       <if test="watchCount != null" >
         watch_count,
       </if>
+      <if test="pictureUrl != null" >
+        picture_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -208,6 +213,9 @@
       </if>
       <if test="watchCount != null" >
         #{watchCount,jdbcType=INTEGER},
+      </if>
+      <if test="pictureUrl != null" >
+        #{pictureUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -259,6 +267,9 @@
       <if test="record.watchCount != null" >
         watch_count = #{record.watchCount,jdbcType=INTEGER},
       </if>
+      <if test="record.pictureUrl != null" >
+        picture_url = #{record.pictureUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -278,7 +289,8 @@
       kind_id = #{record.kindId,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       price = #{record.price,jdbcType=DOUBLE},
-      watch_count = #{record.watchCount,jdbcType=INTEGER}
+      watch_count = #{record.watchCount,jdbcType=INTEGER},
+      picture_url = #{record.pictureUrl,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -322,6 +334,9 @@
       <if test="watchCount != null" >
         watch_count = #{watchCount,jdbcType=INTEGER},
       </if>
+      <if test="pictureUrl != null" >
+        picture_url = #{pictureUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -338,7 +353,8 @@
       kind_id = #{kindId,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=BIGINT},
       price = #{price,jdbcType=DOUBLE},
-      watch_count = #{watchCount,jdbcType=INTEGER}
+      watch_count = #{watchCount,jdbcType=INTEGER},
+      picture_url = #{pictureUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

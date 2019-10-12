@@ -1,10 +1,7 @@
 package cn.ep.bean;
 
-import lombok.Data;
-
 import java.util.Date;
 
-@Data
 public class EpCourse {
     private Long id;
 
@@ -31,6 +28,8 @@ public class EpCourse {
     private Double price;
 
     private Integer watchCount;
+
+    private String pictureUrl;
 
     public Long getId() {
         return id;
@@ -134,5 +133,13 @@ public class EpCourse {
 
     public void setWatchCount(Integer watchCount) {
         this.watchCount = watchCount;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl == null ? null : pictureUrl.trim();
     }
 }
