@@ -81,9 +81,6 @@
   </sql>
   <select id="selectByKey" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
     select
-    <if test="distinct" >
-      distinct
-    </if>
     <include refid="Base_Column_List" />
     from ep_course
     where MATCH (course_name,goal,overview)
