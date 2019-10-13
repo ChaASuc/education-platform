@@ -37,6 +37,7 @@ public class EpCourse {
 
     private String overview;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date openTime;
 
     @NotNull(groups = {Insert.class})

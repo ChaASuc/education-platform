@@ -5,6 +5,7 @@ import cn.ep.service.ICourseService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -50,7 +51,9 @@ public class EpCourseContrller {
         return "epsilon";
     }
 
-    @ApiOperation(value = "网站搜索栏接口,只支持对课程名称、课程目标、课程介绍全文搜索", notes = "为测试")
+
+
+    @ApiOperation(value = "网站搜索栏接口,只支持对课程名称、课程目标、课程介绍全文搜索", notes = "未测试")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "key", value = "搜索关键字", dataType = "String", paramType = "path")
             , @ApiImplicitParam(name = "page", value = "页码", dataType = "int", paramType = "path")
@@ -62,10 +65,12 @@ public class EpCourseContrller {
         if (obj != null){
             return ResultVO.success(obj);
         }
-        PageHelper.startPage(page);
+        PageHelper.startPage(page,1);
         List<EpCourse> courses = courseService.getListByKey(key,1);
-        redisUtil.set(key,courses,1800, TimeUnit.SECONDS);
-        return ResultVO.success(courses);
+        PageInfo<EpCourse> info = new PageInfo<>(courses);
+        redisUtil.set(key,info,1800, TimeUnit.SECONDS);
+        return ResultVO.success(info);
     }
+
 }
 

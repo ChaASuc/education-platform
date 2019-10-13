@@ -65,6 +65,7 @@
     <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.2.9.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.47" level="project" />
     <orderEntry type="module" module-name="ep-course-common" />
+    <orderEntry type="module" module-name="ep-user-common" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-context:2.1.2.RELEASE" level="project" />
