@@ -1,16 +1,22 @@
 package cn.ep.controller;
 
+import cn.ep.bean.EpCourse;
 import cn.ep.service.ICourseService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
+import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @Api(description = "课程模块：对课程操作提供服务")
@@ -46,17 +52,20 @@ public class EpCourseContrller {
 
     @ApiOperation(value = "网站搜索栏接口,只支持对课程名称、课程目标、课程介绍全文搜索", notes = "为测试")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "key", value = "搜索关键字", paramType = "String")
-            , @ApiImplicitParam(name = "page", value = "页码", paramType = "int")
+            @ApiImplicitParam(name = "key", value = "搜索关键字", dataType = "String", paramType = "path")
+            , @ApiImplicitParam(name = "page", value = "页码", dataType = "int", paramType = "path")
     })
     @GetMapping(value = "/list/{key}/{page}")
-    ResultVO search(String key, int page){
+    ResultVO getListByKeyAndPage(@PathVariable String key, @PathVariable int page){
         String redisKey = String.format(CacheNameHelper.EP_COURSE_PREFIX_GETBYUSERNICKNAMEANDUSERPWD, key, page);
         Object obj = redisUtil.get(redisKey);
         if (obj != null){
             return ResultVO.success(obj);
         }
-        return ResultVO.success(redisKey);
+        PageHelper.startPage(page);
+        List<EpCourse> courses = courseService.getListByKey(key,1);
+        redisUtil.set(key,courses,1800, TimeUnit.SECONDS);
+        return ResultVO.success(courses);
     }
 }
 
