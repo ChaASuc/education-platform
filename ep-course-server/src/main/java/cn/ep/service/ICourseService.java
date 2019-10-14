@@ -47,9 +47,10 @@ public interface ICourseService {
      * 根据条件查询status有效的课程列表
      * @param epCourse 注意 epCourse中的status、free有固定值 status 0为无效，1为已通过，2为未通过，3为未审核
      *                  * free 0免费1收费
+     * @param orderBy 排序规则,null为默认排序，如 course_id ASC, course_name DESC
      * @return
      */
-    List<EpCourse> getListByEpCourse(EpCourse epCourse);
+    List<EpCourse> getListByEpCourse(EpCourse epCourse, String orderBy);
 
 
     /**
@@ -75,4 +76,12 @@ public interface ICourseService {
      */
     boolean updateById(EpCourse epCourse);
 
+    /**
+     * 获取前top条记录，按时间+订阅排序
+     * @param status 状态 status 0为无效，1为已通过，2为未通过
+     * @param free 是否免费
+     * @param top 前top记录
+     * @return
+     */
+    List<EpCourse> getListByTop(int status,int free,int top );
 }

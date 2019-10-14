@@ -30,4 +30,6 @@ public interface EpCourseMapper {
     int updateByPrimaryKey(EpCourse record);
 
     List<EpCourse> selectByKey(@Param("keyString") String keyString,@Param("status")int status);
+
+    List<EpCourse> selectByTop( @Param("status") int status,@Param("free") int free,@Param("top") int top);
 }
