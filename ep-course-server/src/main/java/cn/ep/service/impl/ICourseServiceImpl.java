@@ -8,6 +8,7 @@ import cn.ep.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Service
@@ -19,7 +20,7 @@ public class ICourseServiceImpl implements ICourseService {
     private IdWorker idWorker;
 
     @Override
-    public List<EpCourse> getListByEpCourse(EpCourse epCourse) {
+    public List<EpCourse> getListByEpCourse(EpCourse epCourse, String orderBy) {
         EpCourseExample courseExample = new EpCourseExample();
         EpCourseExample.Criteria criteria = courseExample.createCriteria();
         if (epCourse.getCourseName() != null)
@@ -50,6 +51,8 @@ public class ICourseServiceImpl implements ICourseService {
             criteria.andWatchCountEqualTo(epCourse.getWatchCount());
         if (epCourse.getPictureUrl() != null)
             criteria.andPictureUrlEqualTo(epCourse.getPictureUrl());
+        if (orderBy != null)
+            courseExample.setOrderByClause(orderBy);
         return courseMapper.selectByExample(courseExample);
     }
 
@@ -68,5 +71,10 @@ public class ICourseServiceImpl implements ICourseService {
     public boolean updateById(EpCourse epCourse) {
         System.out.println(epCourse);
         return courseMapper.updateByPrimaryKeySelective(epCourse) > 0;
+    }
+
+    @Override
+    public List<EpCourse> getListByTop(int top, int free, int status) {
+        return courseMapper.selectByTop(top,free,status);
     }
 }
