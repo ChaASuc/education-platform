@@ -3,6 +3,7 @@ package cn.ep.service.impl;
 import cn.ep.bean.EpCourseUser;
 import cn.ep.bean.EpCourseUserExample;
 import cn.ep.mapper.EpCourseUserMapper;
+import cn.ep.service.ICourseUserService;
 import cn.ep.utils.IdWorker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

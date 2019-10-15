@@ -36,6 +36,15 @@ public class ICourseServiceImplTest extends TestUtil {
     }
 
     @Test
+    public void getListByTop(){
+        System.out.println(courseService.getListByTop(1,0,20));
+    }
+
+    @Test
+    public void getListByKindIdAndFreeAndOrder(){
+        System.out.println(courseService.getListByKindIdAndFreeAndOrder(2,0,5));
+    }
+    @Test
     public  void  ft(){
         System.out.println(courseMapper.selectByKey("ing",1));
     }

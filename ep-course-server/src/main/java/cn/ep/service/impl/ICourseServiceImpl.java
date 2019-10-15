@@ -77,4 +77,21 @@ public class ICourseServiceImpl implements ICourseService {
     public List<EpCourse> getListByTop(int top, int free, int status) {
         return courseMapper.selectByTop(top,free,status);
     }
+
+    @Override
+    public List<EpCourse> getListByKindIdAndFreeAndOrder(long kindId, int free, int order) {
+        EpCourse course = new EpCourse();
+        course.setStatus(1);
+        course.setFree(free);
+        course.setKindId(kindId);
+        String orderString = null;
+        if (order == 1){
+            orderString = "create_time DESC";
+        } else if (order == 2){
+            orderString = "watch_count DESC";
+        } else {
+            orderString = "create_time DESC,watch_count DESC";
+        }
+        return getListByEpCourse(course,orderString);
+    }
 }

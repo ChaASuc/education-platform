@@ -29,11 +29,17 @@ public class IKindServiceImplTest extends TestUtil {
         kind.setStatus(1);
         System.out.println(iKindService.insert(kind));
     }
+
     @Test
     public void updateById(){
         EpCourseKind kind = new EpCourseKind();
         kind.setStatus(1);
         kind.setId(1182626333419769856L);
         System.out.println(iKindService.updateById(kind));
+    }
+
+    @Test
+    public void getSubKindList(){
+        System.out.println(iKindService.getSubKindList());
     }
 }

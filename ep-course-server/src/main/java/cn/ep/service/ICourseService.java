@@ -84,4 +84,6 @@ public interface ICourseService {
      * @return
      */
     List<EpCourse> getListByTop(int status,int free,int top );
+
+    List<EpCourse> getListByKindIdAndFreeAndOrder(long kindId, int free, int order);
 }
