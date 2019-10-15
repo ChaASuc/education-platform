@@ -2,6 +2,7 @@ package cn.ep.service.impl;
 
 import cn.ep.bean.EpCheck;
 import cn.ep.bean.EpCheckExample;
+import cn.ep.courseenum.CheckEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpChapterMapper;
@@ -66,7 +67,7 @@ public class ICheckServiceImpl implements ICheckService {
     @Override
     public boolean check(long id, int status) {
         EpCheck epCheck = getById(id);
-        if (epCheck.getStatus() != 0)
+        if (epCheck.getStatus() != CheckEnum.UNCHECKED_STATUS.getValue())
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"不得多次审核!");
         epCheck.setStatus(status);
         if (!update(epCheck))
@@ -77,7 +78,7 @@ public class ICheckServiceImpl implements ICheckService {
     @Override
     public boolean insert(EpCheck epCheck) {
         epCheck.setId(idWorker.nextId());
-        return checkMapper.insert(epCheck) > 0;
+        return checkMapper.insertSelective(epCheck) > 0;
     }
 
     @Override
