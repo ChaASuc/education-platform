@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sun.misc.REException;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -45,6 +46,9 @@ public class EpCourseController {
                 "ep_courseKind_prefix_kind_%s";
         public static final String EP_COURSE_KIND_PREFIX_GET_LIST_TOP =
                 "ep_courseKind_prefix_getListTop";
+        public static final String EP_COURSE_PREFIX_GET_COURSEINFO_LIST = "ep_courseKind_prefix_getCourseInfoList";
+        public static final String EP_COURSE_PREFIX_COURSE_ID = "ep_courseKind_prefix_courseId_%s";
+        public static final String EP_COURSE_PREFIX_COURSE_ID_AND_USER_ID = "ep_courseKind_prefix_courseId_and_userId_%s_%s";
     }
 
 
@@ -161,15 +165,27 @@ public class EpCourseController {
         return ResultVO.success(courseList);
     }
 
-    ResultVO getCourseInfoByCourseId(long courseId){
+    ResultVO getCourseInfoListByCourseId(long courseId){
         /*
-            判断是否登陆，
+            判断是否登陆，由汉槟提供
          */
-        String redisKey = null;
         boolean isLogin = false;
+        String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_COURSEINFO_LIST;
+        String redisItem = null;
         if (!isLogin){
-            ;
+            redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_COURSE_ID,courseId);
+            Object object = redisUtil.hget(redisKey,redisItem);
+            if (object != null)
+                return ResultVO.success(object);
         }
+        EpCourse course = courseService.getByCourseId(courseId);
+        CourseInfoVO courseInfoVO = new CourseInfoVO();
+        courseInfoVO.setCourse(course);
+        courseInfoVO.setLogin(false);
+        courseInfoVO.setPay(false);
+        courseInfoVO.setScope(0); //从何亮获取
+        courseInfoVO.setAuthor(null); //从汉槟获取
+        courseInfoVO.setChapters();
         return ResultVO.success();
     }
 
