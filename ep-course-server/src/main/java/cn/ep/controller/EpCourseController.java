@@ -178,7 +178,7 @@ public class EpCourseController {
             if (object != null)
                 return ResultVO.success(object);
         }
-        EpCourse course = courseService.getByCourseId(courseId);
+        /*EpCourse course = courseService.getByCourseId(courseId);
         CourseInfoVO courseInfoVO = new CourseInfoVO();
         courseInfoVO.setCourse(course);
         courseInfoVO.setLogin(false);
@@ -186,7 +186,7 @@ public class EpCourseController {
         courseInfoVO.setScope(0); //从何亮获取
         courseInfoVO.setAuthor(null); //从汉槟获取
         courseInfoVO.setChapters();
-        return ResultVO.success();
+        return ResultVO.success();*/
     }
 
 
