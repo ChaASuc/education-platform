@@ -2,8 +2,9 @@ package cn.ep.mapper;
 
 import cn.ep.bean.EpCourseKind;
 import cn.ep.bean.EpCourseKindExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface EpCourseKindMapper {
     int countByExample(EpCourseKindExample example);

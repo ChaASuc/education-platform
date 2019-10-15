@@ -295,6 +295,66 @@ public class EpCourseKindExample {
             return (Criteria) this;
         }
 
+        public Criteria andSearchCountIsNull() {
+            addCriterion("search_count is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountIsNotNull() {
+            addCriterion("search_count is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountEqualTo(Integer value) {
+            addCriterion("search_count =", value, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountNotEqualTo(Integer value) {
+            addCriterion("search_count <>", value, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountGreaterThan(Integer value) {
+            addCriterion("search_count >", value, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountGreaterThanOrEqualTo(Integer value) {
+            addCriterion("search_count >=", value, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountLessThan(Integer value) {
+            addCriterion("search_count <", value, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountLessThanOrEqualTo(Integer value) {
+            addCriterion("search_count <=", value, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountIn(List<Integer> values) {
+            addCriterion("search_count in", values, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountNotIn(List<Integer> values) {
+            addCriterion("search_count not in", values, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountBetween(Integer value1, Integer value2) {
+            addCriterion("search_count between", value1, value2, "searchCount");
+            return (Criteria) this;
+        }
+
+        public Criteria andSearchCountNotBetween(Integer value1, Integer value2) {
+            addCriterion("search_count not between", value1, value2, "searchCount");
+            return (Criteria) this;
+        }
+
         public Criteria andRootIsNull() {
             addCriterion("root is null");
             return (Criteria) this;

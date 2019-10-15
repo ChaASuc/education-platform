@@ -61,4 +61,17 @@ public interface IKindService {
      * @return 更新成功为true，否则为false
      */
     boolean updateById(EpCourseKind epCourseKind);
+
+    /**
+     * 获取所有子种类
+     * @return
+     */
+    List<EpCourseKind> getSubKindList();
+
+    /**
+     * 添加一个并提交一条审核
+     * @param epCourseKind
+     * @return 事务， 成功返回true，否则回滚
+     */
+    boolean insertAndSendCheck(EpCourseKind epCourseKind);
 }

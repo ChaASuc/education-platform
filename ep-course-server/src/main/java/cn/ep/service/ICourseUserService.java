@@ -1,4 +1,4 @@
-package cn.ep.service.impl;
+package cn.ep.service;
 
 import cn.ep.bean.EpCourseUser;
 import org.springframework.stereotype.Service;

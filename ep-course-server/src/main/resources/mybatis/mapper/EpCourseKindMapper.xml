@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="kind_name" property="kindName" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="search_count" property="searchCount" jdbcType="INTEGER" />
     <result column="root" property="root" jdbcType="BIGINT" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, kind_name, status, root, update_time, create_time
+    id, kind_name, status, search_count, root, update_time, create_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseKindExample" >
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="cn.ep.bean.EpCourseKind" >
     insert into ep_course_kind (id, kind_name, status, 
-      root, update_time, create_time
-      )
+      search_count, root, update_time, 
+      create_time)
     values (#{id,jdbcType=BIGINT}, #{kindName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{root,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
-      )
+      #{searchCount,jdbcType=INTEGER}, #{root,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.ep.bean.EpCourseKind" >
     insert into ep_course_kind
@@ -119,6 +120,9 @@
       </if>
       <if test="status != null" >
         status,
+      </if>
+      <if test="searchCount != null" >
+        search_count,
       </if>
       <if test="root != null" >
         root,
@@ -139,6 +143,9 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="searchCount != null" >
+        #{searchCount,jdbcType=INTEGER},
       </if>
       <if test="root != null" >
         #{root,jdbcType=BIGINT},
@@ -169,6 +176,9 @@
       <if test="record.status != null" >
         status = #{record.status,jdbcType=INTEGER},
       </if>
+      <if test="record.searchCount != null" >
+        search_count = #{record.searchCount,jdbcType=INTEGER},
+      </if>
       <if test="record.root != null" >
         root = #{record.root,jdbcType=BIGINT},
       </if>
@@ -188,6 +198,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       kind_name = #{record.kindName,jdbcType=VARCHAR},
       status = #{record.status,jdbcType=INTEGER},
+      search_count = #{record.searchCount,jdbcType=INTEGER},
       root = #{record.root,jdbcType=BIGINT},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
@@ -203,6 +214,9 @@
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="searchCount != null" >
+        search_count = #{searchCount,jdbcType=INTEGER},
       </if>
       <if test="root != null" >
         root = #{root,jdbcType=BIGINT},
@@ -220,6 +234,7 @@
     update ep_course_kind
     set kind_name = #{kindName,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
+      search_count = #{searchCount,jdbcType=INTEGER},
       root = #{root,jdbcType=BIGINT},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP}

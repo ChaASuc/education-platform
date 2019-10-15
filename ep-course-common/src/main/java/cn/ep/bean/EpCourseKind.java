@@ -33,6 +33,8 @@ public class EpCourseKind {
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
+    private Integer searchCount;
+
     public Long getId() {
         return id;
     }
@@ -79,5 +81,13 @@ public class EpCourseKind {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getSearchCount() {
+        return searchCount;
+    }
+
+    public void setSearchCount(Integer searchCount) {
+        this.searchCount = searchCount;
     }
 }

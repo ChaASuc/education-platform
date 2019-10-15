@@ -79,12 +79,12 @@
     id, course_name, update_time, create_time, `status`, free, goal, overview, open_time,
     kind_id, user_id, price, watch_count, picture_url
   </sql>
-  <select id="selectByTop" resultType="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample">
+  <select id="selectByTop" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample">
     select
     <include refid="Base_Column_List" />
     from ep_course
     where `status`=#{status} and `free`=#{free}
-    ORDER BY -watch_count * 432 + (DAY(NOW())-DAY(create_time)) * 86400 limit #{top}
+    ORDER BY -watch_count * 100 + (DAY(NOW())-DAY(create_time)) * 86400 limit #{top}
   </select>
   <select id="selectByKey" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
     select
