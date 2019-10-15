@@ -42,7 +42,7 @@ public class LoginHelper {
     @Before("myPointcut()")
     //配合全局异常处理
     void isLogin(JoinPoint joinPoint) throws GlobalException {
-        boolean isLogin = false;
+        boolean isLogin = true;
 
         if (!isLogin){
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"你还没有登录");
