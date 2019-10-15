@@ -45,7 +45,7 @@ public interface IChapterService {
      * 根据课程id查找所有status字段不为零的章节，
      * 该map有一定的规律性，key为章节简介，value为该章节的子视频的list集合
      * @param id  课程id
-     * @param status  0为无效，1为未审核，2为通过，3为未通过
+     * @param status  0为无效，1为有效
      * @return Map<EpChapter,List<EpChapter>>
      */
     Map<EpChapter,List<EpChapter>> getListByCourseIdAndStatus(long id, int status );

@@ -1,10 +1,20 @@
 package cn.ep.controller;
 
+import cn.ep.bean.EpChapter;
 import cn.ep.bean.EpCourse;
 import cn.ep.bean.EpCourseKind;
+import cn.ep.bean.EpWatchRecord;
+import cn.ep.courseenum.ChapterEnum;
+import cn.ep.courseenum.CourseEnum;
+import cn.ep.courseenum.WatchRecordEnum;
+import cn.ep.enums.GlobalEnum;
+import cn.ep.service.IChapterService;
 import cn.ep.service.ICourseService;
+import cn.ep.service.ICourseUserService;
+import cn.ep.service.IWatchRecordService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
+import cn.ep.vo.ChapterVO;
 import cn.ep.vo.CourseInfoVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -14,16 +24,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import sun.misc.REException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RestController
 @Api(description = "课程模块：课程接口")
-@RequestMapping("ep/course")
+@RequestMapping("api/ep/course")
 public class EpCourseController {
 
     /**
@@ -46,7 +53,7 @@ public class EpCourseController {
                 "ep_courseKind_prefix_kind_%s";
         public static final String EP_COURSE_KIND_PREFIX_GET_LIST_TOP =
                 "ep_courseKind_prefix_getListTop";
-        public static final String EP_COURSE_PREFIX_GET_COURSEINFO_LIST = "ep_courseKind_prefix_getCourseInfoList";
+        public static final String EP_COURSE_PREFIX_GET_COURSEINFO = "ep_courseKind_prefix_getCourseInfo";
         public static final String EP_COURSE_PREFIX_COURSE_ID = "ep_courseKind_prefix_courseId_%s";
         public static final String EP_COURSE_PREFIX_COURSE_ID_AND_USER_ID = "ep_courseKind_prefix_courseId_and_userId_%s_%s";
     }
@@ -54,6 +61,9 @@ public class EpCourseController {
 
     @Autowired
     private ICourseService courseService;
+    @Autowired
+    private ICourseUserService courseUserService;
+
     @Autowired
     private RedisUtil redisUtil;
 
@@ -64,8 +74,6 @@ public class EpCourseController {
     String test(){
         return "epsilon";
     }
-
-
 
     @ApiOperation(value = "网站搜索栏接口,只支持对课程名称、课程目标、课程介绍全文搜索", notes = "开发人员已测试")
     @ApiImplicitParams({
@@ -80,15 +88,30 @@ public class EpCourseController {
             return ResultVO.success(obj);
         }
         PageHelper.startPage(page,1);
-        List<EpCourse> courses = courseService.getListByKey(key,1);
+        List<EpCourse> courses = courseService.getListByKey(key, CourseEnum.CHECK_PASS.getValue());
         PageInfo<EpCourse> info = new PageInfo<>(courses);
         redisUtil.set(key,info,1800, TimeUnit.SECONDS);
         return ResultVO.success(info);
     }
 
+    private List<CourseInfoVO> CoursesToCourseInfoVOs(List<EpCourse> courses) {
+        List<CourseInfoVO> courseInfoVOS = new ArrayList<>(21);
+        for (EpCourse c :
+                courses) {
+            CourseInfoVO courseInfoVO = new CourseInfoVO();
+            courseInfoVO.setCourse(c);
+            // todo  这里从其他模块获取
+            courseInfoVO.setAuthor(null);   //如果需要，跟用户模块获取
+            courseInfoVO.setChapters(null);
+            courseInfoVO.setScope(0);   //如果需要，向评价模块获取
+            courseInfoVOS.add(courseInfoVO);
+        }
+        return courseInfoVOS;
+    }
+
     @ApiOperation(value = "获取课程排行榜，20条记录，以时间+订阅为排行依据，非实时，次日更新", notes = "开发人员已测试")
     @ApiImplicitParam(name = "free", value = "查询是否免费:0为免费，1为收费", dataType = "String", paramType = "path")
-    @GetMapping(value = "list/top/{free}")
+    @GetMapping(value = "top/list/{free}")
     ResultVO getListTopByFree(@PathVariable int free){
         String redisKey = String.format(CacheNameHelper.EP_COURSE_PREFIX_GET_LIST_TOP_BY_FREE,free);
         Object object = redisUtil.get(redisKey);
@@ -96,16 +119,7 @@ public class EpCourseController {
             return ResultVO.success(object);
         System.out.println(free);
         List<EpCourse> courses = courseService.getListByTop(1,free,20);
-        List<CourseInfoVO> courseInfoVOS = new ArrayList<>(21);
-        for (EpCourse c :
-                courses) {
-            CourseInfoVO courseInfoVO = new CourseInfoVO();
-            courseInfoVO.setCourse(c);
-            courseInfoVO.setAuthor(null);
-            courseInfoVO.setChapters(null);
-            courseInfoVO.setScope(0);
-            courseInfoVOS.add(courseInfoVO);
-        }
+        List<CourseInfoVO> courseInfoVOS = CoursesToCourseInfoVOs(courses);
         redisUtil.set(redisKey,courseInfoVOS,1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
     }
@@ -118,23 +132,15 @@ public class EpCourseController {
         /*if (object != null)
             return ResultVO.success(object);*/
         List<EpCourse> courses = courseService.getListByTop(1,1,50);
-        List<CourseInfoVO> courseInfoVOS = new ArrayList<>(21);
-        for (EpCourse c :
-                courses) {
-            CourseInfoVO courseInfoVO = new CourseInfoVO();
-            courseInfoVO.setCourse(c);
-            courseInfoVO.setAuthor(null);
-            courseInfoVO.setChapters(null);
-            courseInfoVO.setScope(0);
-            courseInfoVOS.add(courseInfoVO);
-        }
+        List<CourseInfoVO> courseInfoVOS = CoursesToCourseInfoVOs(courses);
+
         System.out.println(courses);
         courseInfoVOS.sort(Comparator.comparing(CourseInfoVO::getScope).reversed());
         redisUtil.set(redisKey,courseInfoVOS.subList(0,courseInfoVOS.size()<10?courseInfoVOS.size():10),1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
     }
 
-    @ApiOperation(value = "获取课程信息，一页40条", notes = "测试人员已测试")
+    @ApiOperation(value = "获取课程信息，一页40条", notes = "开发人员已测试")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "kindId", value = "种类id", dataType = "long", paramType = "path")
             , @ApiImplicitParam(name = "free", value = "是否免费：0免费，1收费", dataType = "int", paramType = "path")
@@ -165,28 +171,50 @@ public class EpCourseController {
         return ResultVO.success(courseList);
     }
 
-    ResultVO getCourseInfoListByCourseId(long courseId){
+    @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息，是否已支付，是否登陆", notes = "未测试")
+    @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
+    @GetMapping(value = "/{courseId}")
+    ResultVO getCourseInfoByCourseId(@PathVariable long courseId){
         /*
             判断是否登陆，由汉槟提供
          */
-        boolean isLogin = false;
-        String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_COURSEINFO_LIST;
+        // todo  这里从其他模块获取
+        boolean isLogin = false; //登陆为真
+        int userId = 1;  //从用户模块获取
+        String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_COURSEINFO;
         String redisItem = null;
         if (!isLogin){
             redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_COURSE_ID,courseId);
             Object object = redisUtil.hget(redisKey,redisItem);
             if (object != null)
                 return ResultVO.success(object);
+        } else {
+            redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_COURSE_ID_AND_USER_ID,courseId,userId);
+            Object object = redisUtil.get(redisItem);
+            if (object != null)
+                return ResultVO.success(object);
         }
-        /*EpCourse course = courseService.getByCourseId(courseId);
+        EpCourse course = courseService.getByCourseId(courseId);
+        if (course == null)
+            return ResultVO.failure(GlobalEnum.PARAMS_ERROR,"课程不存在");
         CourseInfoVO courseInfoVO = new CourseInfoVO();
         courseInfoVO.setCourse(course);
-        courseInfoVO.setLogin(false);
-        courseInfoVO.setPay(false);
-        courseInfoVO.setScope(0); //从何亮获取
-        courseInfoVO.setAuthor(null); //从汉槟获取
-        courseInfoVO.setChapters();
-        return ResultVO.success();*/
+        courseInfoVO.setLogin(isLogin);
+        if (!isLogin)
+            courseInfoVO.setPay(false);
+        else
+            courseInfoVO.setPay(courseUserService.getByUserIdAndCourseId(userId,courseId)!=null);
+        // todo  这里从其他模块获取
+        courseInfoVO.setScope(0); //从评论模块获取
+        courseInfoVO.setAuthor(null); //从用户模块获取
+        courseInfoVO.setChapters(
+                courseService.getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(
+                        userId,courseId, WatchRecordEnum.VALID_STATUS.getValue(),isLogin));
+        if (!isLogin)
+            redisUtil.hset(redisKey,redisItem,courseInfoVO);
+        else
+            redisUtil.set(redisItem,courseInfoVO,1,TimeUnit.DAYS);
+        return ResultVO.success(courseInfoVO);
     }
 
 

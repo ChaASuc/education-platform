@@ -1,8 +1,11 @@
 package cn.ep.service;
 
+import cn.ep.bean.EpChapter;
 import cn.ep.bean.EpCourse;
+import cn.ep.vo.ChapterVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author chenshaoxin
@@ -86,4 +89,8 @@ public interface ICourseService {
     List<EpCourse> getListByTop(int status,int free,int top );
 
     List<EpCourse> getListByKindIdAndFreeAndOrder(long kindId, int free, int order);
+
+    EpCourse getByCourseId(long courseId);
+
+    Map<EpChapter, List<ChapterVO>> getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(int i, long courseId, int value, boolean isLogin);
 }

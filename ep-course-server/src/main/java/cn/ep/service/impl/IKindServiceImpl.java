@@ -46,14 +46,14 @@ public class IKindServiceImpl implements IKindService {
         Map<Long, EpCourseKind> root = new LinkedHashMap<>();
         for (EpCourseKind kind :
                 kindList) {
-            if (kind.getRoot() == 0){
+            if (kind.getRoot() == CourseKindEnum.ROOT.getValue()){
                 root.put(kind.getId(),kind);
                 map.put(kind,new ArrayList<>());
             }
         }
         for (EpCourseKind kind :
                 kindList) {
-            if (kind.getRoot() != 0){
+            if (kind.getRoot() != CourseKindEnum.ROOT.getValue()){
                 map.get(root.get(kind.getRoot())).add(kind);
             }
         }
@@ -84,7 +84,8 @@ public class IKindServiceImpl implements IKindService {
     public List<EpCourseKind> getSubKindList(){
         EpCourseKindExample kindExample = new EpCourseKindExample();
         EpCourseKindExample.Criteria criteria = kindExample.createCriteria();
-        criteria.andRootNotEqualTo(0L).andStatusEqualTo(1);
+        criteria.andRootNotEqualTo((long) CourseKindEnum.ROOT.getValue())
+                .andStatusEqualTo(CourseKindEnum.VALID_STATUS.getValue());
         kindExample.setOrderByClause("search_count");
         return  kindMapper.selectByExample(kindExample);
     }
@@ -99,7 +100,9 @@ public class IKindServiceImpl implements IKindService {
         if (!insert(epCourseKind))
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"插入失败");
         EpCheck check = new EpCheck();
-        check.setWho(1L);//审核人id从汉槟随机获取管理员id
+        // todo 审核人id从汉槟随机获取管理员id
+        long userId = 1L;
+        check.setWho(userId);
         check.setStatus(CheckEnum.UNCHECKED_STATUS.getValue());
         check.setBelongId(epCourseKind.getId());
         check.setBelong(CheckEnum.CHECK_COURSE_KIND.getValue());

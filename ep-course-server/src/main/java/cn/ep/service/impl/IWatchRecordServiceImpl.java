@@ -20,7 +20,7 @@ public class IWatchRecordServiceImpl implements IWatchRecordService {
     @Override
     public boolean insert(EpWatchRecord record) {
         record.setId(idWorker.nextId());
-        return recordMapper.insert(record) > 0;
+        return recordMapper.insertSelective(record) > 0;
     }
 
     @Override
