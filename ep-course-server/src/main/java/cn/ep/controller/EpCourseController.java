@@ -125,13 +125,14 @@ public class EpCourseController {
         redisUtil.set(redisKey,courseInfoVOS,1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
     }
-
+    @ApiOperation(value = "获取首页轮播信息，4条记录，以时间+订阅为排行依据，非实时，次日更新", notes = "开发人员已测试")
+    @GetMapping(value = "carouse/list/")
     ResultVO getCarouselList(){
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_CAROUSEL_LIST;
         Object object = redisUtil.get(redisKey);
         if (object != null)
             return ResultVO.success(object);
-        List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),free,20);
+        List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),1,4);
         redisUtil.set(redisKey,courses,1,TimeUnit.DAYS);
         return ResultVO.success(courses);
     }
