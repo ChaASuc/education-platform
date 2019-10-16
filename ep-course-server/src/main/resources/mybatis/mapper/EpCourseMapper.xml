@@ -84,7 +84,7 @@
     <include refid="Base_Column_List" />
     from ep_course
     where `status`=#{status} and `free`=#{free}
-    ORDER BY -watch_count * 100 + (DAY(NOW())-DAY(create_time)) * 86400 limit #{top}
+    ORDER BY -watch_count * 200 + (DAY(NOW())-DAY(create_time)) * 86400 limit #{top}
   </select>
   <select id="selectByKey" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpCourseExample" >
     select

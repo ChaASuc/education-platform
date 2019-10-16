@@ -48,6 +48,7 @@ public class EpCourseController {
         public static final String EP_COURSE_PREFIX = "ep_course_prefix_*";
         public static final String EP_COURSE_PREFIX_GET_RECOMMEND_LIST = "ep_course_prefix_get_recommend_list";
         public static final String EP_COURSE_PREFIX_GET_LIST_BY_KINDID_AND_FREE_ORDER_PAGE = "ep_course_prefix_get_list_by_kindid_and_free_order_page_%s_%s_%s_%s";
+        public static final String EP_COURSE_PREFIX_GET_CAROUSEL_LIST = "ep_course_prefix_getCarouselList";
         //这是获取redis热点种类的key值
         public static final String EP_COURSE_KIND_PREFIX_KIND_ID =
                 "ep_courseKind_prefix_kind_%s";
@@ -56,6 +57,7 @@ public class EpCourseController {
         public static final String EP_COURSE_PREFIX_GET_COURSEINFO = "ep_courseKind_prefix_getCourseInfo";
         public static final String EP_COURSE_PREFIX_COURSE_ID = "ep_courseKind_prefix_courseId_%s";
         public static final String EP_COURSE_PREFIX_COURSE_ID_AND_USER_ID = "ep_courseKind_prefix_courseId_and_userId_%s_%s";
+
     }
 
 
@@ -118,25 +120,36 @@ public class EpCourseController {
         if (object != null)
             return ResultVO.success(object);
         System.out.println(free);
-        List<EpCourse> courses = courseService.getListByTop(1,free,20);
+        List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),free,20);
         List<CourseInfoVO> courseInfoVOS = CoursesToCourseInfoVOs(courses);
         redisUtil.set(redisKey,courseInfoVOS,1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
     }
 
-    @ApiOperation(value = "获取课程推荐榜，10条记录，以时间+订阅+评分为排行依据，非实时，次日更新", notes = "未测试")
-    @GetMapping(value = "list/recommend/")
+    ResultVO getCarouselList(){
+        String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_CAROUSEL_LIST;
+        Object object = redisUtil.get(redisKey);
+        if (object != null)
+            return ResultVO.success(object);
+        List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),free,20);
+        redisUtil.set(redisKey,courses,1,TimeUnit.DAYS);
+        return ResultVO.success(courses);
+    }
+
+
+    @ApiOperation(value = "获取课程推荐榜，8条记录，以时间+订阅+评分为排行依据，非实时，次日更新", notes = "未测试")
+    @GetMapping(value = "recommend/list/")
     ResultVO getRecommendList(){
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_RECOMMEND_LIST;
         Object object = redisUtil.get(redisKey);
         /*if (object != null)
             return ResultVO.success(object);*/
-        List<EpCourse> courses = courseService.getListByTop(1,1,50);
+        List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),1,50);
         List<CourseInfoVO> courseInfoVOS = CoursesToCourseInfoVOs(courses);
 
         System.out.println(courses);
         courseInfoVOS.sort(Comparator.comparing(CourseInfoVO::getScope).reversed());
-        redisUtil.set(redisKey,courseInfoVOS.subList(0,courseInfoVOS.size()<10?courseInfoVOS.size():10),1,TimeUnit.DAYS);
+        redisUtil.set(redisKey,courseInfoVOS.subList(0,courseInfoVOS.size()<8?courseInfoVOS.size():8),1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
     }
 
