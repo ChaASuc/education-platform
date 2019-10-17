@@ -3,10 +3,7 @@ package cn.ep.controller;
 import cn.ep.annotation.CanAdd;
 import cn.ep.annotation.CanLook;
 import cn.ep.annotation.IsLogin;
-import cn.ep.bean.EpChapter;
-import cn.ep.bean.EpCourse;
-import cn.ep.bean.EpCourseKind;
-import cn.ep.bean.EpWatchRecord;
+import cn.ep.bean.*;
 import cn.ep.courseenum.ChapterEnum;
 import cn.ep.courseenum.CourseEnum;
 import cn.ep.courseenum.RoleEnum;
@@ -64,6 +61,7 @@ public class EpCourseController {
 
 
         public static final String EP_COURSE_PREFIX_USER_ID = "ep_course_prefix_userId_%s";
+        public static final String EP_COURSE_PREFIX_getSubscriptionList = "ep_course_prefix_getsubscriptionlist";
     }
 
 
@@ -125,7 +123,7 @@ public class EpCourseController {
     }
 
     @ApiOperation(value = "获取首页轮播信息，4条记录，以时间+订阅为排行依据，非实时，次日更新", notes = "开发人员已测试")
-    @GetMapping(value = "carouse/list/")
+    @GetMapping(value = "carouse/list")
     ResultVO getCarouselList(){
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_CAROUSEL_LIST;
         Object object = redisUtil.get(redisKey);
@@ -140,7 +138,7 @@ public class EpCourseController {
 
 
     @ApiOperation(value = "获取课程推荐榜，8条记录，以时间+订阅+评分为排行依据，非实时，次日更新", notes = "开发人员已测试")
-    @GetMapping(value = "recommend/list/")
+    @GetMapping(value = "recommend/list")
     ResultVO getRecommendList(){
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_RECOMMEND_LIST;
         Object object = redisUtil.get(redisKey);
@@ -266,6 +264,39 @@ public class EpCourseController {
 
     }
 
+    @ApiOperation(value = "订阅课程",notes = "未测试")
+    @PostMapping("/subscription")
+    @IsLogin
+    ResultVO subscription(long courseId){
+        courseUserService.subscription(courseId);
+        //todo 从汉槟获取当前用户id
+        long userId = 1L;
+        String redisKey = CacheNameHelper.EP_COURSE_PREFIX_getSubscriptionList;
+        String redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_USER_ID,userId);
+        redisUtil.hdel(redisKey,redisKey);
+        return ResultVO.success();
+    }
 
+    @ApiOperation(value = "获取当前用户订阅的所有课程", notes = "未测试")
+    @GetMapping("/subscription/list")
+    @IsLogin
+    ResultVO getSubscriptionList(){
+
+        long userId = 1L;
+        String redisKey = CacheNameHelper.EP_COURSE_PREFIX_getSubscriptionList;
+        String redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_USER_ID,userId);
+        Object object = redisUtil.hget(redisKey,redisItem);
+        if (object != null)
+            return ResultVO.success(object);
+        //--------把业务逻辑下移到哪个服务？
+        List<EpCourseUser> courseUserList = courseUserService.getListByUserId(userId);
+        List<EpCourse> courseList = new ArrayList<>();
+        for (EpCourseUser courseUser :
+                courseUserList) {
+               courseList.add(courseService.getByCourseId(courseUser.getCourseId()));
+        }
+        redisUtil.hset(redisKey,redisItem,courseList);
+        return ResultVO.success(courseList);
+    }
 }
 

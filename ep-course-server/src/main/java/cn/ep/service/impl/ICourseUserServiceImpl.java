@@ -2,6 +2,8 @@ package cn.ep.service.impl;
 
 import cn.ep.bean.EpCourseUser;
 import cn.ep.bean.EpCourseUserExample;
+import cn.ep.enums.GlobalEnum;
+import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpCourseUserMapper;
 import cn.ep.service.ICourseUserService;
 import cn.ep.utils.IdWorker;
@@ -20,6 +22,7 @@ public class ICourseUserServiceImpl implements ICourseUserService {
 
     @Override
     public boolean insert(EpCourseUser courseUser) {
+        courseUser.setId(idWorker.nextId());
         return courseUserMapper.insert(courseUser) > 0;
     }
 
@@ -64,5 +67,24 @@ public class ICourseUserServiceImpl implements ICourseUserService {
             return null;
         else
             return courseUserList.get(0);
+    }
+
+    @Override
+    public boolean subscription(long courseId) {
+        boolean isfree = false;
+        if (!isfree) {
+            //todo 从订单模块获取当前课程是否购买成功 在service层调用其他模块提供的服务是否规范？
+            boolean isPay = true;
+            if (!isPay)
+                throw new GlobalException(GlobalEnum.OPERATION_ERROR, "该课程为付费课程，请先购买");
+        }
+        EpCourseUser courseUser = new EpCourseUser();
+        //todo 从汉槟获取当前用户id
+        long userId = 1L;
+        courseUser.setUserId(userId);
+        courseUser.setCourseId(courseId);
+        if (!insert(courseUser))
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "订阅失败");
+        return true;
     }
 }
