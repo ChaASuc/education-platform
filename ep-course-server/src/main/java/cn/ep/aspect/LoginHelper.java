@@ -37,7 +37,7 @@ public class LoginHelper {
     @Pointcut(value = "@annotation(cn.ep.annotation.IsLogin)")
     void myPointcut(){}
 
-
+    //todo 待权限模块实现后，再行修改，不热部署，需重启，不然会报错
     //或者使用环绕通知
     @Before("myPointcut()")
     //配合全局异常处理

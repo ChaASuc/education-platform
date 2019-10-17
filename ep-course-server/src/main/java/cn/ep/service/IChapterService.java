@@ -63,4 +63,6 @@ public interface IChapterService {
      */
     boolean updateById(EpChapter epChapter);
 
+    boolean multiplyInsertAndSendCheck(List<EpChapter> chapters);
+
 }

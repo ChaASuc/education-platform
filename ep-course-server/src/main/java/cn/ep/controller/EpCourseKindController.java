@@ -6,6 +6,7 @@ import cn.ep.bean.EpCourse;
 import cn.ep.bean.EpCourseKind;
 import cn.ep.courseenum.CourseEnum;
 import cn.ep.courseenum.CourseKindEnum;
+import cn.ep.courseenum.RoleEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.service.ICourseService;
@@ -28,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @Api(description = "课程模块：课程种类接口：完成")
-@RequestMapping("api/ep/course/kind")
+@RequestMapping("ep/course/kind")
 public class EpCourseKindController {
 
 
@@ -113,11 +114,11 @@ public class EpCourseKindController {
     }
 
 
-    @ApiOperation(value = "增加一个种类", notes = "开发人员已测试")
+    @ApiOperation(value = "增加一个种类:权限管理员", notes = "开发人员已测试")
     @ApiImplicitParam(name="courseKind",value = "种类实体类:其中kindName必传，root必传：0为一级种类，其他值为一级种类的id", dataType = "EpCourseKind")
     @PostMapping("")
     @IsLogin
-    @CanAdd
+    @CanAdd(role={RoleEnum.ADMIN})
     ResultVO insert(@RequestBody EpCourseKind courseKind){
         System.out.println(courseKind);
         //将排行榜数据更新进数据库

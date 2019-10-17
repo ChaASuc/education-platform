@@ -9,6 +9,7 @@ import cn.ep.bean.EpCourseKind;
 import cn.ep.bean.EpWatchRecord;
 import cn.ep.courseenum.ChapterEnum;
 import cn.ep.courseenum.CourseEnum;
+import cn.ep.courseenum.RoleEnum;
 import cn.ep.courseenum.WatchRecordEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @Api(description = "课程模块：课程接口")
-@RequestMapping("api/ep/course")
+@RequestMapping("ep/course")
 public class EpCourseController {
 
     /**
@@ -101,8 +102,8 @@ public class EpCourseController {
             courseInfoVO.setCourse(c);
             // todo  这里从其他模块获取
             courseInfoVO.setAuthor(null);   //如果需要，跟用户模块获取
-            courseInfoVO.setChapters(null);
             courseInfoVO.setScope(0);   //如果需要，向评价模块获取
+            courseInfoVO.setChapters(null);
             courseInfoVOS.add(courseInfoVO);
         }
         return courseInfoVOS;
@@ -184,11 +185,11 @@ public class EpCourseController {
             return ResultVO.success(object);
         PageHelper.startPage(page,40);
         List<EpCourse> courseList = courseService.getListByKindIdAndFreeAndOrder(kindId,free,order);
-        redisUtil.set(redisKey,courseList,3,TimeUnit.DAYS);
+        redisUtil.set(redisKey,courseList);
         return ResultVO.success(courseList);
     }
 
-    @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息，是否已支付，是否登陆", notes = "开发人员已测试")
+    @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息【章与节&每个节的观看记录（如果登陆了）】，是否已订阅，是否登陆", notes = "开发人员已测试")
     @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
     @GetMapping(value = "/{courseId}")
     ResultVO getCourseInfoByCourseId(@PathVariable long courseId){
@@ -217,10 +218,11 @@ public class EpCourseController {
         CourseInfoVO courseInfoVO = new CourseInfoVO();
         courseInfoVO.setCourse(course);
         courseInfoVO.setLogin(isLogin);
+        //订阅包括付费订阅与免费订阅
         if (!isLogin)
-            courseInfoVO.setPay(false);
+            courseInfoVO.setSubscription(false);
         else
-            courseInfoVO.setPay(courseUserService.getByUserIdAndCourseId(userId,courseId)!=null);
+            courseInfoVO.setSubscription(courseUserService.getByUserIdAndCourseId(userId,courseId)!=null);
         // todo  这里从其他模块获取
         courseInfoVO.setScope(0); //从评论模块获取
         courseInfoVO.setAuthor(null); //从用户模块获取
@@ -234,11 +236,11 @@ public class EpCourseController {
         return ResultVO.success(courseInfoVO);
     }
 
-    @ApiOperation(value = "增加一个课程", notes = "开发人员已测试")
+    @ApiOperation(value = "增加一个课程:教师权限", notes = "开发人员已测试")
     @ApiImplicitParam(name="course",value = "课程实体类:其中courseName、free（0免费1收费）、kindId、price必传，goal、overview、pictureUrl可选，但最好传，id、stutas不传", dataType = "EpCourse")
     @PostMapping("")
     @IsLogin
-    @CanAdd
+    @CanAdd(role = {RoleEnum.TEACHER})
     ResultVO insert(@RequestBody EpCourse course){
         if (!courseService.insertAndSendCheck(course))
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"添加课程失败");
@@ -248,7 +250,7 @@ public class EpCourseController {
     @ApiOperation(value = "获取当前用户所上传的课程,需要权限，只提供给教师角色",notes = "开发人员已测试")
     @GetMapping("/current/list")
     @IsLogin
-    @CanLook
+    @CanLook(role = {RoleEnum.TEACHER})
     ResultVO getListByCurrentUserId(){
         //todo 从汉槟获取当前用户id
         long userId = 1L;
@@ -263,12 +265,6 @@ public class EpCourseController {
         return ResultVO.success(courseList);
 
     }
-   /* @ApiOperation(value = "清除缓存")
-    @GetMapping("course/clear")
-    ResultVO clear(){
-        redisUtil.delFuz(CacheNameHelper.EP_COURSE_PREFIX);
-        return ResultVO.success();
-    }*/
 
 
 }
