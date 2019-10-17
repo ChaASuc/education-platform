@@ -53,4 +53,10 @@ public interface UploadService {
      * @return
      */
     PageInfo<EpFile> selectByDirIdAndPageNum(Long dirId, Integer pageNum);
+
+    /**
+     * 更新文件实体类
+     * @param epFile
+     */
+    void update(EpFile epFile);
 }

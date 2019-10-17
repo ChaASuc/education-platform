@@ -162,4 +162,13 @@ public class UploadServiceImpl implements UploadService {
         return new PageInfo<>(epFiles);
 //        }
     }
+
+    @Override
+    @Transactional
+    public void update(EpFile epFile) {
+        boolean success = epFileMapper.updateByPrimaryKey(epFile) > 0 ? true : false;
+        if (!success) {
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "文件更新失败");
+        }
+    }
 }

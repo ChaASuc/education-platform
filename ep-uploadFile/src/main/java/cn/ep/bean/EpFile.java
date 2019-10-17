@@ -1,11 +1,14 @@
 package cn.ep.bean;
 
 import cn.ep.serializer.Long2StringSerializer;
+import cn.ep.validate.groups.Update;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class EpFile {
+    @NotNull(groups = {Update.class})
     @JsonSerialize(using = Long2StringSerializer.class)
     private Long fileId;
 

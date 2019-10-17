@@ -6,13 +6,17 @@ import cn.ep.validate.groups.Update;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Date;
 
 public class EpDir {
+
     @NotNull(groups = {Update.class})
     @JsonSerialize(using = Long2StringSerializer.class)
     private Long dirId;
+
+    @NotNull(groups = {Insert.class})
+    @JsonSerialize(using = Long2StringSerializer.class)
+    private Long userId;
 
     @NotNull(groups = {Insert.class})
     private String dirName;
@@ -33,6 +37,14 @@ public class EpDir {
 
     public void setDirId(Long dirId) {
         this.dirId = dirId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getDirName() {

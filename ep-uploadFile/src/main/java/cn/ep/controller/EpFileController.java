@@ -97,8 +97,23 @@ public class EpFileController {
         // 删除缓存
         redisUtil.delFuz(CacheNameHelper.EP_UPLOADFILE_PREFIX);
         return ResultVO.success();
-
     }
+
+    /**
+     * 根据主键修改文件夹
+     * @param epFile
+     * @return
+     */
+    @ApiOperation(value="根据主键修改文件",notes = "未测试")
+    @ApiImplicitParam(name="epFile", value = "文件实体类", dataType = "EpFile")
+    @PutMapping("")
+    public ResultVO updateFile(@RequestBody @Validated({Update.class}) EpFile epFile){
+        uploadService.update(epFile);
+        // 删除缓存
+        redisUtil.delFuz(CacheNameHelper.EP_UPLOADFILE_PREFIX);
+        return ResultVO.success();
+    }
+
 
     /**
      * 根据主键物理删除文件夹
