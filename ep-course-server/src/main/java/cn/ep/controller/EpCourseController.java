@@ -1,5 +1,8 @@
 package cn.ep.controller;
 
+import cn.ep.annotation.CanAdd;
+import cn.ep.annotation.CanLook;
+import cn.ep.annotation.IsLogin;
 import cn.ep.bean.EpChapter;
 import cn.ep.bean.EpCourse;
 import cn.ep.bean.EpCourseKind;
@@ -8,6 +11,7 @@ import cn.ep.courseenum.ChapterEnum;
 import cn.ep.courseenum.CourseEnum;
 import cn.ep.courseenum.WatchRecordEnum;
 import cn.ep.enums.GlobalEnum;
+import cn.ep.exception.GlobalException;
 import cn.ep.service.IChapterService;
 import cn.ep.service.ICourseService;
 import cn.ep.service.ICourseUserService;
@@ -20,10 +24,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +38,12 @@ public class EpCourseController {
      * 内部类，专门用来管理每个get方法所对应缓存的名称。
      */
     static class CacheNameHelper{
+        //这是获取redis热点种类的key值
+        public static final String EP_COURSE_KIND_PREFIX_KIND_ID =
+                "ep_courseKind_prefix_kind_%s";
+        public static final String EP_COURSE_KIND_PREFIX_GET_LIST_TOP =
+                "ep_courseKind_prefix_getListTop";
+        //---------------------------------------------------
 
         // ep_category_prefix_getByUserNicknameAnduserPwd_{用户名}_{密码}
         public static final String EP_COURSE_PREFIX_GET_LIST_BY_KEY_AND_PAGE =
@@ -49,15 +56,13 @@ public class EpCourseController {
         public static final String EP_COURSE_PREFIX_GET_RECOMMEND_LIST = "ep_course_prefix_get_recommend_list";
         public static final String EP_COURSE_PREFIX_GET_LIST_BY_KINDID_AND_FREE_ORDER_PAGE = "ep_course_prefix_get_list_by_kindid_and_free_order_page_%s_%s_%s_%s";
         public static final String EP_COURSE_PREFIX_GET_CAROUSEL_LIST = "ep_course_prefix_getCarouselList";
-        //这是获取redis热点种类的key值
-        public static final String EP_COURSE_KIND_PREFIX_KIND_ID =
-                "ep_courseKind_prefix_kind_%s";
-        public static final String EP_COURSE_KIND_PREFIX_GET_LIST_TOP =
-                "ep_courseKind_prefix_getListTop";
-        public static final String EP_COURSE_PREFIX_GET_COURSEINFO = "ep_courseKind_prefix_getCourseInfo";
-        public static final String EP_COURSE_PREFIX_COURSE_ID = "ep_courseKind_prefix_courseId_%s";
-        public static final String EP_COURSE_PREFIX_COURSE_ID_AND_USER_ID = "ep_courseKind_prefix_courseId_and_userId_%s_%s";
+        public static final String EP_COURSE_PREFIX_GET_COURSEINFO = "ep_course_prefix_getCourseInfo";
+        public static final String EP_COURSE_PREFIX_COURSE_ID = "ep_course_prefix_courseId_%s";
+        public static final String EP_COURSE_PREFIX_COURSE_ID_AND_USER_ID = "ep_course_prefix_courseId_and_userId_%s_%s";
+        public static final String EP_COURSE_PREFIX_GET_LIST_BY_CURRENT_USER_ID = "ep_course_prefix_getListByCurrentUserId";
 
+
+        public static final String EP_COURSE_PREFIX_USER_ID = "ep_course_prefix_userId_%s";
     }
 
 
@@ -68,14 +73,6 @@ public class EpCourseController {
 
     @Autowired
     private RedisUtil redisUtil;
-
-    @ApiOperation(value="测试", notes="未测试")
-    @GetMapping(value = "/test")
-   // @CanLook
-   // @CanModify
-    String test(){
-        return "epsilon";
-    }
 
     @ApiOperation(value = "网站搜索栏接口,只支持对课程名称、课程目标、课程介绍全文搜索", notes = "开发人员已测试")
     @ApiImplicitParams({
@@ -119,12 +116,13 @@ public class EpCourseController {
         Object object = redisUtil.get(redisKey);
         if (object != null)
             return ResultVO.success(object);
-        System.out.println(free);
+      //  System.out.println(free);
         List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),free,20);
         List<CourseInfoVO> courseInfoVOS = CoursesToCourseInfoVOs(courses);
         redisUtil.set(redisKey,courseInfoVOS,1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
     }
+
     @ApiOperation(value = "获取首页轮播信息，4条记录，以时间+订阅为排行依据，非实时，次日更新", notes = "开发人员已测试")
     @GetMapping(value = "carouse/list/")
     ResultVO getCarouselList(){
@@ -132,13 +130,15 @@ public class EpCourseController {
         Object object = redisUtil.get(redisKey);
         if (object != null)
             return ResultVO.success(object);
+        //System.out.println("55");
         List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),1,4);
+        System.out.println(courses.size());
         redisUtil.set(redisKey,courses,1,TimeUnit.DAYS);
         return ResultVO.success(courses);
     }
 
 
-    @ApiOperation(value = "获取课程推荐榜，8条记录，以时间+订阅+评分为排行依据，非实时，次日更新", notes = "未测试")
+    @ApiOperation(value = "获取课程推荐榜，8条记录，以时间+订阅+评分为排行依据，非实时，次日更新", notes = "开发人员已测试")
     @GetMapping(value = "recommend/list/")
     ResultVO getRecommendList(){
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_RECOMMEND_LIST;
@@ -150,11 +150,13 @@ public class EpCourseController {
 
         System.out.println(courses);
         courseInfoVOS.sort(Comparator.comparing(CourseInfoVO::getScope).reversed());
-        redisUtil.set(redisKey,courseInfoVOS.subList(0,courseInfoVOS.size()<8?courseInfoVOS.size():8),1,TimeUnit.DAYS);
+        courseInfoVOS = courseInfoVOS.subList(0,courseInfoVOS.size()<8?courseInfoVOS.size():8);
+       // System.out.println(courseInfoVOS);
+        redisUtil.set(redisKey,courseInfoVOS,1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
     }
 
-    @ApiOperation(value = "获取课程信息，一页40条", notes = "开发人员已测试")
+    @ApiOperation(value = "获取某一种类课程信息，一页40条", notes = "开发人员已测试")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "kindId", value = "种类id", dataType = "long", paramType = "path")
             , @ApiImplicitParam(name = "free", value = "是否免费：0免费，1收费", dataType = "int", paramType = "path")
@@ -174,8 +176,9 @@ public class EpCourseController {
                     ,String.format(CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId)
                     ,kind);
         }
+
         String redisKey = String.format(CacheNameHelper.EP_COURSE_PREFIX_GET_LIST_BY_KINDID_AND_FREE_ORDER_PAGE
-                ,order,kindId,free,page);
+                ,kindId,free,order,page);
         Object object = redisUtil.get(redisKey);
         if (object != null)
             return ResultVO.success(object);
@@ -185,7 +188,7 @@ public class EpCourseController {
         return ResultVO.success(courseList);
     }
 
-    @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息，是否已支付，是否登陆", notes = "未测试")
+    @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息，是否已支付，是否登陆", notes = "开发人员已测试")
     @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
     @GetMapping(value = "/{courseId}")
     ResultVO getCourseInfoByCourseId(@PathVariable long courseId){
@@ -231,13 +234,41 @@ public class EpCourseController {
         return ResultVO.success(courseInfoVO);
     }
 
+    @ApiOperation(value = "增加一个课程", notes = "开发人员已测试")
+    @ApiImplicitParam(name="course",value = "课程实体类:其中courseName、free（0免费1收费）、kindId、price必传，goal、overview、pictureUrl可选，但最好传，id、stutas不传", dataType = "EpCourse")
+    @PostMapping("")
+    @IsLogin
+    @CanAdd
+    ResultVO insert(@RequestBody EpCourse course){
+        if (!courseService.insertAndSendCheck(course))
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"添加课程失败");
+        return ResultVO.success();
+    }
 
-    @ApiOperation(value = "清除缓存")
+    @ApiOperation(value = "获取当前用户所上传的课程,需要权限，只提供给教师角色",notes = "开发人员已测试")
+    @GetMapping("/current/list")
+    @IsLogin
+    @CanLook
+    ResultVO getListByCurrentUserId(){
+        //todo 从汉槟获取当前用户id
+        long userId = 1L;
+        String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_LIST_BY_CURRENT_USER_ID;
+        String redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_USER_ID, userId);
+        Object object = redisUtil.hget(redisKey,redisItem);
+        System.out.println(object);
+        if (object != null)
+            return ResultVO.success(object);
+        List<EpCourse> courseList = courseService.getListByUserIdAndStatusNotEqualTo(userId,CourseEnum.INVALID_STATUS.getValue());
+        redisUtil.hset(redisKey,redisItem,courseList);
+        return ResultVO.success(courseList);
+
+    }
+   /* @ApiOperation(value = "清除缓存")
     @GetMapping("course/clear")
     ResultVO clear(){
         redisUtil.delFuz(CacheNameHelper.EP_COURSE_PREFIX);
         return ResultVO.success();
-    }
+    }*/
 
 
 }

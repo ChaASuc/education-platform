@@ -20,10 +20,23 @@ public class ICourseServiceImplTest extends TestUtil {
         EpCourse course = new EpCourse();
         course.setCourseName("spring");
         course.setFree(0);
-        course.setGoal("打败美帝主义");
-        course.setKindId(2L);
+        course.setGoal("打倒肖华莫雷");
+        course.setKindId(4L);
         course.setStatus(1);
         course.setUserId(1L);
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
+        System.out.println(courseService.insert(course));
         System.out.println(courseService.insert(course));
     }
 
@@ -42,7 +55,7 @@ public class ICourseServiceImplTest extends TestUtil {
 
     @Test
     public void getListByKindIdAndFreeAndOrder(){
-        System.out.println(courseService.getListByKindIdAndFreeAndOrder(2,0,5));
+        System.out.println(courseService.getListByKindIdAndFreeAndOrder(1184017944519249920L,1,3));
     }
     @Test
     public  void  ft(){

@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @Api(description = "课程模块：课程种类接口：完成")
-@RequestMapping("api/ep/course")
+@RequestMapping("api/ep/course/kind")
 public class EpCourseKindController {
 
 
@@ -46,7 +47,7 @@ public class EpCourseKindController {
                 "ep_courseKind_prefix_kind_%s";
         //ep_user_prefix_* 用于全部删除，避免缓存
         public static final String EP_COURSE_KIND_PREFIX = "ep_courseKind_prefix_*";
-        public static final String EP_COURSE_KIND_PREFIX_GET_LIST_BY_ROOT = "ep_courseKind_prefix_getListByRoot";
+        public static final String EP_COURSE_KIND_PREFIX_GET_LIST_BY_ROOT = "ep_courseKind_prefix_getListByRoot_%s";
     }
 
 
@@ -66,12 +67,16 @@ public class EpCourseKindController {
         return ResultVO.success(kindListMap);
     }
 
-    @ApiOperation(value = "获得热门种类：8条记录，以点击量为依据，实时更新", notes = "测试人员已测试")
+    @ApiOperation(value = "获得热门种类：8条记录，以点击量为依据，实时更新", notes = "开发人员已测试")
     @GetMapping("/list/kindtop")
     ResultVO getListTop(){
         String redisKey = CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP;
         Map<Object, Object> map = redisUtil.hmget(redisKey);
-        if (map != null){
+       // System.out.println(map.getClass().getName());
+       /* System.out.println(redisUtil.hmget(redisKey) == Collections.EMPTY_MAP);
+        System.out.println(redisUtil.hmget(redisKey) == Collections.emptyMap());
+        System.out.println(map == Collections.emptyMap());*/
+        if (map.size() != 0){
             //System.out.println(redisKey);
             List<EpCourseKind> kindList = new LinkedList<>();
             for (Map.Entry<Object,Object> entry:
@@ -94,21 +99,21 @@ public class EpCourseKindController {
         return  ResultVO.success(kindList.subList(0,kindList.size()>=8?8:kindList.size()));
     }
 
-    @ApiOperation(value = "获取[一级|二级]种类，通过root区分", notes = "未测试")
+    @ApiOperation(value = "获取[一级|二级]种类，通过root区分", notes = "开发人员已测试")
     @ApiImplicitParam(name="root",value = "root: 0值表示获取所有一级种类，其他值为一级种类的id，表示此一级种类的所有二级种类", dataType = "long", paramType = "path")
-    @GetMapping("list/list/{root}")
+    @GetMapping("list/{root}")
     ResultVO getListByRoot(@PathVariable long root){
-        String redisKey = CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_BY_ROOT;
+        String redisKey = String.format(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_BY_ROOT,root);
         Object obj = redisUtil.get(redisKey);
         if (obj != null)
             return ResultVO.success(obj);
-        List<EpCourseKind> kindList = kindService.getListByRootAndStatus(CourseKindEnum.VALID_STATUS.getValue(),root);
+        List<EpCourseKind> kindList = kindService.getListByRootAndStatus(root,CourseKindEnum.VALID_STATUS.getValue());
         redisUtil.set(redisKey,kindList);
         return ResultVO.success(kindList);
     }
 
 
-    @ApiOperation(value = "增加一个种类", notes = "未测试")
+    @ApiOperation(value = "增加一个种类", notes = "开发人员已测试")
     @ApiImplicitParam(name="courseKind",value = "种类实体类:其中kindName必传，root必传：0为一级种类，其他值为一级种类的id", dataType = "EpCourseKind")
     @PostMapping("")
     @IsLogin
@@ -118,7 +123,7 @@ public class EpCourseKindController {
         //将排行榜数据更新进数据库
         String redisKey = CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP;
         Map<Object, Object> map = redisUtil.hmget(redisKey);
-        if (map != null) {
+        if (map.size() != 0) {
             //System.out.println(redisKey);
             List<EpCourseKind> kindList = new LinkedList<>();
             for (Map.Entry<Object, Object> entry :
@@ -138,12 +143,12 @@ public class EpCourseKindController {
         return  ResultVO.success();
     }
 
-    @ApiOperation(value = "清除缓存")
+/*    @ApiOperation(value = "清除缓存")
     @GetMapping("coursekind/clear")
     ResultVO clear(){
         redisUtil.delFuz(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP);
         return ResultVO.success();
-    }
+    }*/
 
 }
 

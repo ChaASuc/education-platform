@@ -1,20 +1,24 @@
 package cn.ep.service.impl;
 
-import cn.ep.bean.EpChapter;
-import cn.ep.bean.EpCourse;
-import cn.ep.bean.EpCourseExample;
-import cn.ep.bean.EpWatchRecord;
+import cn.ep.bean.*;
 import cn.ep.courseenum.ChapterEnum;
+import cn.ep.courseenum.CheckEnum;
 import cn.ep.courseenum.CourseEnum;
 import cn.ep.courseenum.WatchRecordEnum;
+import cn.ep.enums.GlobalEnum;
+import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpCourseMapper;
 import cn.ep.service.IChapterService;
+import cn.ep.service.ICheckService;
 import cn.ep.service.ICourseService;
 import cn.ep.service.IWatchRecordService;
 import cn.ep.utils.IdWorker;
 import cn.ep.vo.ChapterVO;
+import io.swagger.annotations.ApiImplicitParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -33,6 +37,8 @@ public class ICourseServiceImpl implements ICourseService {
     private IWatchRecordService recordService;
     @Autowired
     private IdWorker idWorker;
+    @Autowired
+    private ICheckService checkService;
 
     @Override
     public List<EpCourse> getListByEpCourse(EpCourse epCourse, String orderBy) {
@@ -76,10 +82,9 @@ public class ICourseServiceImpl implements ICourseService {
         return courseMapper.selectByKey(key,status);
     }
     @Override
-    public boolean insert(EpCourse epCourseKind) {
-        epCourseKind.setId(idWorker.nextId());
-        System.out.println(epCourseKind);
-        return courseMapper.insertSelective(epCourseKind) > 0;
+    public boolean insert(@Validated  EpCourse epCourse) {
+        //System.out.println(epCourse);
+        return courseMapper.insertSelective(epCourse) > 0;
     }
 
     @Override
@@ -96,7 +101,7 @@ public class ICourseServiceImpl implements ICourseService {
     @Override
     public List<EpCourse> getListByKindIdAndFreeAndOrder(long kindId, int free, int order) {
         EpCourse course = new EpCourse();
-        course.setStatus(CourseEnum.UNCHECKED_STATUS.getValue());
+        course.setStatus(CourseEnum.CHECK_PASS.getValue());
         course.setFree(free);
         course.setKindId(kindId);
         String orderString = null;
@@ -143,5 +148,37 @@ public class ICourseServiceImpl implements ICourseService {
             chapterVOListMap.put(chapterListEntry.getKey(),chapterVOList);
         }
         return chapterVOListMap;
+    }
+
+    @Override
+    @Transactional
+    public boolean insertAndSendCheck(EpCourse course) {
+        course.setId(idWorker.nextId());
+        // todo 获取当前登陆人的id
+        long userId = 1L;
+        course.setUserId(userId);
+        course.setStatus(CourseEnum.UNCHECKED_STATUS.getValue());
+        if (!insert(course))
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"增加课程失败");
+        EpCheck check = new EpCheck();
+        // todo 审核人id从汉槟随机获取管理员id
+        long whoId = 1L;
+        check.setWho(whoId);
+        check.setStatus(CheckEnum.UNCHECKED_STATUS.getValue());
+        check.setBelongId(course.getId());
+        check.setBelong(CheckEnum.CHECK_COURSE.getValue());
+        if (!checkService.insert(check))
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"增加课程失败");
+        System.out.println(check);
+        return true;
+    }
+
+    @Override
+    public List<EpCourse> getListByUserIdAndStatusNotEqualTo(long userId, int status) {
+        EpCourseExample courseExample = new EpCourseExample();
+        EpCourseExample.Criteria criteria = courseExample.createCriteria();
+        criteria.andStatusNotEqualTo(status);
+        criteria.andUserIdEqualTo(userId);
+        return courseMapper.selectByExample(courseExample);
     }
 }

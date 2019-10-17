@@ -62,7 +62,7 @@ public class IKindServiceImpl implements IKindService {
 
     @Override
     //@CanLook
-    public List<EpCourseKind> getListByRootAndStatus(int status, long root) {
+    public List<EpCourseKind> getListByRootAndStatus(long root,int status ) {
         EpCourseKindExample kindExample = new EpCourseKindExample();
         EpCourseKindExample.Criteria criteria = kindExample.createCriteria();
         criteria.andStatusEqualTo(status).andRootEqualTo(root);

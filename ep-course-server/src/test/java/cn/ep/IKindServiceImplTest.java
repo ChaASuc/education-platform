@@ -18,9 +18,8 @@ public class IKindServiceImplTest extends TestUtil {
 
     @Test
     public void getListByRootAndStatus(){
-        System.out.println(iKindService.getListByRootAndStatus(1,1L));
+      //  System.out.println(iKindService.getListByRootAndStatus(1,1L));
     }
-
     @Test
     public void insert(){
         EpCourseKind kind = new EpCourseKind();
