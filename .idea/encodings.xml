@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-category-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-category-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-category-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-config" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-course-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-course-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-course-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-eureka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-gateway" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-hystrix-dashboard" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-product-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-product-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-product-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-uploadFile" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-user-api" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-user-common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ep-user-server" charset="UTF-8" />
+  </component>
+</project>

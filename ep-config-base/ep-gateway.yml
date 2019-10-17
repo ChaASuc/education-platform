@@ -35,6 +35,10 @@ zuul:
       path: /ep/course/**
       serviceId: ep-course
       strip-prefix: false
+    ep-order:
+      path: /ep/order/**
+      serviceId: ep-order
+      strip-prefix: false
 # Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：
 # 设置全局Hystrix超时时间，Ribbon< hystrix, 因为ribbon重试没完，熔断了就麻烦了
 # 超时：(1 + MaxAutoRetries ）*（1+ MaxAutoRetriesNextServer) *（ReadTimeout +ConnectTimeout）
