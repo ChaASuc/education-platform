@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.models.auth.In;
 import lombok.Data;
 
+import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -33,9 +34,6 @@ public class EpCourse {
     @NotNull(groups = {Insert.class})
     private Integer free;
 
-    private String goal;
-
-    private String overview;
 
     @JsonSerialize(using = Date2LongSerializer.class)
     private Date openTime;
@@ -47,10 +45,12 @@ public class EpCourse {
     private Long userId;
 
     @NotNull(groups = {Insert.class})
+    @DecimalMax("99999.99")
     private Double price;
 
+    private String goal;
+    private String overview;
     private Integer watchCount;
-
     private String pictureUrl;
 
     public Long getId() {

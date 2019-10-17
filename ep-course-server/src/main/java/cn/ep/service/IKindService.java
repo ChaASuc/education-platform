@@ -46,7 +46,7 @@ public interface IKindService {
      * @param root 父节点
      * @return List<EpCourseKind>
      */
-    List<EpCourseKind> getListByRootAndStatus(int status, long root);
+    List<EpCourseKind> getListByRootAndStatus( long root,int status);
 
     /**
      * 增加一个种类

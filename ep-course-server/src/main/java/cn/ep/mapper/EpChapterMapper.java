@@ -27,4 +27,6 @@ public interface EpChapterMapper {
     int updateByPrimaryKeySelective(EpChapter record);
 
     int updateByPrimaryKey(EpChapter record);
+
+    int multiplyInsertSelective(@Param("chapterList") List<EpChapter> chapterList);
 }

@@ -93,4 +93,8 @@ public interface ICourseService {
     EpCourse getByCourseId(long courseId);
 
     Map<EpChapter, List<ChapterVO>> getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(int i, long courseId, int value, boolean isLogin);
+
+    boolean insertAndSendCheck(EpCourse course);
+
+    List<EpCourse> getListByUserIdAndStatusNotEqualTo(long userId, int status);
 }
