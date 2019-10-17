@@ -15,5 +15,5 @@ public class CourseInfoVO {
     private float scope;
     private Map<EpChapter,List<ChapterVO>> chapters;
     private boolean login;
-    private boolean pay;
+    private boolean subscription;
 }

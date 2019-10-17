@@ -1,11 +1,15 @@
 package cn.ep.aspect;
 
+import cn.ep.annotation.CanAdd;
+import cn.ep.annotation.CanLook;
+import cn.ep.courseenum.RoleEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -44,14 +48,18 @@ public class OperationHelper {
     void modifyPointCut(){}
 
 
-    @Before(value = "addPointCut()")
-    //@Order(1)
-    void addAdvice(JoinPoint joinPoint){
+    //todo 待权限模块实现后，再行修改，不热部署，需重启，不然会报错
 
-        boolean canAdd = true;
+
+    @Before(value = "@annotation(canAdd)", argNames = "canAdd")
+    //@Order(1)
+    void addAdvice(CanAdd canAdd){
+
+        System.out.println(canAdd.role().length);
+        boolean canAdd1 = true;
         //....
 
-        if (!canAdd){
+        if (!canAdd1){
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"你没有增加的权限");
         }
         System.out.println("add");
@@ -71,6 +79,11 @@ public class OperationHelper {
     @Before(value = "lookPointCut()")
     //@Order(4)
     void lookAdvice(JoinPoint joinPoint){
+        CanLook look = ((MethodSignature)joinPoint.getSignature())
+                .getMethod().getAnnotation(CanLook.class);
+        System.out.println(look.role().length);
+       // RoleEnum[] roleEnum = look.role();
+        //System.out.println(roleEnum);
 
         boolean canLook = true;
         if (!canLook){
@@ -78,6 +91,8 @@ public class OperationHelper {
         }
         System.out.println("look");
     }
+
+
     @Before(value = "modifyPointCut()")
    // @Order(3)
     void modifyAdvice(JoinPoint joinPoint){
