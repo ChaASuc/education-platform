@@ -6,7 +6,7 @@ spring:
     password: root123
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://management.deschen.cn:3306/ep_file?characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql://139.196.120.94:3306/ep_file?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root123
     initialSize: 5
@@ -34,8 +34,8 @@ spring:
     password: rjgc2016
   servlet:
     multipart:
-      max-file-size: 1024MB  # 最大文件大小
-      max-request-size: 1024MB # 最大请求大小
+      max-file-size: 8192MB  # 最大文件大小
+      max-request-size: 8192MB # 最大请求大小
 eureka:
   instance:
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称

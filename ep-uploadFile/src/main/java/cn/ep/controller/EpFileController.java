@@ -97,8 +97,23 @@ public class EpFileController {
         // 删除缓存
         redisUtil.delFuz(CacheNameHelper.EP_UPLOADFILE_PREFIX);
         return ResultVO.success();
-
     }
+
+    /**
+     * 根据主键修改文件夹
+     * @param epFile
+     * @return
+     */
+    @ApiOperation(value="根据主键修改文件",notes = "未测试")
+    @ApiImplicitParam(name="epFile", value = "文件实体类", dataType = "EpFile")
+    @PutMapping("")
+    public ResultVO updateFile(@RequestBody @Validated({Update.class}) EpFile epFile){
+        uploadService.update(epFile);
+        // 删除缓存
+        redisUtil.delFuz(CacheNameHelper.EP_UPLOADFILE_PREFIX);
+        return ResultVO.success();
+    }
+
 
     /**
      * 根据主键物理删除文件夹
@@ -140,7 +155,7 @@ public class EpFileController {
      */
     @ApiOperation(value="根据文件id物理删除文件", notes = "已测试")
     @ApiImplicitParam(name= "fileId",value = "文件id", required = true, paramType = "path")
-    @DeleteMapping(value = "/delete/{fileId}")
+    @DeleteMapping(value = "/{fileId}")
     public ResultVO delete(@PathVariable @NotNull Long fileId){
         uploadService.deleteByEpFileId(fileId);
         // 删除缓存
@@ -229,14 +244,14 @@ public class EpFileController {
         // 获取reids的key
         String key = String.format(CacheNameHelper.EP_UPLOADFILE_PREFIX_GETLISTBYDIRIDANDPAGENUM, dirId, pageNum);
         // 统一返回值
-        PageInfo<String> pageInfo = null;
+        PageInfo<EpFile> pageInfo = null;
         // 查看是否有缓存
         Object obj = redisUtil.get(key);
         if (null == obj) {
             pageInfo = uploadService.selectByDirIdAndPageNum(dirId, pageNum);
             redisUtil.set(key, pageInfo);
         }else {
-            pageInfo = (PageInfo<String>) obj;
+            pageInfo = (PageInfo<EpFile>) obj;
         }
         // 删除缓存
         return ResultVO.success(pageInfo);

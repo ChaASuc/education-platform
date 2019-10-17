@@ -72,15 +72,15 @@ public class UploadServiceImpl implements UploadService {
             String extensionName = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
             StorePath storePath = storageClient.uploadFile(file.getInputStream(), file.getSize(), extensionName, null);
 
+            String url = prop.getBaseUrl() + storePath.getFullPath();
             // 保存数据库
             EpFile epFile = new EpFile();
             epFile.setFileId(idWorker.nextId());
             epFile.setDirId(dirId);
-            epFile.setFileIp(prop.getBaseUrl());
-            epFile.setFileUrl(storePath.getFullPath());
+            epFile.setFileUrl(url);
             boolean success = epFileMapper.insertSelective(epFile) > 0 ? true : false;
             if (!success) {
-                deleteFile(storePath.getFullPath());
+                deleteFile(url);
                 throw new GlobalException(GlobalEnum.OPERATION_ERROR, "保存文件失败");
             }
             //返回保存图片的完整url
@@ -92,9 +92,9 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public void deleteFile(String fullPath) {
-        log.info("【文件模块】删除文件 url = {}", fullPath);
-        storageClient.deleteFile(fullPath);
+    public void deleteFile(String url) {
+        log.info("【文件模块】删除文件 url = {}", url);
+        storageClient.deleteFile(url.substring(url.indexOf("group")));
     }
 
     @Override
@@ -132,15 +132,15 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public byte[] downloadFile(String fileUrl) {
         byte[] bytes = storageClient.downloadFile(
-                fileUrl.substring(0, fileUrl.indexOf("/")),
-                fileUrl.substring(fileUrl.indexOf("/") + 1),
+                fileUrl.substring(fileUrl.indexOf("group"), fileUrl.indexOf("group")+6),
+                fileUrl.substring(fileUrl.indexOf("group")+7),
                 new DownloadByteArray()
         );
         return bytes;
     }
 
     @Override
-    public PageInfo<String> selectByDirIdAndPageNum(Long dirId, Integer pageNum) {
+    public PageInfo<EpFile> selectByDirIdAndPageNum(Long dirId, Integer pageNum) {
         PageHelper.startPage(pageNum, pageConfig.getPageSize());    // 开启分页查询，第一次切仅第一次查询时生效
         // 创建查询条件
         EpFileExample epFileExample = new EpFileExample();
@@ -149,17 +149,26 @@ public class UploadServiceImpl implements UploadService {
         // 根据条件查询
         List<EpFile> epFiles = epFileMapper.selectByExample(epFileExample);
 
-        List<String> fileUrls = new ArrayList<>();
-        //  无商品
-        if(!CollectionUtils.isEmpty(epFiles)) {
-            fileUrls = epFiles.stream().map(
-                    epFile -> {
-                        return epFile.getFileIp() + epFile.getFileUrl();
-                    }
-            ).collect(Collectors.toList());
-            return new PageInfo<>(fileUrls);
-        } else {
-            return new PageInfo<>(fileUrls);
+//        List<String> fileUrls = new ArrayList<>();
+//        //  无商品
+//        if(!CollectionUtils.isEmpty(epFiles)) {
+//            fileUrls = epFiles.stream().map(
+//                    epFile -> {
+//                        return epFile.getFileIp() + epFile.getFileUrl();
+//                    }
+//            ).collect(Collectors.toList());
+//            return new PageInfo<>(fileUrls);
+//        } else {
+        return new PageInfo<>(epFiles);
+//        }
+    }
+
+    @Override
+    @Transactional
+    public void update(EpFile epFile) {
+        boolean success = epFileMapper.updateByPrimaryKey(epFile) > 0 ? true : false;
+        if (!success) {
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "文件更新失败");
         }
     }
 }

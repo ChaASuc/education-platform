@@ -1,19 +1,19 @@
 package cn.ep.bean;
 
 import cn.ep.serializer.Long2StringSerializer;
+import cn.ep.validate.groups.Update;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-public class EpFile implements Serializable {
+public class EpFile {
+    @NotNull(groups = {Update.class})
     @JsonSerialize(using = Long2StringSerializer.class)
     private Long fileId;
 
     @JsonSerialize(using = Long2StringSerializer.class)
     private Long dirId;
-
-    private String fileIp;
 
     private String fileUrl;
 
@@ -35,14 +35,6 @@ public class EpFile implements Serializable {
 
     public void setDirId(Long dirId) {
         this.dirId = dirId;
-    }
-
-    public String getFileIp() {
-        return fileIp;
-    }
-
-    public void setFileIp(String fileIp) {
-        this.fileIp = fileIp == null ? null : fileIp.trim();
     }
 
     public String getFileUrl() {
