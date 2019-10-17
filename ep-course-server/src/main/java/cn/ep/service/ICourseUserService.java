@@ -17,4 +17,5 @@ public interface ICourseUserService {
 
     EpCourseUser getByUserIdAndCourseId(long courseId, long userId);
 
+    boolean subscription(long courseId);
 }

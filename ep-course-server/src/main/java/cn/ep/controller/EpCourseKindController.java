@@ -58,7 +58,7 @@ public class EpCourseKindController {
     private RedisUtil redisUtil;
 
     @ApiOperation(value = "获得所有课程种类", notes = "开发人员已测试")
-    @GetMapping("/listAll")
+    @GetMapping("/list")
     ResultVO getListAll(){
         Object obj = redisUtil.get(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_ALL);
         if (obj != null)
