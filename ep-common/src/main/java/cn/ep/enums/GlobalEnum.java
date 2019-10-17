@@ -30,6 +30,8 @@ public enum GlobalEnum implements IEnum{
 
     INVALID_PARAM(10005, "参数错误"),
 
+    CONTENT_REPETITION_ERROR(10006, "内容重复"),
+
     ;
 
 

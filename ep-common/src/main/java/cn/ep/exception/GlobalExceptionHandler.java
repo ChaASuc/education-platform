@@ -5,6 +5,7 @@ import cn.ep.utils.JsonUtil;
 import cn.ep.utils.ResultVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
@@ -64,6 +65,24 @@ public class GlobalExceptionHandler {
                 .addExtra("exceptionMessage", e.getClass().getName() + ": " + e.getMessage());
     }
 
+    /**
+     * 数据库内容重复异常
+     */
+    /**
+     * 服务异常
+     *
+     * @param request
+     * @param e
+     * @return
+     */
+    @ExceptionHandler({DuplicateKeyException.class})
+    public ResultVO handleDuplicateKeyException(HttpServletRequest request, DuplicateKeyException e) {
+        log.error("错误请求url = {}", request.getRequestURI(), e);
+        return ResultVO.failure(GlobalEnum.CONTENT_REPETITION_ERROR)
+                .addExtra("stackTrace", e.getStackTrace())
+                .addExtra("exceptionMessage", e.getClass().getName() + ": " + e.getMessage());
+    }
+
 
     /**
      * 参数异常处理
@@ -112,5 +131,7 @@ public class GlobalExceptionHandler {
         }
         return resultVO;
     }
+
+
 
 }
