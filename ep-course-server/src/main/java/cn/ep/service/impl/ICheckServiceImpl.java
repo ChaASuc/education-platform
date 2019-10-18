@@ -1,3 +1,4 @@
+
 package cn.ep.service.impl;
 
 import cn.ep.bean.EpCheck;
@@ -7,11 +8,18 @@ import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpChapterMapper;
 import cn.ep.mapper.EpCheckMapper;
+import cn.ep.service.IChapterService;
 import cn.ep.service.ICheckService;
+import cn.ep.service.ICourseService;
+import cn.ep.service.IKindService;
 import cn.ep.utils.IdWorker;
+import cn.ep.vo.CheckVO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class ICheckServiceImpl implements ICheckService {
@@ -20,6 +28,10 @@ public class ICheckServiceImpl implements ICheckService {
     private IdWorker idWorker;
     @Autowired
     private EpCheckMapper checkMapper;
+
+    @Autowired private IChapterService chapterService;
+    @Autowired private ICourseService courseService;
+    @Autowired private IKindService kindService;
 
     @Override
     public List<EpCheck> getListByEpCheck(EpCheck epCheck) {
@@ -90,4 +102,42 @@ public class ICheckServiceImpl implements ICheckService {
     public EpCheck getById(long id) {
         return checkMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public PageInfo<CheckVO> getListByUserIdAndTypeAndPage(Long userId, int type, int page) {
+        PageHelper.startPage(page,20);
+        EpCheckExample checkExample = new EpCheckExample();
+        EpCheckExample.Criteria criteria = checkExample.createCriteria();
+        if (userId != null)
+            criteria.andWhoEqualTo(userId);
+        if (type == 1){  //未审核
+            criteria.andStatusEqualTo(CheckEnum.UNCHECKED_STATUS.getValue());
+        } else if(type == 2) {  //已审核
+            criteria.andStatusNotEqualTo(CheckEnum.UNCHECKED_STATUS.getValue());
+        } else{    //所有
+            ;
+        }
+        checkExample.setOrderByClause("create_time desc");
+        List<EpCheck> checkList = checkMapper.selectByExample(checkExample);
+        PageInfo<EpCheck> checkInfo = new PageInfo<>(checkList);
+        PageInfo<CheckVO> checkVOPageInfo = new PageInfo<>();
+        checkVOPageInfo.setTotal(checkInfo.getTotal());
+        List<CheckVO> checkVOList = new ArrayList<>();
+        for (EpCheck check :
+                checkList) {
+            CheckVO checkVO = new CheckVO();
+            checkVO.setRecord(check);
+            if (check.getBelong() == CheckEnum.CHECK_COURSE.getValue()){
+                checkVO.setChecked(courseService.getByCourseId(check.getBelongId()));
+            } else if(check.getBelong() == CheckEnum.CHECK_VIDEO.getValue()){
+                checkVO.setChecked(chapterService.getByChapterId(check.getBelongId()));
+            } else{
+                checkVO.setChecked(kindService.getByKindId(check.getBelongId()));
+            }
+            checkVOList.add(checkVO);
+        }
+        checkVOPageInfo.setList(checkVOList);
+        return checkVOPageInfo;
+    }
 }
+

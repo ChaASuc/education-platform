@@ -14,7 +14,6 @@ import cn.ep.service.ICourseService;
 import cn.ep.service.IWatchRecordService;
 import cn.ep.utils.IdWorker;
 import cn.ep.vo.ChapterVO;
-import io.swagger.annotations.ApiImplicitParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

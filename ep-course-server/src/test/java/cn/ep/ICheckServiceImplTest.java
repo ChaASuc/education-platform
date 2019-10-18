@@ -1,7 +1,5 @@
 package cn.ep;
 
-import cn.ep.bean.EpChapter;
-import cn.ep.service.IChapterService;
 import cn.ep.service.ICheckService;
 import cn.ep.utils.TestUtil;
 import org.junit.Test;

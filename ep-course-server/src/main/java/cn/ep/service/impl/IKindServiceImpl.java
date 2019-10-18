@@ -1,6 +1,5 @@
 package cn.ep.service.impl;
 
-import cn.ep.annotation.CanLook;
 import cn.ep.bean.EpCheck;
 import cn.ep.bean.EpCourseKind;
 import cn.ep.bean.EpCourseKindExample;
@@ -109,6 +108,11 @@ public class IKindServiceImpl implements IKindService {
         if (!checkService.insert(check))
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"插入失败");
         return true;
+    }
+
+    @Override
+    public EpCourseKind getByKindId(Long id) {
+        return kindMapper.selectByPrimaryKey(id);
     }
 
 }

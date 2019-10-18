@@ -264,20 +264,21 @@ public class EpCourseController {
 
     }
 
-    @ApiOperation(value = "订阅课程",notes = "未测试")
-    @PostMapping("/subscription")
+    @ApiOperation(value = "订阅课程",notes = "开发人员已测试")
+    @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
+    @PostMapping("/subscription/{courseId}")
     @IsLogin
-    ResultVO subscription(long courseId){
+    ResultVO subscription(@PathVariable long courseId){
         courseUserService.subscription(courseId);
         //todo 从汉槟获取当前用户id
         long userId = 1L;
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_getSubscriptionList;
         String redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_USER_ID,userId);
-        redisUtil.hdel(redisKey,redisKey);
+        redisUtil.hdel(redisKey,redisItem);
         return ResultVO.success();
     }
 
-    @ApiOperation(value = "获取当前用户订阅的所有课程", notes = "未测试")
+    @ApiOperation(value = "获取当前用户订阅的所有课程", notes = "开发人员已测试")
     @GetMapping("/subscription/list")
     @IsLogin
     ResultVO getSubscriptionList(){
@@ -288,14 +289,18 @@ public class EpCourseController {
         Object object = redisUtil.hget(redisKey,redisItem);
         if (object != null)
             return ResultVO.success(object);
-        //--------把业务逻辑下移到哪个服务？
+        //todo--------把业务逻辑下移到哪个服务？
         List<EpCourseUser> courseUserList = courseUserService.getListByUserId(userId);
         List<EpCourse> courseList = new ArrayList<>();
-        for (EpCourseUser courseUser :
-                courseUserList) {
-               courseList.add(courseService.getByCourseId(courseUser.getCourseId()));
+
+        if (courseUserList != null && courseUserList.size() != 0){
+            for (EpCourseUser courseUser :
+                    courseUserList) {
+                courseList.add(courseService.getByCourseId(courseUser.getCourseId()));
+            }
+            redisUtil.hset(redisKey,redisItem,courseList);
         }
-        redisUtil.hset(redisKey,redisItem,courseList);
+        System.out.println(courseUserList);
         return ResultVO.success(courseList);
     }
 }

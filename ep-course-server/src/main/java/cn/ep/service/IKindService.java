@@ -74,4 +74,6 @@ public interface IKindService {
      * @return 事务， 成功返回true，否则回滚
      */
     boolean insertAndSendCheck(EpCourseKind epCourseKind);
+
+    EpCourseKind getByKindId(Long id);
 }

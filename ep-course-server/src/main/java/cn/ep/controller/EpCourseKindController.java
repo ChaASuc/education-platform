@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@Api(description = "课程模块：课程种类接口：完成")
+@Api(description = "课程模块：课程种类接口")
 @RequestMapping("ep/course/kind")
 public class EpCourseKindController {
 

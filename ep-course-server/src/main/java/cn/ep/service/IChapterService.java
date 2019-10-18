@@ -65,4 +65,5 @@ public interface IChapterService {
 
     boolean multiplyInsertAndSendCheck(List<EpChapter> chapters);
 
+    EpChapter getByChapterId(Long Id);
 }
