@@ -5,7 +5,7 @@ spring:
     config:
       # 服务环境名称  例如 {name}-{profile} = ep-category-dev.yml
       name: ep-uploadFile
-      profile: dev
+      profile: dev1
       discovery:
         enabled: true
         service-id: ep-config
