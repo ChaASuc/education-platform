@@ -13,7 +13,7 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
-    ip-address: 5tsehe.natappfree.cc        # 指定自己的ip信息，不指定的话会自己寻找
+    ip-address: 139.196.120.94       # 指定自己的ip信息，不指定的话会自己寻找
     status-page-url.: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
 # 设置全局Hystrix超时时间
 hystrix:
