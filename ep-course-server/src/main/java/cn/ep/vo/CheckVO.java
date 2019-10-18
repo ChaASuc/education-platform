@@ -8,6 +8,6 @@ import lombok.Data;
 public class CheckVO {
     EpCheck record;
     Object  checked;
-    //CheckEnum type;
+    CheckEnum type;
 }
 

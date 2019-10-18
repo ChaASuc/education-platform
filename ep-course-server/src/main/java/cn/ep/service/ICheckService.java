@@ -1,6 +1,7 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpCheck;
+import cn.ep.courseenum.CheckEnum;
 import cn.ep.vo.CheckVO;
 import com.github.pagehelper.PageInfo;
 
@@ -66,7 +67,7 @@ public interface ICheckService {
      * @param status 0 未审核 1未通过 2 通过
      * @return 成功为true，否则为false
      */
-    boolean check(long id, int status);
+    boolean check(EpCheck epCheck, int status);
     /**
      * 增加一条记录
      * @param epCheck 记录实体
@@ -88,4 +89,8 @@ public interface ICheckService {
     EpCheck getById(long id);
 
     PageInfo<CheckVO> getListByUserIdAndTypeAndPage(Long userId, int type, int page);
+
+    PageInfo<CheckVO> getAllCheckListByPage(int page);
+
+    CheckEnum checkAndSetStatus(long checkId, int status);
 }

@@ -1,9 +1,11 @@
 
 package cn.ep.service.impl;
 
-import cn.ep.bean.EpCheck;
-import cn.ep.bean.EpCheckExample;
+import cn.ep.bean.*;
+import cn.ep.courseenum.ChapterEnum;
 import cn.ep.courseenum.CheckEnum;
+import cn.ep.courseenum.CourseEnum;
+import cn.ep.courseenum.CourseKindEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpChapterMapper;
@@ -18,6 +20,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,17 +80,6 @@ public class ICheckServiceImpl implements ICheckService {
     }
 
     @Override
-    public boolean check(long id, int status) {
-        EpCheck epCheck = getById(id);
-        if (epCheck.getStatus() != CheckEnum.UNCHECKED_STATUS.getValue())
-            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"不得多次审核!");
-        epCheck.setStatus(status);
-        if (!update(epCheck))
-            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"审核失败");
-        return true;
-    }
-
-    @Override
     public boolean insert(EpCheck epCheck) {
         epCheck.setId(idWorker.nextId());
         return checkMapper.insertSelective(epCheck) > 0;
@@ -129,15 +121,67 @@ public class ICheckServiceImpl implements ICheckService {
             checkVO.setRecord(check);
             if (check.getBelong() == CheckEnum.CHECK_COURSE.getValue()){
                 checkVO.setChecked(courseService.getByCourseId(check.getBelongId()));
+                checkVO.setType(CheckEnum.CHECK_COURSE);
             } else if(check.getBelong() == CheckEnum.CHECK_VIDEO.getValue()){
                 checkVO.setChecked(chapterService.getByChapterId(check.getBelongId()));
+                checkVO.setType(CheckEnum.CHECK_VIDEO);
             } else{
                 checkVO.setChecked(kindService.getByKindId(check.getBelongId()));
+                checkVO.setType(CheckEnum.CHECK_COURSE_KIND);
             }
             checkVOList.add(checkVO);
         }
         checkVOPageInfo.setList(checkVOList);
         return checkVOPageInfo;
+    }
+
+    @Override
+    public PageInfo<CheckVO> getAllCheckListByPage(int page) {
+        return getListByUserIdAndTypeAndPage(null,0,page);
+    }
+
+    @Override
+    @Transactional
+    public CheckEnum checkAndSetStatus(long checkId, int status) {
+        //todo 从汉槟获取用户id；
+        long userId = 1L;
+        EpCheck epCheck = getById(checkId);
+        if (userId != epCheck.getWho())
+            throw  new GlobalException(GlobalEnum.OPERATION_ERROR,"你没有审批这条记录的权限");
+        check(epCheck,status);
+        if (epCheck.getBelong() == CheckEnum.CHECK_VIDEO.getValue()){
+            EpChapter epChapter = new EpChapter();
+            epChapter.setId(epCheck.getBelongId());
+            epChapter.setStatus(status == CheckEnum.CHECK_NOT_PASS.getValue()? ChapterEnum.INVALID_STATUS.getValue():ChapterEnum.VALID_STATUS.getValue());
+            chapterService.updateById(epChapter);
+            return CheckEnum.CHECK_VIDEO;
+        } else if (epCheck.getBelong() == CheckEnum.CHECK_COURSE.getValue()){
+            EpCourse epCourse = new EpCourse();
+            epCourse.setId(epCheck.getBelongId());
+            epCourse.setStatus(status == CheckEnum.CHECK_NOT_PASS.getValue()? CourseEnum.CHECK_NOT_PASS.getValue() : CourseEnum.CHECK_PASS.getValue());
+            courseService.updateById(epCourse);
+            return CheckEnum.CHECK_COURSE;
+        } else {
+            EpCourseKind epCourseKind = new EpCourseKind();
+            epCourseKind.setId(epCheck.getBelongId());
+            epCourseKind.setStatus(status == CheckEnum.CHECK_NOT_PASS.getValue()? CourseKindEnum.INVALID_STATUS.getValue() : CourseKindEnum.VALID_STATUS.getValue());
+            kindService.updateById(epCourseKind);
+            return CheckEnum.CHECK_COURSE_KIND;
+        }
+    }
+
+    @Override
+    public boolean check(EpCheck epCheck, int status) {
+        if (epCheck.getStatus() != CheckEnum.UNCHECKED_STATUS.getValue())
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"不得多次审核!");
+        if (status != CheckEnum.CHECK_NOT_PASS.getValue()
+                && status != CheckEnum.CHECK_PASS.getValue())
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"参数非法!");
+        epCheck.setStatus(status);
+        epCheck.setUpdateTime(null);
+        if (!update(epCheck))
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR,"审核失败");
+        return true;
     }
 }
 

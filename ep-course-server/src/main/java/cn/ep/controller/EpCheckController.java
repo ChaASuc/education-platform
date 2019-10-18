@@ -3,6 +3,8 @@ package cn.ep.controller;
 
 import cn.ep.annotation.CanLook;
 import cn.ep.annotation.IsLogin;
+import cn.ep.bean.EpCheck;
+import cn.ep.courseenum.CheckEnum;
 import cn.ep.courseenum.RoleEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.service.IChapterService;
@@ -13,16 +15,11 @@ import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.vo.CheckVO;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @Api(description = "课程模块：审核接口")
@@ -41,7 +38,27 @@ public class EpCheckController {
         public static final String EP_COURSE_CHECK_PREFIX_GET_LIST_BY_PAGE = "ep_courseCheck_prefix_getList_%s";
     }
 
-    ResultVO check(){
+    @ApiOperation(value = "审核，管理员权限",notes = "开发人员已测试")
+   /* @ApiImplicitParams({
+            @ApiImplicitParam(name = "checkId", value = "审核记录id", dataType = "long", paramType = "body"),
+            @ApiImplicitParam(name = "status", value = "状态，1未通过，2通过", dataType = "int", paramType = "body")
+    })*/
+  //  @ApiImplicitParam(name = "params" , paramType = "body", )
+
+    @PutMapping("")
+    @IsLogin
+    @CanLook(role = {RoleEnum.ADMIN})
+    ResultVO check(@RequestBody @ApiParam(value = "json格式，checkId:审核记录id，status：状态【1：未通过2：通过】")  Map<String,String> params){
+        long checkId = Long.valueOf(params.get("checkId"));
+        int status = Integer.valueOf(params.get("status"));
+        CheckEnum checkEnum = checkService.checkAndSetStatus(checkId,status);
+        if (checkEnum == CheckEnum.CHECK_VIDEO){
+            //todo 清除有关章节缓存,可能还有其他
+        } else if (checkEnum == CheckEnum.CHECK_COURSE){
+            //todo 清除有关课程缓存，可能还有其他
+        } else {
+            //todo 清除有关种类缓存,可能还有其他
+        }
         return ResultVO.success();
     }
 
@@ -51,11 +68,11 @@ public class EpCheckController {
     @IsLogin
     @CanLook(role = RoleEnum.ADMIN)
     ResultVO getListByPage(@PathVariable  int page){
-        String redisKey = CacheNameHelper.EP_COURSE_CHECK_PREFIX_GET_LIST_BY_PAGE;
+        String redisKey = String.format(CacheNameHelper.EP_COURSE_CHECK_PREFIX_GET_LIST_BY_PAGE,page);
         Object object = redisUtil.get(redisKey);
         if (object != null)
             return ResultVO.success(object);
-        PageInfo<CheckVO> checkVOList = checkService.getListByUserIdAndTypeAndPage(null,0,page);
+        PageInfo<CheckVO> checkVOList = checkService.getAllCheckListByPage(page);
         redisUtil.set(redisKey,checkVOList);
         return ResultVO.success(checkVOList);
     }
