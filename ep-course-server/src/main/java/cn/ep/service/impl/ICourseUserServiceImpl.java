@@ -23,13 +23,13 @@ public class ICourseUserServiceImpl implements ICourseUserService {
     @Override
     public boolean insert(EpCourseUser courseUser) {
         courseUser.setId(idWorker.nextId());
-        return courseUserMapper.insert(courseUser) > 0;
+        return courseUserMapper.insertSelective(courseUser) > 0;
     }
 
     @Override
     public List<EpCourseUser> getListByCourseId(long courseId) {
         EpCourseUser condition = new EpCourseUser();
-        condition.setUserId(courseId);
+        condition.setCourseId(courseId);
         return getListByCourseUser(condition);
     }
 
@@ -49,7 +49,7 @@ public class ICourseUserServiceImpl implements ICourseUserService {
         if (courseUser.getId() != null)
             criteria.andIdEqualTo(courseUser.getId());
         if (courseUser.getUserId() != null)
-            criteria.andCourseIdEqualTo(courseUser.getCourseId());
+            criteria.andUserIdEqualTo(courseUser.getUserId());
         if (courseUser.getCreateTime() != null)
             criteria.andCreateTimeEqualTo(courseUser.getCreateTime());
         if (courseUser.getUpdateTime() != null)
@@ -83,6 +83,7 @@ public class ICourseUserServiceImpl implements ICourseUserService {
         long userId = 1L;
         courseUser.setUserId(userId);
         courseUser.setCourseId(courseId);
+        System.out.println(courseUser);
         if (!insert(courseUser))
             throw new GlobalException(GlobalEnum.OPERATION_ERROR, "订阅失败");
         return true;

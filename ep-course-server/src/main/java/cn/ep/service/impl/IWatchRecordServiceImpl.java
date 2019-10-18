@@ -2,6 +2,7 @@ package cn.ep.service.impl;
 
 import cn.ep.bean.EpWatchRecord;
 import cn.ep.bean.EpWatchRecordExample;
+import cn.ep.courseenum.WatchRecordEnum;
 import cn.ep.mapper.EpWatchRecordMapper;
 import cn.ep.service.IWatchRecordService;
 import cn.ep.utils.IdWorker;
@@ -20,6 +21,7 @@ public class IWatchRecordServiceImpl implements IWatchRecordService {
     @Override
     public boolean insert(EpWatchRecord record) {
         record.setId(idWorker.nextId());
+        record.setStatus(WatchRecordEnum.VALID_STATUS.getValue());
         return recordMapper.insertSelective(record) > 0;
     }
 
@@ -34,6 +36,11 @@ public class IWatchRecordServiceImpl implements IWatchRecordService {
 
     @Override
     public boolean update(EpWatchRecord record) {
-        return recordMapper.updateByPrimaryKeySelective(record) > 0;
+        EpWatchRecordExample recordExample = new EpWatchRecordExample();
+        EpWatchRecordExample.Criteria criteria = recordExample.createCriteria();
+        criteria.andUserIdEqualTo(record.getUserId())
+                .andCourseIdEqualTo(record.getCourseId())
+                .andChapterIdEqualTo(record.getChapterId());
+        return recordMapper.updateByExampleSelective(record,recordExample) > 0;
     }
 }

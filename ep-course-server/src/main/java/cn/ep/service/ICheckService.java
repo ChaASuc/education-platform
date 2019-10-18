@@ -1,15 +1,17 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpCheck;
+import cn.ep.vo.CheckVO;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 
 /**
-* @author chenshaoxin
-* @description 课程模块审核业务逻辑接口定义
-* @date 17:20 2019-10-10
-* @modified 17:20 2019-10-10
-*/
+ * @author chenshaoxin
+ * @description 课程模块审核业务逻辑接口定义
+ * @date 17:20 2019-10-10
+ * @modified 17:20 2019-10-10
+ */
 public interface ICheckService {
 
     /** 审核表 字段
@@ -85,4 +87,5 @@ public interface ICheckService {
      */
     EpCheck getById(long id);
 
+    PageInfo<CheckVO> getListByUserIdAndTypeAndPage(Long userId, int type, int page);
 }

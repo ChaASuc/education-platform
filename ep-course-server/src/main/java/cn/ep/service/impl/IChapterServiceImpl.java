@@ -92,4 +92,9 @@ public class IChapterServiceImpl implements IChapterService {
         }
         return true;
     }
+
+    @Override
+    public EpChapter getByChapterId(Long Id) {
+        return chapterMapper.selectByPrimaryKey(Id);
+    }
 }
