@@ -269,9 +269,9 @@ public class EpCourseController {
     @PostMapping("/subscription/{courseId}")
     @IsLogin
     ResultVO subscription(@PathVariable long courseId){
-        courseUserService.subscription(courseId);
         //todo 从汉槟获取当前用户id
         long userId = 1L;
+        courseUserService.subscription(courseId,userId);
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_getSubscriptionList;
         String redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_USER_ID,userId);
         redisUtil.hdel(redisKey,redisItem);

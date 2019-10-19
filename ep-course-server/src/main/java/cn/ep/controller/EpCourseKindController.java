@@ -14,6 +14,7 @@ import cn.ep.service.IKindService;
 import cn.ep.utils.IdWorker;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
+import cn.ep.vo.KindVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -63,9 +64,18 @@ public class EpCourseKindController {
         Object obj = redisUtil.get(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_ALL);
         if (obj != null)
             return ResultVO.success(obj);
+        //System.out.println(555);
         Map<EpCourseKind,List<EpCourseKind>> kindListMap = kindService.getListByStatus(CourseKindEnum.VALID_STATUS.getValue());
-        redisUtil.set(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_ALL,kindListMap);
-        return ResultVO.success(kindListMap);
+        List<KindVO> kindVOList = new ArrayList<>(kindListMap.size());
+        for (Map.Entry<EpCourseKind, List<EpCourseKind>> entry :
+                kindListMap.entrySet()) {
+            KindVO kindVO = new KindVO();
+            kindVO.setRoot(entry.getKey());
+            kindVO.setSubKind(entry.getValue());
+            kindVOList.add(kindVO);
+        }
+        redisUtil.set(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_ALL,kindVOList);
+        return ResultVO.success(kindVOList);
     }
 
     @ApiOperation(value = "获得热门种类：8条记录，以点击量为依据，实时更新", notes = "开发人员已测试")

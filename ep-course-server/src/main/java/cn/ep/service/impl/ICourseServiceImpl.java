@@ -14,6 +14,7 @@ import cn.ep.service.ICourseService;
 import cn.ep.service.IWatchRecordService;
 import cn.ep.utils.IdWorker;
 import cn.ep.vo.ChapterVO;
+import cn.ep.vo.VerseVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,33 +121,45 @@ public class ICourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public Map<EpChapter, List<ChapterVO>> getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(int userId, long courseId, int value, boolean isLogin) {
+    public  List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(int userId, long courseId, int value, boolean isLogin) {
         Map<EpChapter,List<EpChapter>> chapterListMap =
                 chapterService.getListByCourseIdAndStatus(courseId
                         , ChapterEnum.VALID_STATUS.getValue());
-        Map<EpChapter,List<ChapterVO>> chapterVOListMap = new HashMap<>(chapterListMap.size());
+        //一个课程的所有（章与节）VO
+        List<ChapterVO> chapterVOList = new ArrayList<>(chapterListMap.size());
+
+       // Map<EpChapter,List<ChapterVO>> chapterVOListMap = new HashMap<>(chapterListMap.size());
         for (Map.Entry<EpChapter, List<EpChapter>> chapterListEntry :
                 chapterListMap.entrySet()) {
-            List<ChapterVO> chapterVOList = new ArrayList<>();
+            //（章与节）VO
+            ChapterVO chapterVO = new ChapterVO();
+            chapterVO.setChapter(chapterListEntry.getKey());
+
+            //一个章的所有（节与观看记录）VO
+            List<VerseVO> verseVOList = new ArrayList<>();
             List<EpWatchRecord> records = null;
-            if (!isLogin)
+
+            if (isLogin)  //如果登陆了 ，获取该用户该课程的所有观看记录
                 records = recordService.selectByUserIdAndCourseIdAndStatus(userId,courseId, WatchRecordEnum.VALID_STATUS.getValue());
-            for (EpChapter c :
+
+            for (EpChapter verse :
                     chapterListEntry.getValue()) {
-                ChapterVO chapterVO = new ChapterVO();
-                chapterVO.setChapter(c);
-                if (!isLogin){
+                VerseVO verseVO = new VerseVO();
+                verseVO.setVerse(verse);
+
+                if (isLogin){  //因为没有登陆，records等于null
                     for (EpWatchRecord r :
                             records) {
-                        if (r.getChapterId() == c.getId())
-                            chapterVO.setRecord(r);
+                        if (r.getChapterId() == verse.getId())
+                            verseVO.setRecord(r);
                     }
                 }
-                chapterVOList.add(chapterVO);
+                verseVOList.add(verseVO);
             }
-            chapterVOListMap.put(chapterListEntry.getKey(),chapterVOList);
+            chapterVO.setVerseVOS(verseVOList);
+            chapterVOList.add(chapterVO);
         }
-        return chapterVOListMap;
+        return chapterVOList;
     }
 
     @Override

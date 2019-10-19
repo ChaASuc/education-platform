@@ -63,7 +63,7 @@ public interface ICheckService {
 
     /**
      *  审核记录
-     * @param id 记录id
+     * @param epCheck 审核实体类
      * @param status 0 未审核 1未通过 2 通过
      * @return 成功为true，否则为false
      */

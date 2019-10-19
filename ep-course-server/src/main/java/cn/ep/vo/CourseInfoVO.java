@@ -13,7 +13,7 @@ public class CourseInfoVO {
     private EpUser author;
     private EpCourse course;
     private float scope;
-    private Map<EpChapter,List<ChapterVO>> chapters;
+    private List<ChapterVO> chapters;
     private boolean login;
     private boolean subscription;
 }

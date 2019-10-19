@@ -70,7 +70,9 @@ public class ICourseUserServiceImpl implements ICourseUserService {
     }
 
     @Override
-    public boolean subscription(long courseId) {
+    public boolean subscription(long courseId,long userId) {
+        if (getByUserIdAndCourseId(courseId,userId) != null)
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "不能重复订阅");
         boolean isfree = false;
         if (!isfree) {
             //todo 从订单模块获取当前课程是否购买成功 在service层调用其他模块提供的服务是否规范？
@@ -79,8 +81,6 @@ public class ICourseUserServiceImpl implements ICourseUserService {
                 throw new GlobalException(GlobalEnum.OPERATION_ERROR, "该课程为付费课程，请先购买");
         }
         EpCourseUser courseUser = new EpCourseUser();
-        //todo 从汉槟获取当前用户id
-        long userId = 1L;
         courseUser.setUserId(userId);
         courseUser.setCourseId(courseId);
         System.out.println(courseUser);
