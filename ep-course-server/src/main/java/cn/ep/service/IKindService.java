@@ -36,7 +36,7 @@ public interface IKindService {
      * 获取种类列表中status字段不为零的map
      * 该map有一定的规律性，key为一级种类，value为其二级种类list集合
      * @param status 状态值 整型
-     * @return Map<EpCourseKind,List<EpCourseKind>>
+     * @return
      */
     Map<EpCourseKind,List<EpCourseKind>> getListByStatus(int status);
 
