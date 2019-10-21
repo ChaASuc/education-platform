@@ -2,31 +2,23 @@ package cn.ep.controller;
 
 import cn.ep.annotation.CanAdd;
 import cn.ep.annotation.IsLogin;
-import cn.ep.bean.EpCourse;
 import cn.ep.bean.EpCourseKind;
-import cn.ep.courseenum.CourseEnum;
 import cn.ep.courseenum.CourseKindEnum;
 import cn.ep.courseenum.RoleEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
-import cn.ep.service.ICourseService;
 import cn.ep.service.IKindService;
-import cn.ep.utils.IdWorker;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.vo.KindVO;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+
 
 @RestController
 @Api(description = "课程模块：课程种类接口")
@@ -65,7 +57,7 @@ public class EpCourseKindController {
         if (obj != null)
             return ResultVO.success(obj);
         //System.out.println(555);
-        Map<EpCourseKind,List<EpCourseKind>> kindListMap = kindService.getListByStatus(CourseKindEnum.VALID_STATUS.getValue());
+        Map<EpCourseKind, List<EpCourseKind>> kindListMap = kindService.getListByStatus(CourseKindEnum.VALID_STATUS.getValue());
         List<KindVO> kindVOList = new ArrayList<>(kindListMap.size());
         for (Map.Entry<EpCourseKind, List<EpCourseKind>> entry :
                 kindListMap.entrySet()) {

@@ -4,19 +4,15 @@ import cn.ep.annotation.CanAdd;
 import cn.ep.annotation.CanLook;
 import cn.ep.annotation.IsLogin;
 import cn.ep.bean.*;
-import cn.ep.courseenum.ChapterEnum;
 import cn.ep.courseenum.CourseEnum;
 import cn.ep.courseenum.RoleEnum;
 import cn.ep.courseenum.WatchRecordEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
-import cn.ep.service.IChapterService;
 import cn.ep.service.ICourseService;
 import cn.ep.service.ICourseUserService;
-import cn.ep.service.IWatchRecordService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
-import cn.ep.vo.ChapterVO;
 import cn.ep.vo.CourseInfoVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -36,13 +32,6 @@ public class EpCourseController {
      * 内部类，专门用来管理每个get方法所对应缓存的名称。
      */
     static class CacheNameHelper{
-        //这是获取redis热点种类的key值
-        public static final String EP_COURSE_KIND_PREFIX_KIND_ID =
-                "ep_courseKind_prefix_kind_%s";
-        public static final String EP_COURSE_KIND_PREFIX_GET_LIST_TOP =
-                "ep_courseKind_prefix_getListTop";
-        //---------------------------------------------------
-
         // ep_category_prefix_getByUserNicknameAnduserPwd_{用户名}_{密码}
         public static final String EP_COURSE_PREFIX_GET_LIST_BY_KEY_AND_PAGE =
                 "ep_course_prefix_getListByKeyAndPage_%s_%s";
@@ -142,8 +131,8 @@ public class EpCourseController {
     ResultVO getRecommendList(){
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_RECOMMEND_LIST;
         Object object = redisUtil.get(redisKey);
-        /*if (object != null)
-            return ResultVO.success(object);*/
+        if (object != null)
+            return ResultVO.success(object);
         List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),1,50);
         List<CourseInfoVO> courseInfoVOS = CoursesToCourseInfoVOs(courses);
 
@@ -166,13 +155,13 @@ public class EpCourseController {
     ResultVO getListByKindIdAndFreeAndOrderAndPage(@PathVariable long kindId, @PathVariable int free, @PathVariable int order,@PathVariable int page){
 
         //搜索特定种类，热度加一
-        Object obj = redisUtil.hget(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
-                ,String.format(CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId));
+        Object obj = redisUtil.hget(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
+                ,String.format(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId));
         if (obj != null){
             EpCourseKind kind = (EpCourseKind) obj;
             kind.setSearchCount(kind.getSearchCount()+1);
-            redisUtil.hset(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
-                    ,String.format(CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId)
+            redisUtil.hset(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
+                    ,String.format(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId)
                     ,kind);
         }
 

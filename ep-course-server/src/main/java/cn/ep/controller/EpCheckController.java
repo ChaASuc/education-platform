@@ -2,6 +2,7 @@ package cn.ep.controller;
 
 
 import cn.ep.annotation.CanLook;
+import cn.ep.annotation.CanModify;
 import cn.ep.annotation.IsLogin;
 import cn.ep.bean.EpCheck;
 import cn.ep.courseenum.CheckEnum;
@@ -47,17 +48,25 @@ public class EpCheckController {
 
     @PutMapping("")
     @IsLogin
-    @CanLook(role = {RoleEnum.ADMIN})
+    @CanModify(role = {RoleEnum.ADMIN})
     ResultVO check(@RequestBody @ApiParam(value = "json格式，checkId:审核记录id，status：状态【1：未通过2：通过】")  Map<String,String> params){
         long checkId = Long.valueOf(params.get("checkId"));
         int status = Integer.valueOf(params.get("status"));
         CheckEnum checkEnum = checkService.checkAndSetStatus(checkId,status);
+
         if (checkEnum == CheckEnum.CHECK_VIDEO){
             //todo 清除有关章节缓存,可能还有其他
+            //只在这里使用到了，还有一处已在别处（updateWatchRecord）清除
+            redisUtil.delFuz(EpCourseController.CacheNameHelper.EP_COURSE_PREFIX_GET_COURSEINFO);
         } else if (checkEnum == CheckEnum.CHECK_COURSE){
             //todo 清除有关课程缓存，可能还有其他
+            //我只是简单的清除所有缓存
+            redisUtil.delFuz(EpCourseController.CacheNameHelper.EP_COURSE_PREFIX);
         } else {
             //todo 清除有关种类缓存,可能还有其他
+            //我只是简单的清除所有缓存
+
+            redisUtil.delFuz(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX);
         }
         return ResultVO.success();
     }
