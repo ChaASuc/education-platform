@@ -103,9 +103,11 @@ public class EpCourseKindController {
     }
 
     @ApiOperation(value = "获取[一级|二级]种类，通过root区分", notes = "开发人员已测试")
-    @ApiImplicitParam(name="root",value = "root: 0值表示获取所有一级种类，其他值为一级种类的id，表示此一级种类的所有二级种类", dataType = "long", paramType = "path")
+    @ApiImplicitParam(name="root",value = "root: 0值表示获取所有一级种类,负值（如-1）表示获取所有二级种类，其他值为一级种类的id，表示此一级种类的所有二级种类", dataType = "long", paramType = "path")
     @GetMapping("list/{root}")
     ResultVO getListByRoot(@PathVariable long root){
+        if (root<0)
+            root = -1;
         String redisKey = String.format(CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_BY_ROOT,root);
         Object obj = redisUtil.get(redisKey);
         if (obj != null)
