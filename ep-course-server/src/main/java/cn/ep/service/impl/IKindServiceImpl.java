@@ -64,7 +64,11 @@ public class IKindServiceImpl implements IKindService {
     public List<EpCourseKind> getListByRootAndStatus(long root,int status ) {
         EpCourseKindExample kindExample = new EpCourseKindExample();
         EpCourseKindExample.Criteria criteria = kindExample.createCriteria();
-        criteria.andStatusEqualTo(status).andRootEqualTo(root);
+        criteria.andStatusEqualTo(status);
+        if (root == -1)
+            criteria.andRootNotEqualTo(0L);
+        else
+            criteria.andRootEqualTo(root);
         List<EpCourseKind> kindList = kindMapper.selectByExample(kindExample);
         return kindList;
     }

@@ -103,7 +103,8 @@ public class ICourseServiceImpl implements ICourseService {
         EpCourse course = new EpCourse();
         course.setStatus(CourseEnum.CHECK_PASS.getValue());
         course.setFree(free);
-        course.setKindId(kindId);
+        if (kindId >= 0)
+            course.setKindId(kindId);
         String orderString = null;
         if (order == 1){
             orderString = "create_time DESC";

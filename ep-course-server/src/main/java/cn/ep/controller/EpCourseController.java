@@ -96,7 +96,7 @@ public class EpCourseController {
         return courseInfoVOS;
     }
 
-    @ApiOperation(value = "获取课程排行榜，20条记录，以时间+订阅为排行依据，非实时，次日更新", notes = "开发人员已测试")
+    @ApiOperation(value = "获取课程排行榜，8条记录，以时间+订阅为排行依据，非实时，次日更新", notes = "开发人员已测试")
     @ApiImplicitParam(name = "free", value = "查询是否免费:0为免费，1为收费", dataType = "String", paramType = "path")
     @GetMapping(value = "top/list/{free}")
     ResultVO getListTopByFree(@PathVariable int free){
@@ -105,7 +105,7 @@ public class EpCourseController {
         if (object != null)
             return ResultVO.success(object);
       //  System.out.println(free);
-        List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),free,20);
+        List<EpCourse> courses = courseService.getListByTop(CourseEnum.CHECK_PASS.getValue(),free,8);
         List<CourseInfoVO> courseInfoVOS = CoursesToCourseInfoVOs(courses);
         redisUtil.set(redisKey,courseInfoVOS,1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVOS);
@@ -146,25 +146,29 @@ public class EpCourseController {
 
     @ApiOperation(value = "获取某一种类课程信息，一页40条", notes = "开发人员已测试")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "kindId", value = "种类id", dataType = "long", paramType = "path")
+            @ApiImplicitParam(name = "kindId", value = "种类id(-1(负值)默认全部)", dataType = "long", paramType = "path")
             , @ApiImplicitParam(name = "free", value = "是否免费：0免费，1收费", dataType = "int", paramType = "path")
-            , @ApiImplicitParam(name = "order", value = "按哪种方式排序，取值为1、2 或其他值：最新（1）最热（2）最新最热（其他任意整数值，即非1、2）", dataType = "int", paramType = "path")
+            , @ApiImplicitParam(name = "order", value = "按哪种方式排序，取值为1、2 或其他值(例如0)：最新（1）最热（2）最新最热（其他任意整数值，即非1、2）", dataType = "int", paramType = "path")
             , @ApiImplicitParam(name = "page", value = "页码", dataType = "int", paramType = "path")
     })
     @GetMapping(value = "/list/{kindId}/{free}/{order}/{page}")
     ResultVO getListByKindIdAndFreeAndOrderAndPage(@PathVariable long kindId, @PathVariable int free, @PathVariable int order,@PathVariable int page){
-
-        //搜索特定种类，热度加一
-        Object obj = redisUtil.hget(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
-                ,String.format(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId));
-        if (obj != null){
-            EpCourseKind kind = (EpCourseKind) obj;
-            kind.setSearchCount(kind.getSearchCount()+1);
-            redisUtil.hset(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
-                    ,String.format(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId)
-                    ,kind);
+        if (kindId < 0){
+            kindId = -1;
+        } else {
+            //搜索特定种类，热度加一
+            Object obj = redisUtil.hget(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
+                    ,String.format(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId));
+            if (obj != null){
+                EpCourseKind kind = (EpCourseKind) obj;
+                kind.setSearchCount(kind.getSearchCount()+1);
+                redisUtil.hset(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_GET_LIST_TOP
+                        ,String.format(EpCourseKindController.CacheNameHelper.EP_COURSE_KIND_PREFIX_KIND_ID,kindId)
+                        ,kind);
+            }
         }
-
+        if (order != 1 || order != 2)
+            order = 0;
         String redisKey = String.format(CacheNameHelper.EP_COURSE_PREFIX_GET_LIST_BY_KINDID_AND_FREE_ORDER_PAGE
                 ,kindId,free,order,page);
         Object object = redisUtil.get(redisKey);
@@ -172,8 +176,9 @@ public class EpCourseController {
             return ResultVO.success(object);
         PageHelper.startPage(page,40);
         List<EpCourse> courseList = courseService.getListByKindIdAndFreeAndOrder(kindId,free,order);
-        redisUtil.set(redisKey,courseList);
-        return ResultVO.success(courseList);
+        PageInfo<EpCourse> info = new PageInfo<>(courseList);
+        redisUtil.set(redisKey,info);
+        return ResultVO.success(info);
     }
 
     @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息【章与节&每个节的观看记录（如果登陆了）】，是否已订阅，是否登陆", notes = "开发人员已测试")
