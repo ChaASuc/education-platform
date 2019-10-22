@@ -1,6 +1,7 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpDept;
+import cn.ep.bean.EpDeptDto;
 
 import java.util.List;
 
@@ -27,6 +28,6 @@ public interface EpDeptService {
     /**
      * 获取所有有效部门
      */
-    List<EpDept> getAll();
+    List<EpDeptDto> selectAll();
 
 }
