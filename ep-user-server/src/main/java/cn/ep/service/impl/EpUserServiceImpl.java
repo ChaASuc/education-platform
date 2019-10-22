@@ -3,6 +3,7 @@ package cn.ep.service.impl;
 import cn.ep.bean.EpUser;
 import cn.ep.bean.EpUserExample;
 import cn.ep.client.ProductClient;
+import cn.ep.constant.UserConstant;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpUserMapper;
@@ -61,22 +62,26 @@ public class EpUserServiceImpl implements EpUserService {
     }
 
     @Override
-    public boolean checkUser(String account, Integer type) {
+    public EpUser getUserByAccountAndType(String userNickname, Integer type) {
         EpUserExample epUserExample = new EpUserExample();
         EpUserExample.Criteria criteria = epUserExample.createCriteria().andDeletedEqualTo(false);
         //判断校验数据的类型
         switch (type) {
-            case 1:
-                criteria.andUserNameEqualTo(account);
+            case UserConstant.TYPE_USER:
+                criteria.andUserNameEqualTo(userNickname);
                 break;
-            case 2:
-                criteria.andUserPhoneEqualTo(account);
+            case UserConstant.TYPE_PHONE:
+                criteria.andUserPhoneEqualTo(userNickname);
                 break;
             default:
                 throw new GlobalException(GlobalEnum.INVALID_PARAM);
         }
 
-        return epUserMapper.selectByExample(epUserExample).size() == 1 ? true : false;
+        List<EpUser> epUsers = epUserMapper.selectByExample(epUserExample);
+        if (epUsers.size() != 1) {
+            throw new GlobalException(GlobalEnum.EXIST_ERROR, "账号");
+        }
+        return epUsers.get(0);
 
     }
 

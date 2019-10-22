@@ -24,11 +24,11 @@ public interface EpUserService {
 
     /**
      * 根据type类型用户名和手机号是否被注册
-     * @param account
+     * @param userNickname
      * @param type
      * @return
      */
-    boolean checkUser(String account, Integer type);
+    EpUser getUserByAccountAndType(String userNickname, Integer type);
 
     /**
      * 根据用户名和密码查找用户
