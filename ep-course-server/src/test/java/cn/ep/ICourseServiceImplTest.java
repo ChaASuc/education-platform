@@ -18,13 +18,15 @@ public class ICourseServiceImplTest extends TestUtil {
     @Test
     public void insert(){
         EpCourse course = new EpCourse();
-        course.setCourseName("spring");
-        course.setFree(0);
-        course.setGoal("打倒肖华莫雷");
+        course.setCourseName("打倒肖华莫雷");
+        course.setFree(1);
+        course.setGoal("测试数据");
         course.setKindId(4L);
         course.setStatus(1);
         course.setUserId(1L);
-        System.out.println(courseService.insert(course));
+        for (int i = 0; i< 200; i++){
+            System.out.println(courseService.insert(course));
+        }
         System.out.println(courseService.insert(course));
         System.out.println(courseService.insert(course));
         System.out.println(courseService.insert(course));
