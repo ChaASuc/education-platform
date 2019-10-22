@@ -6,7 +6,7 @@ spring:
     password: root123
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://management.deschen.cn:3306/ep_user?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://139.196.120.94:3306/ep_user?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
     password: root123
     initialSize: 5
