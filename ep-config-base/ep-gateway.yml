@@ -47,6 +47,11 @@ zuul:
       serviceId: ep-order
       strip-prefix: false
       sensitiveHeaders:
+    ep-pay:
+      path: /ep/pay/**
+      serviceId: ep-pay
+      strip-prefix: false
+      sensitiveHeaders:
 # `@FeignClient`注解修改的客户端在被代理时，都会创建一个新的Fegin.Logger实例。我们需要额外指定这个日志的级别才可以。
 logging:
   level:
