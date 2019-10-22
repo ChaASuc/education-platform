@@ -13,7 +13,9 @@ import cn.ep.service.ICourseService;
 import cn.ep.service.ICourseUserService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
+import cn.ep.vo.ChapterVO;
 import cn.ep.vo.CourseInfoVO;
+import cn.ep.vo.VerseVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
@@ -180,6 +182,25 @@ public class EpCourseController {
         redisUtil.set(redisKey,info);
         return ResultVO.success(info);
     }
+    @ApiOperation(value = "通过课程id获取课程所有节信息【节&每个节的观看记录，如果未观看，则为null】", notes = "开发人员已测试")
+    @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
+    @GetMapping(value = "verse/{courseId}")
+    ResultVO getVerseInfoByCourseId(@PathVariable long courseId){
+
+        // todo  这里从其他模块获取
+        int userId = 1;  //从用户模块获取
+        EpCourse course = courseService.getByCourseId(courseId);
+        if (course == null)
+            return ResultVO.failure(GlobalEnum.PARAMS_ERROR,"课程不存在");
+
+        boolean isSubscription;
+        isSubscription = courseUserService.getByUserIdAndCourseId(userId,courseId)!=null;
+        if (!isSubscription)
+            return ResultVO.failure(GlobalEnum.OPERATION_ERROR,"请先订阅，才能观看其余视频");
+        List<VerseVO> verseVOList = courseService.getVerseList(userId,courseId);
+        return ResultVO.success(verseVOList);
+
+    }
 
     @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息【章与节&每个节的观看记录（如果登陆了）】，是否已订阅，是否登陆", notes = "开发人员已测试")
     @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
@@ -189,7 +210,7 @@ public class EpCourseController {
             判断是否登陆，由汉槟提供
          */
         // todo  这里从其他模块获取
-        boolean isLogin = false; //登陆为真
+        boolean isLogin = true; //登陆为真
         int userId = 1;  //从用户模块获取
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_COURSEINFO;
         String redisItem = null;
@@ -210,23 +231,61 @@ public class EpCourseController {
         CourseInfoVO courseInfoVO = new CourseInfoVO();
         courseInfoVO.setCourse(course);
         courseInfoVO.setLogin(isLogin);
+        boolean isSubscription;
         //订阅包括付费订阅与免费订阅
         if (!isLogin)
-            courseInfoVO.setSubscription(false);
+            isSubscription = false;
         else
-            courseInfoVO.setSubscription(courseUserService.getByUserIdAndCourseId(userId,courseId)!=null);
+            isSubscription = courseUserService.getByUserIdAndCourseId(userId,courseId)!=null;
+        System.out.println(isSubscription);
+        courseInfoVO.setSubscription(isSubscription);
         // todo  这里从其他模块获取
         courseInfoVO.setScope(0); //从评论模块获取
         courseInfoVO.setAuthor(null); //从用户模块获取
+
         courseInfoVO.setChapters(
-                courseService.getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(
-                        userId,courseId, WatchRecordEnum.VALID_STATUS.getValue(),isLogin));
+                courseService.getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(
+                        userId,courseId, WatchRecordEnum.VALID_STATUS.getValue(),isSubscription));
+        //获取下一节未看的章、节下标，
+        List<ChapterVO> chapterVOS = courseInfoVO.getChapters();
+        int currentChapter = -1; //当前章，-1表示没有
+        int currentVerse = -1;//当前章节，-1表示没有
+        if (chapterVOS != null){
+            boolean isLookOver = true; // 假设全部看完
+            for (int i = 0; i < chapterVOS.size() && isLookOver; i++) {
+                List<VerseVO> verseVOS = chapterVOS.get(i).getVerseVOS();
+                if (verseVOS != null){
+                    for (int j = 0; j < verseVOS.size(); j++) {
+                        if (verseVOS.get(j).getRecord() == null){
+                            courseInfoVO.setNextChapter(i);
+                            courseInfoVO.setNextVerse(j);
+                            isLookOver = false;
+                            break;
+                        } else {
+                            currentChapter = i;
+                            currentVerse = j;
+                        }
+                    }
+                }
+            }
+            if (isLookOver){ //如果看完了，设当前章、节为下一个观看的章、节，即再看一遍
+                courseInfoVO.setNextChapter(currentChapter);
+                courseInfoVO.setNextVerse(currentVerse);
+            }
+        } else {
+            courseInfoVO.setNextChapter(currentChapter);
+            courseInfoVO.setNextVerse(currentChapter);
+        }
+
+
         if (!isLogin)
             redisUtil.hset(redisKey,redisItem,courseInfoVO);
         else
             redisUtil.set(redisItem,courseInfoVO,1,TimeUnit.DAYS);
         return ResultVO.success(courseInfoVO);
     }
+
+
 
     @ApiOperation(value = "增加一个课程:教师权限", notes = "开发人员已测试")
     @ApiImplicitParam(name="course",value = "课程实体类:其中courseName、free（0免费1收费）、kindId、price必传，goal、overview、pictureUrl可选，但最好传，id、stutas不传", dataType = "EpCourse")

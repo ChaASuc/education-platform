@@ -122,7 +122,7 @@ public class ICourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public  List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(int userId, long courseId, int value, boolean isLogin) {
+    public  List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(int userId, long courseId, int value, boolean isSubscription) {
         Map<EpChapter,List<EpChapter>> chapterListMap =
                 chapterService.getListByCourseIdAndStatus(courseId
                         , ChapterEnum.VALID_STATUS.getValue());
@@ -140,27 +140,30 @@ public class ICourseServiceImpl implements ICourseService {
             List<VerseVO> verseVOList = new ArrayList<>();
             List<EpWatchRecord> records = null;
 
-            if (isLogin)  //如果登陆了 ，获取该用户该课程的所有观看记录
+            if (isSubscription)  //如果订阅了 ，获取该用户该课程的所有观看记录
                 records = recordService.selectByUserIdAndCourseIdAndStatus(userId,courseId, WatchRecordEnum.VALID_STATUS.getValue());
 
             for (EpChapter verse :
                     chapterListEntry.getValue()) {
                 VerseVO verseVO = new VerseVO();
-                verseVO.setVerse(verse);
 
-                if (isLogin){  //因为没有登陆，records等于null
+                if (isSubscription){  //因为没有订阅，records等于null，章节的url不可看
                     for (EpWatchRecord r :
                             records) {
                         if (r.getChapterId() == verse.getId())
                             verseVO.setRecord(r);
                     }
-                }
+                   // System.out.println(verse.getUrl());
+                } else
+                    verse.setUrl(null);
+               // System.out.println(verse);
+                verseVO.setVerse(verse);
                 verseVOList.add(verseVO);
             }
             chapterVO.setVerseVOS(verseVOList);
             chapterVOList.add(chapterVO);
         }
-        return chapterVOList;
+        return chapterVOList.size() == 0 ? null : chapterVOList;
     }
 
     @Override
@@ -193,5 +196,37 @@ public class ICourseServiceImpl implements ICourseService {
         criteria.andStatusNotEqualTo(status);
         criteria.andUserIdEqualTo(userId);
         return courseMapper.selectByExample(courseExample);
+    }
+
+    @Override
+    public List<VerseVO> getVerseList(int userId, long courseId) {
+        Map<EpChapter,List<EpChapter>> chapterListMap =
+                chapterService.getListByCourseIdAndStatus(courseId
+                        , ChapterEnum.VALID_STATUS.getValue());
+
+        //所有（节与观看记录）VO
+        List<VerseVO> verseVOList = new ArrayList<>();
+
+        for (Map.Entry<EpChapter, List<EpChapter>> chapterListEntry :
+                chapterListMap.entrySet()) {
+
+            List<EpWatchRecord> records = null;
+            records = recordService.selectByUserIdAndCourseIdAndStatus(userId, courseId, WatchRecordEnum.VALID_STATUS.getValue());
+
+            for (EpChapter verse :
+                    chapterListEntry.getValue()) {
+                VerseVO verseVO = new VerseVO();
+
+                verseVO.setVerse(verse);
+
+                for (EpWatchRecord r :
+                        records) {
+                    if (r.getChapterId() == verse.getId())
+                        verseVO.setRecord(r);
+                }
+                verseVOList.add(verseVO);
+            }
+        }
+        return verseVOList;
     }
 }

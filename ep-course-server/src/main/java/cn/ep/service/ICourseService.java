@@ -3,6 +3,7 @@ package cn.ep.service;
 import cn.ep.bean.EpChapter;
 import cn.ep.bean.EpCourse;
 import cn.ep.vo.ChapterVO;
+import cn.ep.vo.VerseVO;
 
 import java.util.List;
 import java.util.Map;
@@ -92,9 +93,11 @@ public interface ICourseService {
 
     EpCourse getByCourseId(long courseId);
 
-    List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndLogin(int i, long courseId, int value, boolean isLogin);
+    List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(int i, long courseId, int value, boolean isSubscription);
 
     boolean insertAndSendCheck(EpCourse course);
 
     List<EpCourse> getListByUserIdAndStatusNotEqualTo(long userId, int status);
+
+    List<VerseVO> getVerseList(int userId, long courseId);
 }
