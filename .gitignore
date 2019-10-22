@@ -1,8 +1,8 @@
 HELP.md
 /target/
-.idea
+*.idea
 *.rebel.xml
-*rebel-remote.xml
+*.rebel-remote.xml
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
