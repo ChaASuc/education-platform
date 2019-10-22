@@ -1,12 +1,10 @@
 package cn.ep.vo;
 
-import cn.ep.bean.EpChapter;
 import cn.ep.bean.EpCourse;
 import cn.ep.bean.EpUser;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class CourseInfoVO {
@@ -16,4 +14,6 @@ public class CourseInfoVO {
     private List<ChapterVO> chapters;
     private boolean login;
     private boolean subscription;
+    private int nextChapter;
+    private int nextVerse;
 }
