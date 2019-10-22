@@ -17,8 +17,8 @@ eureka:
       enabled: true   # 开启响应压缩，默认false
 zuul:
   host:
-    connect-timeout-millis: 15000 #HTTP连接超时大于Hystrix的超时时间
-    socket-timeout-millis: 60000   #socket超时
+    connect-timeout-millis: 120000 #HTTP连接超时大于Hystrix的超时时间
+    socket-timeout-millis: 120000   #socket超时
   prefix: /api   # 路由前缀
   ignored-services: "*"  # 忽略的应用，不暴露接口
   routes:
@@ -53,7 +53,7 @@ logging:
     com.ep: debug
 # 参数计算重试的次数：MaxAutoRetries+MaxAutoRetriesNextServer+(MaxAutoRetries *MaxAutoRetriesNextServer) 即重试3次 则一共产生4次调用
 ribbon:
-  ConnectTimeout: 10000 # 连接超时时间(ms)
-  ReadTimeout: 10000 # 通信超时时间(ms)
+  ConnectTimeout: 60000 # 连接超时时间(ms)
+  ReadTimeout: 60000 # 通信超时时间(ms)
   MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数，不包括首次调用
   MaxAutoRetries: 1 # 同一实例的重试次数，不包括首次调用
