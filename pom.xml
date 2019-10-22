@@ -24,6 +24,9 @@
         <module>ep-user-common</module>
         <module>ep-user-api</module>
         <module>ep-user-server</module>
+        <module>ep-auth-api</module>
+        <module>ep-auth-common</module>
+        <module>ep-auth-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
