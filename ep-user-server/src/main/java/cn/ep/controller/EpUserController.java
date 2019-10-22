@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -45,6 +44,10 @@ public class EpUserController {
 
         //ep_user_prefix_* 用于全部删除，避免缓存
         public static final String EP_USER_PREFIX = "ep_user_prefix_*";
+
+        // ep_user_prefix_getByUserNicknameAndType_{用户名}_{用户名类型}
+        public static final String EP_USER_GETBYUSERNICKNAMEANDTYPE =
+                "ep_user_prefix_getByUserNicknameAndType_%s_%s";
     }
 
     /**
@@ -80,19 +83,20 @@ public class EpUserController {
     }
 
 
-    @ApiOperation(value="根据文件路径不包含ip下载文件", notes = "已测试")
+
+    @ApiOperation(value="根据账号查询用户", notes = "未测试")
     @GetMapping(value = "")
-    public ResultVO getByUserNicknameAnduserPwd(@RequestParam @NotNull String userNickname,
-                             @RequestParam @NotNull String userPwd) {
+    public ResultVO getByUserNicknameAndType(
+            @RequestParam @NotNull String userNickname, @RequestParam @NotNull Integer type) {
         // 获取reids的key
         String key = String.format(
-                CacheNameHelper.EP_USER_PREFIX_GETBYUSERNICKNAMEANDUSERPWD, userNickname, userPwd);
+                CacheNameHelper.EP_USER_PREFIX_GETBYUSERNICKNAMEANDUSERPWD, userNickname, type);
         // 统一返回值
         EpUser user = null;
         // 查看是否有缓存
         Object obj = redisUtil.get(key);
         if (null == obj) {
-            user = epUserService.get(userNickname, userPwd);
+            user = epUserService.getUserByAccountAndType(userNickname, type);
             redisUtil.set(key, user);
         }else {
             user = (EpUser) obj;
@@ -100,5 +104,6 @@ public class EpUserController {
         // 删除缓存
         return ResultVO.success(user);
     }
+
 
 }
