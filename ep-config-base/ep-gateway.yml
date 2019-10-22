@@ -25,24 +25,28 @@ zuul:
     ep-category:
       path: /ep/category/**
       serviceId: ep-category
-      strip-prefix: false 
+      strip-prefix: false
+      sensitiveHeaders:
     ep-product:
       path: /ep/product/**
       serviceId: ep-product
       strip-prefix: false
+      sensitiveHeaders:
     ep-uploadFile:
       path: /ep/file/**
       serviceId: ep-uploadFile
       strip-prefix: false
+      sensitiveHeaders:
     ep-course:
       path: /ep/course/**
       serviceId: ep-course
       strip-prefix: false
+      sensitiveHeaders:
     ep-order:
       path: /ep/order/**
       serviceId: ep-order
       strip-prefix: false
-
+      sensitiveHeaders:
 # `@FeignClient`注解修改的客户端在被代理时，都会创建一个新的Fegin.Logger实例。我们需要额外指定这个日志的级别才可以。
 logging:
   level:
