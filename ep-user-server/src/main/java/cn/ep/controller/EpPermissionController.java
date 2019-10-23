@@ -1,9 +1,7 @@
 package cn.ep.controller;
 
 import cn.ep.bean.EpPermission;
-import cn.ep.bean.EpRole;
 import cn.ep.service.EpPermissionService;
-import cn.ep.service.EpRoleService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.validate.groups.Insert;

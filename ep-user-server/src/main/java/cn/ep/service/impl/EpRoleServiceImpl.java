@@ -2,8 +2,6 @@ package cn.ep.service.impl;
 
 import cn.ep.bean.EpRole;
 import cn.ep.bean.EpRoleExample;
-import cn.ep.bean.EpUser;
-import cn.ep.bean.EpUserExample;
 import cn.ep.config.PageConfig;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
@@ -13,9 +11,6 @@ import cn.ep.service.EpRoleService;
 import cn.ep.utils.IdWorker;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.netflix.discovery.converters.Auto;
-import io.netty.util.internal.UnstableApi;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
