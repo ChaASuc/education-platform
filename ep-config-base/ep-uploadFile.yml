@@ -102,6 +102,6 @@ ep:
       - audio/mpeg  # mp3
     baseUrl: http://139.196.120.94/
     pageSize: 12
-    worker:
-      workerId: 1
-      datacenterId: 1
+  worker:
+    workerId: 1
+    datacenterId: 1
