@@ -1,10 +1,7 @@
 package cn.ep.service;
 
-import cn.ep.bean.EpDeptDto;
 import cn.ep.bean.EpUser;
 import com.github.pagehelper.PageInfo;
-
-import java.util.List;
 
 /**
  * @Author deschen

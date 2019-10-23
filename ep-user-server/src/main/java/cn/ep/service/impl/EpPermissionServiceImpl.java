@@ -2,16 +2,12 @@ package cn.ep.service.impl;
 
 import cn.ep.bean.EpPermission;
 import cn.ep.bean.EpPermissionExample;
-import cn.ep.bean.EpRole;
-import cn.ep.bean.EpRoleExample;
 import cn.ep.config.PageConfig;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpPermissionMapper;
-import cn.ep.mapper.EpRoleMapper;
 import cn.ep.mapper.EpUserRoleMapper;
 import cn.ep.service.EpPermissionService;
-import cn.ep.service.EpRoleService;
 import cn.ep.utils.IdWorker;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

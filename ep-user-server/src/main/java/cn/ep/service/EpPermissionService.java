@@ -1,7 +1,6 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpPermission;
-import cn.ep.bean.EpRole;
 import com.github.pagehelper.PageInfo;
 
 /**

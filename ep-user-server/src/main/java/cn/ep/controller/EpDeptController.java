@@ -2,9 +2,7 @@ package cn.ep.controller;
 
 import cn.ep.bean.EpDept;
 import cn.ep.bean.EpDeptDto;
-import cn.ep.bean.EpUser;
 import cn.ep.service.EpDeptService;
-import cn.ep.service.EpUserService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.validate.groups.Insert;
