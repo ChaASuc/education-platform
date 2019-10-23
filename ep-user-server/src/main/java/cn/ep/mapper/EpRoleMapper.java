@@ -19,6 +19,8 @@ public interface EpRoleMapper {
 
     List<EpRole> selectByExample(EpRoleExample example);
 
+    List<EpRole> selectByUserId(Long userId);
+
     EpRole selectByPrimaryKey(Long roleId);
 
     int updateByExampleSelective(@Param("record") EpRole record, @Param("example") EpRoleExample example);

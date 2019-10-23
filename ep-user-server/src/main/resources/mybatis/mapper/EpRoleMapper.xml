@@ -84,6 +84,16 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT er.*
+    FROM ep_role er, ep_user_role eur
+    WHERE er.role_id = eur.role_id
+      AND er.deleted = 0
+      AND eur.user_id = #{userId, jdbcType=BIGINT}
+    ORDER BY update_time DESC
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

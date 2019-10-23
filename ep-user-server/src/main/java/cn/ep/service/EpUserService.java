@@ -1,6 +1,10 @@
 package cn.ep.service;
 
+import cn.ep.bean.EpDeptDto;
 import cn.ep.bean.EpUser;
+import com.github.pagehelper.PageInfo;
+
+import java.util.List;
 
 /**
  * @Author deschen
@@ -28,14 +32,13 @@ public interface EpUserService {
      * @param type
      * @return
      */
-    EpUser getUserByAccountAndType(String userNickname, Integer type);
+    EpUser getUserByUserNicknameAndType(String userNickname, Integer type);
 
     /**
-     * 根据用户名和密码查找用户
-     * @param username
-     * @param pwd
+     * 根据部门id获取所有有效的用户
+     * @param deptId
+     * @param num
      * @return
      */
-    EpUser get(String username, String pwd);
-
+    PageInfo<EpUser> selectByDeptId(Long deptId, Integer num);
 }

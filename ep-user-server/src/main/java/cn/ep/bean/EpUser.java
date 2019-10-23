@@ -1,14 +1,26 @@
 package cn.ep.bean;
 
+import cn.ep.serializer.Date2LongSerializer;
+import cn.ep.serializer.Long2StringSerializer;
+import cn.ep.validate.groups.Insert;
+import cn.ep.validate.groups.Update;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class EpUser {
+    @JsonSerialize(using = Long2StringSerializer.class)
+    @NotNull(groups = {Update.class})
     private Long userId;
 
     private String userNickname;
 
     private String userName;
 
+    @JsonIgnore
     private String userPwd;
 
     private String fileUrl;
@@ -25,10 +37,13 @@ public class EpUser {
 
     private Boolean deleted;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
 
+    @JsonSerialize(using = Long2StringSerializer.class)
     private Long deptId;
 
     public Long getUserId() {
