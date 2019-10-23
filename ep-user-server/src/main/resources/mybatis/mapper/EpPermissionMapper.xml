@@ -88,6 +88,16 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="selectByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT ep.*
+    FROM ep_role_permission erp, ep_permission ep
+    WHERE erp.perm_id = ep.perm_id
+      AND ep.deleted = 0
+      AND erp.role_id = #{roleId,jdbcType=BIGINT}
+    ORDER BY update_time DESC
+  </select>
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />

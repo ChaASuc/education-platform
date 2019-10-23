@@ -232,7 +232,7 @@ public class EpFileController {
      * 获取该文件夹下所有图片
      * @return
      */
-    @ApiOperation(value="获取该文件夹下所有图片",notes = "未测试")
+    @ApiOperation(value="获取该文件夹下所有图片",notes = "已测试")
     @ApiImplicitParams({
             @ApiImplicitParam(name= "dirId",value = "文件夹id", required = true, paramType = "path"),
             @ApiImplicitParam(name= "pageNum",value = "页码", required = true, paramType = "path")

@@ -19,6 +19,8 @@ public interface EpPermissionMapper {
 
     List<EpPermission> selectByExample(EpPermissionExample example);
 
+    List<EpPermission> selectByRoleId(Long roleId);
+
     EpPermission selectByPrimaryKey(Long permId);
 
     int updateByExampleSelective(@Param("record") EpPermission record, @Param("example") EpPermissionExample example);

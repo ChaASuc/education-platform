@@ -6,14 +6,18 @@ import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.validate.groups.Insert;
 import cn.ep.validate.groups.Update;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @Author deschen
@@ -48,6 +52,8 @@ public class EpUserController {
         // ep_user_prefix_getByUserNicknameAndType_{用户名}_{用户名类型}
         public static final String EP_USER_GETBYUSERNICKNAMEANDTYPE =
                 "ep_user_prefix_getByUserNicknameAndType_%s_%s";
+        public static final String EP_USER_PREFIX_GETBYDEPTIDANDNUM =
+                "ep_user_prefix_getByDeptId_%s_%s";
     }
 
     /**
@@ -55,11 +61,10 @@ public class EpUserController {
      * @param user
      * @return
      */
-    @ApiOperation(value="新增用户", notes="未测试")
+    @ApiOperation(value="新增用户", notes="已测试")
     @ApiImplicitParam(name = "user", value = "用户实体", required = true, dataType = "EpUser")
     @PostMapping("")
     public ResultVO insert(@RequestBody @Validated({Insert.class}) EpUser user){
-        System.out.println("xxx");
         epUserService.insert(user);
         // 清空相关缓存
         redisUtil.delFuz(CacheNameHelper.EP_USER_PREFIX);
@@ -71,7 +76,7 @@ public class EpUserController {
      * @param user
      * @return
      */
-    @ApiOperation(value="根据主键修改和逻辑删除用户",notes = "未测试")
+    @ApiOperation(value="根据主键修改和逻辑删除用户",notes = "已测试")
     @ApiImplicitParam(name="user", value = "用户实体类", dataType = "EpUser")
     @PutMapping("")
     public ResultVO update(@RequestBody @Validated({Update.class}) EpUser user){
@@ -84,7 +89,7 @@ public class EpUserController {
 
 
 
-    @ApiOperation(value="根据账号查询用户", notes = "未测试")
+    @ApiOperation(value="根据账号查询用户", notes = "已测试")
     @GetMapping(value = "")
     public ResultVO getByUserNicknameAndType(
             @RequestParam @NotNull String userNickname, @RequestParam @NotNull Integer type) {
@@ -96,7 +101,7 @@ public class EpUserController {
         // 查看是否有缓存
         Object obj = redisUtil.get(key);
         if (null == obj) {
-            user = epUserService.getUserByAccountAndType(userNickname, type);
+            user = epUserService.getUserByUserNicknameAndType(userNickname, type);
             redisUtil.set(key, user);
         }else {
             user = (EpUser) obj;
@@ -105,5 +110,43 @@ public class EpUserController {
         return ResultVO.success(user);
     }
 
+
+    @ApiOperation(value="根据部门id获取用户信息", notes = "已测试")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name= "deptId",value = "部门id", required = true, paramType = "path")
+    })
+    @GetMapping(value = "/dept/{deptId}/{num}")
+    public ResultVO getByDeptIdAndNum(
+            @PathVariable @NotNull @Min(0) Long deptId,
+            @PathVariable @NotNull @Min(1)Integer num) {
+        // 获取reids的key
+        String key = String.format(
+                CacheNameHelper.EP_USER_PREFIX_GETBYDEPTIDANDNUM, deptId, num);
+        // 统一返回值
+        PageInfo<EpUser> users = null;
+        // 查看是否有缓存
+        Object obj = redisUtil.get(key);
+        if (null == obj) {
+            users = epUserService.selectByDeptId(deptId, num);
+            redisUtil.set(key, users);
+        }else {
+            users = (PageInfo<EpUser>) obj;
+        }
+        // 删除缓存
+        return ResultVO.success(users);
+    }
+
+
+    /**
+     * 删除所有缓存
+     * @return
+     */
+    @ApiOperation(value="删除所有缓存", notes="已测试")
+    @GetMapping("/deleteAll")
+    public ResultVO deleteAll(){
+        // 清空相关缓存
+        redisUtil.delFuz(CacheNameHelper.EP_USER_PREFIX);
+        return ResultVO.success();
+    }
 
 }

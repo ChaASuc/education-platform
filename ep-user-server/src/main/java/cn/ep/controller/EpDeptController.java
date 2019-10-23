@@ -92,7 +92,7 @@ public class EpDeptController {
      * 获取所有部门
      * @return
      */
-    @ApiOperation(value="获取所有部门",notes = "未测试")
+    @ApiOperation(value="获取所有部门",notes = "已测试")
     @GetMapping("/listAll")
     public ResultVO getListAll(){
 

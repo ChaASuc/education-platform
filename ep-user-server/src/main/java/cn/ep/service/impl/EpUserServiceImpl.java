@@ -3,6 +3,7 @@ package cn.ep.service.impl;
 import cn.ep.bean.EpUser;
 import cn.ep.bean.EpUserExample;
 import cn.ep.client.ProductClient;
+import cn.ep.config.PageConfig;
 import cn.ep.constant.UserConstant;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
@@ -10,6 +11,8 @@ import cn.ep.mapper.EpUserMapper;
 import cn.ep.service.EpUserService;
 import cn.ep.utils.IdWorker;
 import cn.ep.utils.ResultVO;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,9 @@ public class EpUserServiceImpl implements EpUserService {
 
     @Autowired
     private ProductClient productClient;
+
+    @Autowired
+    private PageConfig pageConfig;
 
 
     @Override
@@ -62,7 +68,7 @@ public class EpUserServiceImpl implements EpUserService {
     }
 
     @Override
-    public EpUser getUserByAccountAndType(String userNickname, Integer type) {
+    public EpUser getUserByUserNicknameAndType(String userNickname, Integer type) {
         EpUserExample epUserExample = new EpUserExample();
         EpUserExample.Criteria criteria = epUserExample.createCriteria().andDeletedEqualTo(false);
         //判断校验数据的类型
@@ -86,18 +92,15 @@ public class EpUserServiceImpl implements EpUserService {
     }
 
     @Override
-    public EpUser get(String username, String pwd) {
+    public PageInfo<EpUser> selectByDeptId(Long deptId, Integer num) {
+        PageHelper.startPage(num, pageConfig.getPageSize());
         EpUserExample epUserExample = new EpUserExample();
         epUserExample.createCriteria()
-                .andUserNameEqualTo(username)
-                .andUserPwdEqualTo(pwd)
-                .andDeletedEqualTo(false);
+                .andDeletedEqualTo(false)
+                .andDeptIdEqualTo(deptId);
         List<EpUser> epUsers = epUserMapper.selectByExample(epUserExample);
-        if (epUsers.size() == 1) {
-            return epUsers.get(0);
-        }
-
-
-        throw new GlobalException(GlobalEnum.EXIST_ERROR, "用户");
+        PageInfo<EpUser> epUserPageInfo = new PageInfo<>(epUsers);
+        return epUserPageInfo;
     }
+
 }
