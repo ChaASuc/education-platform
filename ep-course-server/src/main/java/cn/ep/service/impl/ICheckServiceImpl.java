@@ -8,7 +8,6 @@ import cn.ep.courseenum.CourseEnum;
 import cn.ep.courseenum.CourseKindEnum;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
-import cn.ep.mapper.EpChapterMapper;
 import cn.ep.mapper.EpCheckMapper;
 import cn.ep.service.IChapterService;
 import cn.ep.service.ICheckService;
@@ -96,7 +95,7 @@ public class ICheckServiceImpl implements ICheckService {
     }
 
     @Override
-    public PageInfo<CheckVO> getListByUserIdAndTypeAndPage(Long userId, int type, int page) {
+    public PageInfo<CheckVO> getListByUserIdAndTypeAndPageAndChecked(Long userId, int type, int page,Integer checked) {
         PageHelper.startPage(page,20);
         EpCheckExample checkExample = new EpCheckExample();
         EpCheckExample.Criteria criteria = checkExample.createCriteria();
@@ -109,6 +108,8 @@ public class ICheckServiceImpl implements ICheckService {
         } else{    //所有
             ;
         }
+        if (checked!=null)
+            criteria.andBelongEqualTo(checked);
         checkExample.setOrderByClause("create_time desc");
         List<EpCheck> checkList = checkMapper.selectByExample(checkExample);
         PageInfo<EpCheck> checkInfo = new PageInfo<>(checkList);
@@ -136,8 +137,8 @@ public class ICheckServiceImpl implements ICheckService {
     }
 
     @Override
-    public PageInfo<CheckVO> getAllCheckListByPage(int page) {
-        return getListByUserIdAndTypeAndPage(null,0,page);
+    public PageInfo<CheckVO> getAllCheckListByPageAndChecked(int page,int checked) {
+        return getListByUserIdAndTypeAndPageAndChecked(null,0,page,checked);
     }
 
     @Override

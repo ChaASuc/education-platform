@@ -34,9 +34,9 @@ public class EpCheckController {
     @Autowired private IKindService kindService;
 
     static class CacheNameHelper{
-        public static final String EP_COURSE_CHECK_PREFIX_UESR_ID_TYPE_PAGE = "ep_courseCheck_prefix_UserId_type_page_%s_%s_%s";
+        public static final String EP_COURSE_CHECK_PREFIX_UESR_ID_TYPE_PAGE_CHECKED = "ep_courseCheck_prefix_UserId_type_page_%s_%s_%s_%s";
         public static final String EP_COURSE_CHECK_PREFIX_GET_CURRENT_USER_LIST = "ep_courseCheck_prefix_getCurrentUserList";
-        public static final String EP_COURSE_CHECK_PREFIX_GET_LIST_BY_PAGE = "ep_courseCheck_prefix_getList_%s";
+        public static final String EP_COURSE_CHECK_PREFIX_GET_LIST_BY_PAGE_CHECKED = "ep_courseCheck_prefix_getList_%s_%s";
     }
 
     @ApiOperation(value = "审核，管理员权限",notes = "开发人员已测试")
@@ -71,42 +71,51 @@ public class EpCheckController {
         return ResultVO.success();
     }
 
-    @ApiOperation(value = "获取所有用户的审核列表（只能查看不能审核）：管理员权限，按时间降序", notes = "开发人员已测试")
-    @ApiImplicitParam(name = "page", value = "页码", dataType = "int", paramType = "path")
-    @GetMapping("/list/{page}")
+    @ApiOperation(value = "获取所有管理员的审核列表（只能查看不能审核）：管理员权限，按时间降序", notes = "开发人员已测试")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页码", dataType = "int", paramType = "path")
+            ,@ApiImplicitParam(name = "checked", value = "获取审核类型：0种类，1视频，2课程", dataType = "int", paramType = "path")
+    })@GetMapping("/list/{page}/{checked}")
     @IsLogin
     @CanLook(role = RoleEnum.ADMIN)
-    ResultVO getListByPage(@PathVariable  int page){
-        String redisKey = String.format(CacheNameHelper.EP_COURSE_CHECK_PREFIX_GET_LIST_BY_PAGE,page);
+    ResultVO getListByPage(@PathVariable  int page, @PathVariable int checked){
+        if (checked != 0 && checked != 1 && checked != 2){
+            return ResultVO.failure(GlobalEnum.OPERATION_ERROR,"参数非法");
+        }
+        String redisKey = String.format(CacheNameHelper.EP_COURSE_CHECK_PREFIX_GET_LIST_BY_PAGE_CHECKED,page,checked);
         Object object = redisUtil.get(redisKey);
         if (object != null)
             return ResultVO.success(object);
-        PageInfo<CheckVO> checkVOList = checkService.getAllCheckListByPage(page);
+        PageInfo<CheckVO> checkVOList = checkService.getAllCheckListByPageAndChecked(page,checked);
         redisUtil.set(redisKey,checkVOList);
         return ResultVO.success(checkVOList);
     }
 
-    @ApiOperation(value = "获取当前用户的审核列表：管理员权限，按时间降序", notes = "开发人员已测试")
+    @ApiOperation(value = "获取当前管理员的审核列表：管理员权限，按时间降序", notes = "开发人员已测试")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "type", value = "类型：0所有1未审核2已审核", dataType = "int", paramType = "path")
+            @ApiImplicitParam(name = "type", value = "状态呢：0所有1未审核2已审核", dataType = "int", paramType = "path")
             , @ApiImplicitParam(name = "page", value = "页码", dataType = "int", paramType = "path")
+            ,@ApiImplicitParam(name = "checked", value = "获取审核类型：0种类，1视频，2课程", dataType = "int", paramType = "path")
     })
-    @GetMapping("/current/list/{type}/{page}")
+    @GetMapping("/current/list/{type}/{page}/{checked}")
     @IsLogin
     @CanLook(role = RoleEnum.ADMIN)
-    ResultVO getCurrentUserListByType(@PathVariable int type, @PathVariable int page){
+    ResultVO getCurrentUserListByType(@PathVariable int type, @PathVariable int page, @PathVariable int checked){
          if (type != 0 && type != 1 && type != 2){
              return ResultVO.failure(GlobalEnum.OPERATION_ERROR,"参数非法");
          }
+        if (checked != 0 && checked != 1 && checked != 2){
+            return ResultVO.failure(GlobalEnum.OPERATION_ERROR,"参数非法");
+        }
          //todo 从用户模块获取当前用户id；
          long userId = 1L;
-         String redisKey = CacheNameHelper.EP_COURSE_CHECK_PREFIX_GET_CURRENT_USER_LIST;
-         String redisItem = String.format(CacheNameHelper.EP_COURSE_CHECK_PREFIX_UESR_ID_TYPE_PAGE,userId,type,page);
-         Object object = redisUtil.hget(redisKey,redisItem);
+        String redisKey = CacheNameHelper.EP_COURSE_CHECK_PREFIX_GET_CURRENT_USER_LIST;
+        String redisItem = String.format(CacheNameHelper.EP_COURSE_CHECK_PREFIX_UESR_ID_TYPE_PAGE_CHECKED,userId,type,page,checked);
+        Object object = redisUtil.hget(redisKey,redisItem);
          if (object != null)
              return ResultVO.success(object);
 
-        PageInfo<CheckVO> checkVOList = checkService.getListByUserIdAndTypeAndPage(userId,type,page);
+        PageInfo<CheckVO> checkVOList = checkService.getListByUserIdAndTypeAndPageAndChecked(userId,type,page,checked);
         redisUtil.hset(redisKey,redisItem,checkVOList);
         return ResultVO.success(checkVOList);
     }

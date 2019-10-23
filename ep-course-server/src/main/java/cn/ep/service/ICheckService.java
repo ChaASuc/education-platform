@@ -88,9 +88,9 @@ public interface ICheckService {
      */
     EpCheck getById(long id);
 
-    PageInfo<CheckVO> getListByUserIdAndTypeAndPage(Long userId, int type, int page);
+    PageInfo<CheckVO> getListByUserIdAndTypeAndPageAndChecked(Long userId, int type, int page,Integer checked);
 
-    PageInfo<CheckVO> getAllCheckListByPage(int page);
+    PageInfo<CheckVO> getAllCheckListByPageAndChecked(int page, int checked);
 
     CheckEnum checkAndSetStatus(long checkId, int status);
 }

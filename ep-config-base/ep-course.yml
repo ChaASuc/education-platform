@@ -38,7 +38,8 @@ spring:
         max-wait: -1  # 无限等待
     timeout: 30000
     database: 1
-    password: rjgc2016
+    password:
+
 eureka:
   instance:
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
