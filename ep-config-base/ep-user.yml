@@ -38,6 +38,11 @@ eureka:
       # 服务失效时间，默认值90秒
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
     instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+    lease-renewal-interval-in-seconds: 5
+    # 服务失效时间，默认值90秒
+    lease-expiration-duration-in-seconds: 10
+    ip-address: zefjt8.natappfree.cc
+    status-page-url: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
   compression:
     request:
       enabled: true   # 开启请求压缩，默认false
