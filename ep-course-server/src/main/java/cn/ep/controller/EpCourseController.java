@@ -202,6 +202,7 @@ public class EpCourseController {
 
     }
 
+
     @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息【章与节&每个节的观看记录（如果登陆了）】，是否已订阅，是否登陆", notes = "开发人员已测试")
     @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
     @GetMapping(value = "/{courseId}")
@@ -235,8 +236,25 @@ public class EpCourseController {
         //订阅包括付费订阅与免费订阅
         if (!isLogin)
             isSubscription = false;
-        else
+        else {
+            //一登陆，查看是否订阅
             isSubscription = courseUserService.getByUserIdAndCourseId(userId,courseId)!=null;
+            //--------------------------------------------------
+            //未订阅，查看是否为收费订阅，如果是，尝试订阅（为什么？因为我不知道此收费课程当前用户是否已购买，在订阅接口中有验证是否购买）
+            //这一段代码可由支付模块，在支付成功后直接调用订阅接口来代替
+            if (!isSubscription && course.getFree() == 1) {  //未订阅且为收费课程，尝试订阅，
+                try {
+                    ResultVO resultVO = subscription(courseId);  //尝试订阅
+                    isSubscription = true;  //如果未订阅，程序直接抛出异常，如果未抛出，则表明已订阅
+                } catch (GlobalException ge){
+                    //尝试订阅失败，报globalException可不处理
+                    ge.printStackTrace();
+                } catch (Exception e){
+                    throw e; //其他异常直接抛出
+                }
+            }
+            //-----------------------------------------------
+        }
         System.out.println(isSubscription);
         courseInfoVO.setSubscription(isSubscription);
         // todo  这里从其他模块获取
