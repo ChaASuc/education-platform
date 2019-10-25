@@ -1,6 +1,8 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpUser;
+//import cn.ep.bean.EpUserDetails;
+import cn.ep.bean.EpUserDetails;
 import com.github.pagehelper.PageInfo;
 
 /**
@@ -38,4 +40,13 @@ public interface EpUserService {
      * @return
      */
     PageInfo<EpUser> selectByDeptId(Long deptId, Integer num);
+
+
+    /**
+     * 根据用户名获取用户信息，用于UserDetail
+     * @param userNickname
+     * @param type
+     * @return
+     */
+    EpUserDetails selectEpUserDetailByUserNickName(String userNickname, Integer type);
 }

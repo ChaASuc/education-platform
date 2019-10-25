@@ -2,9 +2,12 @@ package cn.ep.mapper;
 
 import cn.ep.bean.EpPermission;
 import cn.ep.bean.EpPermissionExample;
+//import cn.ep.bean.EpUserDetialsPermission;
+import cn.ep.bean.EpUserDetialsPermission;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 public interface EpPermissionMapper {
     int countByExample(EpPermissionExample example);
@@ -30,4 +33,6 @@ public interface EpPermissionMapper {
     int updateByPrimaryKeySelective(EpPermission record);
 
     int updateByPrimaryKey(EpPermission record);
+
+    Set<EpUserDetialsPermission> selectByRoleName(String commonRoleName);
 }

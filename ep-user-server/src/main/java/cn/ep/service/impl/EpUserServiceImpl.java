@@ -1,6 +1,8 @@
 package cn.ep.service.impl;
 
 import cn.ep.bean.EpUser;
+//import cn.ep.bean.EpUserDetails;
+import cn.ep.bean.EpUserDetails;
 import cn.ep.bean.EpUserExample;
 import cn.ep.client.ProductClient;
 import cn.ep.config.PageConfig;
@@ -101,6 +103,12 @@ public class EpUserServiceImpl implements EpUserService {
         List<EpUser> epUsers = epUserMapper.selectByExample(epUserExample);
         PageInfo<EpUser> epUserPageInfo = new PageInfo<>(epUsers);
         return epUserPageInfo;
+    }
+
+    @Override
+    public EpUserDetails selectEpUserDetailByUserNickName(String userNickname, Integer type) {
+        EpUserDetails epUserDetails = epUserMapper.selectByUsername(userNickname, type);
+        return epUserDetails;
     }
 
 }

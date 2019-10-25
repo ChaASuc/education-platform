@@ -1,6 +1,8 @@
 package cn.ep.controller;
 
 import cn.ep.bean.EpUser;
+//import cn.ep.bean.EpUserDetails;
+import cn.ep.bean.EpUserDetails;
 import cn.ep.service.EpUserService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Locale;
 
 /**
  * @Author deschen
@@ -53,6 +56,8 @@ public class EpUserController {
                 "ep_user_prefix_getByUserNicknameAndType_%s_%s";
         public static final String EP_USER_PREFIX_GETBYDEPTIDANDNUM =
                 "ep_user_prefix_getByDeptId_%s_%s";
+        public static final String EP_USER_PREFIX_GETUSERDETAILSBYUSERNICKNAMEANDTYPE =
+                "ep_user_prefix_getUserDetailsByUserNickNameAndType_%s_%s";
     }
 
     /**
@@ -133,6 +138,27 @@ public class EpUserController {
         }
         // 删除缓存
         return ResultVO.success(users);
+    }
+
+    @ApiOperation(value="根据部门id获取用户信息", notes = "已测试")
+    @GetMapping(value = "/userDetails")
+    public ResultVO getUserDetailsByUserNickNameAndType(
+            @RequestParam @NotNull String userNickname, @RequestParam @NotNull Integer type) {
+        // 获取reids的key
+        String key = String.format(
+                CacheNameHelper.EP_USER_PREFIX_GETUSERDETAILSBYUSERNICKNAMEANDTYPE, userNickname, type);
+        // 统一返回值
+        EpUserDetails user = null;
+        // 查看是否有缓存
+        Object obj = redisUtil.get(key);
+        if (null == obj) {
+            user = epUserService.selectEpUserDetailByUserNickName(userNickname, type);
+            redisUtil.set(key, user);
+        }else {
+            user = (EpUserDetails) obj;
+        }
+        // 删除缓存
+        return ResultVO.success(user);
     }
 
 
