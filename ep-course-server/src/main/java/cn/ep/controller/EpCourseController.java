@@ -245,7 +245,7 @@ public class EpCourseController {
             if (!isSubscription && course.getFree() == 1) {  //未订阅且为收费课程，尝试订阅，
                 try {
                     ResultVO resultVO = subscription(courseId);  //尝试订阅
-                    isSubscription = true;  //如果未订阅，程序直接抛出异常，如果未抛出，则表明已订阅
+                    isSubscription = true;  //如果订阅不成功，程序直接抛出异常，如果未抛出，则表明已订阅
                 } catch (GlobalException ge){
                     //尝试订阅失败，报globalException可不处理
                     ge.printStackTrace();

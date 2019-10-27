@@ -88,7 +88,7 @@ public class IChapterServiceImpl implements IChapterService {
             check.setBelong(CheckEnum.CHECK_VIDEO.getValue());
             if (!checkService.insert(check))
                 throw new GlobalException(GlobalEnum.OPERATION_ERROR,"批量添加失败");
-            System.out.println(check);
+            //System.out.println(check);
         }
         return true;
     }

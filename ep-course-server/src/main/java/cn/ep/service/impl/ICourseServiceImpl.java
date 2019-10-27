@@ -147,15 +147,18 @@ public class ICourseServiceImpl implements ICourseService {
                     chapterListEntry.getValue()) {
                 VerseVO verseVO = new VerseVO();
 
-                if (isSubscription){  //因为没有订阅，records等于null，章节的url不可看
+                if (isSubscription){
                     for (EpWatchRecord r :
                             records) {
                         if (r.getChapterId() == verse.getId())
                             verseVO.setRecord(r);
                     }
                    // System.out.println(verse.getUrl());
-                } else
-                    verse.setUrl(null);
+                } else {  //因为没有订阅，records等于null，章节的url不可看
+                    //todo 当前系统是没有试看的功能的，如果要提供，将if语句去掉注释
+                    //if (verse.getFree() == 1)
+                        verse.setUrl(null);
+                }
                // System.out.println(verse);
                 verseVO.setVerse(verse);
                 verseVOList.add(verseVO);
