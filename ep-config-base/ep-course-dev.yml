@@ -17,10 +17,10 @@ eureka:
     # swagger2页面
     status-page-url.: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
     # 上传服务器后显示域名
-    ip-address: 789ngr.natappfree.cc
+    ip-address: pend4g.natappfree.cc
 # 设置全局Hystrix超时时间
 hystrix:
-  command:
+  command: 
     default:  # 默认全局
       circuitBreaker:
         requestVolumeThreshold: 10 #  触发熔断的最小请求次数，默认20

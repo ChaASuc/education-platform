@@ -95,7 +95,7 @@ public class EpCheckController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "type", value = "状态呢：0所有1未审核2已审核", dataType = "int", paramType = "path")
             , @ApiImplicitParam(name = "page", value = "页码", dataType = "int", paramType = "path")
-            ,@ApiImplicitParam(name = "checked", value = "获取审核类型：0种类，1视频，2课程", dataType = "int", paramType = "path")
+            ,@ApiImplicitParam(name = "checked", value = "获取审核类型：0视频，1课程，2种类", dataType = "int", paramType = "path")
     })
     @GetMapping("/current/list/{type}/{page}/{checked}")
     @IsLogin
