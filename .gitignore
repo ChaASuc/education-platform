@@ -3,6 +3,7 @@ HELP.md
 *.idea
 *.rebel.xml
 *.rebel-remote.xml
+*.iml
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
