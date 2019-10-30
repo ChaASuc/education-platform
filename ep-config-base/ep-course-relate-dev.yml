@@ -1,3 +1,4 @@
+env: course-relate-dev  # 测试用的
 server:
   port: 80 # 端口 101XX属于微服务端口
 eureka:
@@ -13,7 +14,10 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
-    ip-address: v6rce9.natappfree.cc
+    # swagger2页面
+    status-page-url.: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
+    # 上传服务器后显示域名
+    ip-address: fkcay6.natappfree.cc
 # 设置全局Hystrix超时时间
 hystrix:
   command:
@@ -27,9 +31,10 @@ hystrix:
 #        isolation:
 #          thread:
 #            timeoutInMilliseconds: 6000 # 设置hystrix的超时时间为6000ms，默认1000ms
+
 spring:
   zipkin:
-    base-url: http://coding.deschen.cn:9411  # zipkin的链接
+    base-url: http://127.0.0.1:9411  # zipkin的链接
     sender:
       type: web
   sleuth:
