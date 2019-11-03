@@ -1,0 +1,35 @@
+{
+  "groups": [
+    {
+      "name": "ep",
+      "type": "cn.ep.config.PageConfig",
+      "sourceType": "cn.ep.config.PageConfig"
+    },
+    {
+      "name": "ep.work",
+      "type": "cn.ep.config.IdWorkerProperties",
+      "sourceType": "cn.ep.config.IdWorkerProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ep.page-size",
+      "type": "java.lang.Integer",
+      "sourceType": "cn.ep.config.PageConfig",
+      "defaultValue": 12
+    },
+    {
+      "name": "ep.work.datacenter-id",
+      "type": "java.lang.Long",
+      "sourceType": "cn.ep.config.IdWorkerProperties",
+      "defaultValue": 1
+    },
+    {
+      "name": "ep.work.worker-id",
+      "type": "java.lang.Long",
+      "sourceType": "cn.ep.config.IdWorkerProperties",
+      "defaultValue": 1
+    }
+  ],
+  "hints": []
+}

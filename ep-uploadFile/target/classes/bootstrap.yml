@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ep-uploadFile # 应用名称，会在Eureka中显示
+  cloud:
+    config:
+      # 服务环境名称  例如 {name}-{profile} = ep-category-dev.yml
+      name: ep-uploadFile
+      profile: dev
+      discovery:
+        enabled: true
+        service-id: ep-config
+      label: ep-upload-deschen
+    # 解决github /monitor自动刷新失败
+    bus:
+      id: ${spring.application.name}:${spring.cloud.config.profile}:${random.value}
+eureka:
+  client:
+    service-url:
+      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
+

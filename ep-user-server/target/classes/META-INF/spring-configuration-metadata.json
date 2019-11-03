@@ -1,0 +1,93 @@
+{
+  "groups": [
+    {
+      "name": "spring.sleuth.sampler",
+      "type": "org.springframework.cloud.sleuth.sampler.SamplerProperties",
+      "sourceType": "cn.ep.EpUserApplication",
+      "sourceMethod": "samplerProperties()"
+    },
+    {
+      "name": "spring.zipkin",
+      "type": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties",
+      "sourceType": "cn.ep.EpUserApplication",
+      "sourceMethod": "zipkinProperties()"
+    },
+    {
+      "name": "spring.zipkin.compression",
+      "type": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Compression",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties",
+      "sourceMethod": "getCompression()"
+    },
+    {
+      "name": "spring.zipkin.locator",
+      "type": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Locator",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties",
+      "sourceMethod": "getLocator()"
+    },
+    {
+      "name": "spring.zipkin.locator.discovery",
+      "type": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Locator$Discovery",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Locator",
+      "sourceMethod": "getDiscovery()"
+    },
+    {
+      "name": "spring.zipkin.service",
+      "type": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Service",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties",
+      "sourceMethod": "getService()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.sleuth.sampler.probability",
+      "type": "java.lang.Float",
+      "sourceType": "org.springframework.cloud.sleuth.sampler.SamplerProperties"
+    },
+    {
+      "name": "spring.sleuth.sampler.rate",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.cloud.sleuth.sampler.SamplerProperties"
+    },
+    {
+      "name": "spring.zipkin.base-url",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties"
+    },
+    {
+      "name": "spring.zipkin.compression.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Compression"
+    },
+    {
+      "name": "spring.zipkin.discovery-client-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties"
+    },
+    {
+      "name": "spring.zipkin.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties"
+    },
+    {
+      "name": "spring.zipkin.encoder",
+      "type": "zipkin2.codec.SpanBytesEncoder",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties"
+    },
+    {
+      "name": "spring.zipkin.locator.discovery.enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Locator$Discovery"
+    },
+    {
+      "name": "spring.zipkin.message-timeout",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties"
+    },
+    {
+      "name": "spring.zipkin.service.name",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.cloud.sleuth.zipkin2.ZipkinProperties$Service"
+    }
+  ],
+  "hints": []
+}

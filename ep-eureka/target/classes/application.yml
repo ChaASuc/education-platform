@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: ep-eureka # 应用名称，会在Eureka中显示
+  profiles:
+    active: dev  #启动服务时，服务器会自动加载的配置文件
+eureka:
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+info:
+  app:
+    version: 1.1
+    name: ep-eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
