@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
  */
 @Api(description = "角色模块")
 @RestController
-@RequestMapping("/ep/role")
+@RequestMapping("/ep/user/role")
 @Validated
 public class EpRoleController {
 
@@ -96,7 +96,7 @@ public class EpRoleController {
             @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
     })
     @GetMapping(value = "/dept/{deptId}/{num}")
-    public ResultVO getByDeptIdAndNum(
+    public ResultVO getRoleByDeptIdAndNum(
             @PathVariable @NotNull @Min(0) Long deptId,
             @PathVariable @NotNull @Min(1)Integer num) {
         // 获取reids的key

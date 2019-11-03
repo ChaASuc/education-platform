@@ -1,0 +1,96 @@
+package cn.ep.controller;
+
+import cn.ep.bean.AuthToken;
+import cn.ep.bean.EpUserDetails;
+import cn.ep.constant.RoleConstant;
+import cn.ep.constant.UserConstant;
+import cn.ep.service.AuthService;
+import cn.ep.utils.Oauth2Util;
+import cn.ep.utils.ResultVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
+
+
+@RestController
+@RequestMapping("/ep/auth")
+@Validated
+public class AuthController {
+
+    @Value("${auth.clientId}")
+    String clientId;
+    @Value("${auth.clientSecret}")
+    String clientSecret;
+    @Value("${auth.cookieDomain}")
+    String cookieDomain;
+    @Value("${auth.cookieMaxAge}")
+    int cookieMaxAge;
+
+    @Autowired
+    private Oauth2Util oauth2Util;
+
+    @Autowired
+    AuthService authService;
+
+    @PostMapping("/front/login")
+    public ResultVO FrontLogin(@RequestParam @NotBlank String username,
+                          @RequestParam @NotBlank String password) {
+
+        authService.checkRoleByUsernameAndType(username, UserConstant.TYPE_USER, RoleConstant.type_student);
+        //申请令牌
+        AuthToken authToken =  authService.login(username,password,clientId,clientSecret);
+
+        return ResultVO.success(authToken);
+    }
+
+    @PostMapping("/background/login")
+    public ResultVO backgroundLogin(@RequestParam @NotBlank String username,
+                          @RequestParam @NotBlank String password) {
+
+        authService.checkRoleByUsernameAndType(username, UserConstant.TYPE_USER, RoleConstant.type_noStudent);
+        //申请令牌
+        AuthToken authToken =  authService.login(username,password,clientId,clientSecret);
+
+
+        return ResultVO.success(authToken);
+    }
+
+
+
+
+    //退出
+    @PostMapping("/userlogout")
+    public ResultVO logout(HttpServletRequest request) {
+        //取出cookie中的用户身份令牌
+        String token = oauth2Util.getTokenByRequest(request);
+        //删除redis中的token
+        authService.delToken(token);
+        return ResultVO.success();
+    }
+//
+    @GetMapping("/user")
+    public ResultVO userJwt(HttpServletRequest request) {
+
+        //拿身份令牌从redis中查询jwt令牌
+        EpUserDetails userJwt = oauth2Util.getUserByRequest(request);
+//        if(userToken!=null){
+//            //将jwt令牌返回给用户
+//            String jwt_token = userToken.getJwt_token();
+//            return ResultVO.success(jwt_token);
+//        }
+        return ResultVO.success(userJwt);
+    }
+//
+//
+//    //从cookie删除token
+//    private void clearCookie(String token){
+//        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+//        //HttpServletResponse response,String domain,String path, String name, String value, int maxAge,boolean httpOnly
+//        CookieUtil.addCookie(response,cookieDomain,"/","uid",token,0,false);
+//
+//    }
+}

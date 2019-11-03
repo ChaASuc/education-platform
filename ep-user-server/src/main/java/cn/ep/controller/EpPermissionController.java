@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
  */
 @Api(description = "权限模块")
 @RestController
-@RequestMapping("/ep/perm")
+@RequestMapping("/ep/user/perm")
 @Validated
 public class EpPermissionController {
 
@@ -89,7 +89,7 @@ public class EpPermissionController {
             @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
     })
     @GetMapping(value = "/dept/{deptId}/{num}")
-    public ResultVO getByDeptIdAndNum(
+    public ResultVO getPermByDeptIdAndNum(
             @PathVariable @NotNull @Min(0) Long deptId,
             @PathVariable @NotNull @Min(1)Integer num) {
         // 获取reids的key

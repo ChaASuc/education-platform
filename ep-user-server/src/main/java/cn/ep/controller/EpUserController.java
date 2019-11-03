@@ -1,7 +1,6 @@
 package cn.ep.controller;
 
 import cn.ep.bean.EpUser;
-//import cn.ep.bean.EpUserDetails;
 import cn.ep.bean.EpUserDetails;
 import cn.ep.service.EpUserService;
 import cn.ep.utils.RedisUtil;
@@ -19,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Locale;
+
+//import cn.ep.bean.EpUserDetails;
 
 /**
  * @Author deschen
@@ -95,7 +95,7 @@ public class EpUserController {
 
     @ApiOperation(value="根据账号查询用户", notes = "已测试")
     @GetMapping(value = "")
-    public ResultVO getByUserNicknameAndType(
+    public ResultVO getUserByUserNicknameAndType(
             @RequestParam @NotNull String userNickname, @RequestParam @NotNull Integer type) {
         // 获取reids的key
         String key = String.format(

@@ -1,5 +1,6 @@
 package cn.ep.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -23,4 +24,20 @@ public class JsonUtil {
     public static <T> T obj2Class (Object obj,Class<T> clazz) throws IOException {
         return string2Obj(obj2String(obj), clazz);
     }
+
+    public static <T> String parseObject(T obj) {
+        return  obj instanceof String ? (String) obj : JSONObject.toJSONString(obj);
+    }
+
+
+    //字符串转对象
+    public static <T> T parseObject(String str,Class<T> clazz) {
+        return clazz.equals(String.class)? (T) str :JSONObject.parseObject(str,clazz);
+    }
+
+    // object转换为自定义对象
+    public static <T> T parseObject (Object obj,Class<T> clazz){
+        return parseObject(parseObject(obj), clazz);
+    }
+
 }

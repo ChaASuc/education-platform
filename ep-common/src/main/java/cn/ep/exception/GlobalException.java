@@ -9,7 +9,7 @@ import cn.ep.enums.IEnum;
  * @Description
  * @Since 1.0.0
  */
-public class GlobalException extends RuntimeException{
+public class GlobalException extends RuntimeException {
 
     private Integer code;
 

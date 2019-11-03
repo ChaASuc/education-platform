@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Api(description = "部门模块")
 @RestController
-@RequestMapping("/ep/dept")
+@RequestMapping("/ep/user/dept")
 @Validated
 public class EpDeptController {
 

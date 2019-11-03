@@ -4,9 +4,6 @@ import cn.ep.serializer.Long2StringSerializer;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,14 +18,25 @@ public class EpUserDetails{
     @JsonSerialize(using = Long2StringSerializer.class)
     private Long userId;
 
-    private String username;
+    private String userNickname;
 
-    private String password;
+    private String userName;
+
+    private String userPwd;
+
+    private String fileUrl;
+
+    private String userPosition;
+
+    private String userDescription;
+
+    private String userPhone;
+
+    private String userEmail;
 
     private Set<EpRole> roles;
 
     private Set<EpUserDetialsPermission> permissions;
-
 
 }
 

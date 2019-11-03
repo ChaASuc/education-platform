@@ -1,8 +1,8 @@
 server:
-  port: 8080 # 1006XX 用户模块的端口
+  port: 8082 # 1006XX 用户模块的端口
 spring:
   application:
-    name: ep-user
+    name: ep-auth
   rabbitmq:
     host: management.deschen.cn
     port: 5672
@@ -47,11 +47,11 @@ eureka:
   client:
     registry-fetch-interval-seconds: 5
     service-url:
-#      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
+      #      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
       defaultZone: http://localhost:50101/eureka/
   instance:
     lease-renewal-interval-in-seconds: 5
-      # 服务失效时间，默认值90秒
+    # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
     ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
@@ -103,4 +103,22 @@ ribbon:
   ReadTimeout: 2000 # 通信超时时间(ms)
   MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
   MaxAutoRetries: 1 # 同一实例的重试次数
+
+
+auth:
+  tokenValiditySeconds: 3600  #token存储到redis的过期时间
+  clientId: XcWebApp
+  clientSecret: XcWebApp
+  cookieDomain: xc.com
+  cookieMaxAge: -1
+encrypt:
+  key-store:
+    location: classpath:/xc.keystore
+    secret: xuechengkeystore
+    alias: xckey
+    password: xuecheng
+
+
+
+
 
