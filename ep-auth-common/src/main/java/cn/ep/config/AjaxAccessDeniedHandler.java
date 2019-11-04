@@ -1,8 +1,8 @@
-package cn.ep.security;
+package cn.ep.config;
 
-import cn.ep.Enums.ResultEnum;
 import cn.ep.utils.ResultVO;
 import com.alibaba.fastjson.JSON;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -21,6 +21,8 @@ import java.io.IOException;
 public class AjaxAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
-        httpServletResponse.getWriter().write(JSON.toJSONString(ResultVO.failure(ResultEnum.USER_NO_ACCESS)));
+        httpServletResponse.setStatus(HttpStatus.OK.value());
+        httpServletResponse.setHeader("Content-Type", "application/json;charset=UTF-8");
+        httpServletResponse.getWriter().write(JSON.toJSONString(ResultVO.failure(204, "用户无权访问")));
     }
 }

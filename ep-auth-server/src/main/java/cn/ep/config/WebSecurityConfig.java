@@ -1,7 +1,5 @@
 package cn.ep.config;
 
-import cn.ep.security.AjaxAccessDeniedHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -18,8 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Order(-1)
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private AjaxAccessDeniedHandler accessDeniedHandler;
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -48,4 +45,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 //        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler); // 无权访问 JSON 格式的数据
     }
+
+
 }

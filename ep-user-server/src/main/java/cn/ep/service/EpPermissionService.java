@@ -2,6 +2,9 @@ package cn.ep.service;
 
 import cn.ep.bean.EpPermission;
 import com.github.pagehelper.PageInfo;
+import org.hibernate.validator.constraints.EAN;
+
+import java.util.List;
 
 /**
  * @Author deschen
@@ -33,9 +36,15 @@ public interface EpPermissionService {
 
     /**
      * 根据用户id和页码获取权限
+     *
      * @param roleId
      * @param num
      * @return
      */
     PageInfo<EpPermission> selectByRoleIdAndNum(Long roleId, Integer num);
+
+
+//    List<String> getCommonPerm();
+//
+//    List<String>
 }

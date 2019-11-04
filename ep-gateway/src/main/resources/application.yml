@@ -1,0 +1,103 @@
+server:
+  port: 10020 # 端口 1002X属于zuul端口
+spring:
+  redis:
+    cluster:
+      #集群信息
+      nodes: 112.74.39.181:6080,112.74.39.181:6083,112.74.39.181:6081,203.195.191.48:6082,203.195.191.48:6085,203.195.191.48:6084
+      #默认值是5 一般当此值设置过大时，容易报：Too many Cluster redirections
+      maxRedirects: 5
+    # springboot版本为1.4RELEASE后中的RedisProperties配置文件类，从图中可知pool属性则被封装到了内部静态类Jedis和Lettuce中去了
+    jedis:
+      pool:
+        max-idle: 8  # 最大连接数
+        min-idle: 0  # 最小连接数
+        max-wait: -1  # 无限等待
+    timeout: 30000
+    database: 1
+    password: rjgc2016
+  application:
+    name: ep-gatway # 应用名称，会在Eureka中显示
+  rabbitmq:
+    host: management.deschen.cn
+    port: 5672
+    username: deschen
+    password: root123
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:50101/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
+    instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+    #在注册服务完成以后，服务提供者会维持一个心跳（定时向EurekaServer发起Rest请求），告诉EurekaServer：“我还活着”。这个我们称为服务的续约（renew）；
+    # 默认情况下每个30秒服务会向注册中心发送一次心跳，证明自己还活着。如果超过90秒没有发送心跳，EurekaServer就会认为该服务宕机，“失效剔除”从服务列表中移除，这两个值在生产环境不要修改，默认即可。
+    # 在开发时，这个值有点太长了
+    # 服务续约(renew)的间隔，默认为30秒
+    lease-renewal-interval-in-seconds: 5
+    # 服务失效时间，默认值90秒
+    lease-expiration-duration-in-seconds: 10
+  compression:
+    request:
+      enabled: true   # 开启请求压缩，默认false
+      mime-types:  text/html,application/xml,application/json # 默认设置压缩的数据类型
+      min-request-size: 2048 # 默认设置触发压缩的大小下限
+    response:
+      enabled: true   # 开启响应压缩，默认false
+zuul:
+  prefix: /api   # 路由前缀
+  ignored-services: "*"  # 忽略的应用，不暴露接口
+  routes:
+    ep-category:
+      path: /ep/category/**
+      serviceId: ep-category
+      strip-prefix: false
+      sensitiveHeaders:
+    ep-product:
+      path: /ep/product/**
+      serviceId: ep-product
+      strip-prefix: false
+      sensitiveHeaders:
+    ep-uploadFile:
+      path: /ep/file/**
+      serviceId: ep-uploadFile
+      strip-prefix: false
+      sensitiveHeaders:
+    ep-user:
+      path: /ep/user/**
+      serviceId: ep-user
+      strip-prefix: false
+      sensitiveHeaders:
+    ep-auth:
+      path: /ep/auth/**
+      serviceId: ep-auth
+      strip-prefix: false
+      sensitiveHeaders:
+# Zuul中默认就已经集成了Ribbon负载均衡和Hystix熔断机制。但是所有的超时策略都是走的默认值，比如熔断超时时间只有1S，很容易就触发了。因此建议我们手动进行配置：
+# 设置全局Hystrix超时时间，Ribbon< hystrix, 因为ribbon重试没完，熔断了就麻烦了
+# 超时：(1 + MaxAutoRetries ）*（1+ MaxAutoRetriesNextServer) *（ReadTimeout +ConnectTimeout）
+hystrix:
+  command:
+    default:  # 默认全局
+      circuitBreaker:
+        requestVolumeThreshold: 10 #  触发熔断的最小请求次数，默认20
+        errorThresholdPercentage: 50  # 触发熔断的失败请求最小占比，默认50%
+        sleepWindowInMilliseconds: 1000  # 休眠时长，默认是5000毫秒
+      execution:
+        timeout:
+          enable: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 12000 # 设置hystrix的超时时间为6000ms，默认1000ms
+
+# `@FeignClient`注解修改的客户端在被代理时，都会创建一个新的Fegin.Logger实例。我们需要额外指定这个日志的级别才可以。
+logging:
+  level:
+    com.ep: debug
+# 参数计算重试的次数：MaxAutoRetries+MaxAutoRetriesNextServer+(MaxAutoRetries *MaxAutoRetriesNextServer) 即重试3次 则一共产生4次调用
+ribbon:
+  ConnectTimeout: 1000 # 连接超时时间(ms)
+  ReadTimeout: 2000 # 通信超时时间(ms)
+  MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数，不包括首次调用
+  MaxAutoRetries: 1 # 同一实例的重试次数，不包括首次调用

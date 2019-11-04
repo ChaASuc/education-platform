@@ -92,6 +92,7 @@ hystrix:
         timeout:
           enable: true
         isolation:
+          strategy: SEMAPHORE
           thread:
             timeoutInMilliseconds: 12000 # 设置hystrix的超时时间为6000ms，默认1000ms
       circuitBreaker:
