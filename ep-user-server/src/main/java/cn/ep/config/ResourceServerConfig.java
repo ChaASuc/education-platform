@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     @Autowired
-    private AjaxAccessDeniedHandler accessDeniedHandler;
+    private AjaxAccessDeniedHandler ajaxAccessDeniedHandler;
 
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
@@ -75,12 +75,14 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
                         "/swagger-resources", "/swagger-resources/configuration/security",
                         "/swagger-ui.html", "/webjars/**", "/ep/user/userDetails").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest()
+//                .access("@rbacauthorityservice.hasPermission(request,authentication)");
+                .authenticated();
     }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
         resources.authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler);
+                .accessDeniedHandler(ajaxAccessDeniedHandler);
     }
 }

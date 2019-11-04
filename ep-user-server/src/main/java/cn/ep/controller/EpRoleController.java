@@ -1,7 +1,9 @@
 package cn.ep.controller;
 
 import cn.ep.bean.EpRole;
+import cn.ep.bean.EpUserDetails;
 import cn.ep.service.EpRoleService;
+import cn.ep.utils.Oauth2Util;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.validate.groups.Insert;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -36,6 +39,8 @@ public class EpRoleController {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired
+    private Oauth2Util oauth2Util;
     /**
      * 内部类，专门用来管理每个get方法所对应缓存的名称。
      */
@@ -123,13 +128,13 @@ public class EpRoleController {
      */
     @ApiOperation(value="获取用户的所有角色", notes="已测试")
     @ApiImplicitParams({
-            @ApiImplicitParam(name= "userId",value = "用户id", required = true, paramType = "path"),
             @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
     })
-    @GetMapping("/list/{userId}/{num}")
+    @GetMapping("/list/{num}")
     public ResultVO getListByUserIdAndNum(
-            @PathVariable @NotNull @Min(0) Long userId,
-            @PathVariable @NotNull @Min(1) Integer num){
+            @PathVariable @NotNull @Min(1) Integer num, HttpServletRequest request){
+        EpUserDetails userByRequest = oauth2Util.getUserByRequest(request);
+        Long userId = userByRequest.getUserId();
         // 获取reids的key
         String key = String.format(
                 CacheNameHelper.EP_ROLE_PREFIX_GETLISTBYUSERIDANDNUM, userId, num);

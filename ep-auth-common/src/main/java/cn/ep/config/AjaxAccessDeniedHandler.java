@@ -17,8 +17,9 @@ import java.io.IOException;
  * @date: 2018/10/15 16:43
  * @description: 无权访问
  */
-@Component
+@Component("ajaxAccessDeniedHandler")
 public class AjaxAccessDeniedHandler implements AccessDeniedHandler {
+
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
         httpServletResponse.setStatus(HttpStatus.OK.value());

@@ -44,7 +44,4 @@ public interface EpPermissionService {
     PageInfo<EpPermission> selectByRoleIdAndNum(Long roleId, Integer num);
 
 
-//    List<String> getCommonPerm();
-//
-//    List<String>
 }

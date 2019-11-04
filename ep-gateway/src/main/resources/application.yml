@@ -1,6 +1,19 @@
 server:
   port: 10020 # 端口 1002X属于zuul端口
 spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://139.196.120.94:3306/ep_user?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: root123
+    initialSize: 5
+    minIdle: 5
+    maxWait: 60000
+    maxActive: 20
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
   redis:
     cluster:
       #集群信息
@@ -54,6 +67,11 @@ zuul:
       serviceId: ep-category
       strip-prefix: false
       sensitiveHeaders:
+    ep-course:
+      path: /ep/course/**
+      serviceId: ep-course
+      strip-prefix: false
+      sensitiveHeaders:
     ep-product:
       path: /ep/product/**
       serviceId: ep-product
@@ -101,3 +119,17 @@ ribbon:
   ReadTimeout: 2000 # 通信超时时间(ms)
   MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数，不包括首次调用
   MaxAutoRetries: 1 # 同一实例的重试次数，不包括首次调用
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/mybatis-config.xml
+  type-aliases-package: cn.ep.bean
+ep:
+  role:
+    userId: 1186798544305131520
+    studentId: 1181241956957818881
+    teacherId: 1186798544305131521
+    adminId: 1181241956957818880
+  dept:
+    studentId: 1181232023264694272
+    teacherId: 1181232023264694273
+    adminId: 1181232023264694274

@@ -22,7 +22,7 @@ import java.util.Map;
  * @email i@merryyou.cn
  * @since 1.0
  */
-@Component
+@Component("authExceptionEntryPoint")
 public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
 
 

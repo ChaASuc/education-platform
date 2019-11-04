@@ -2,6 +2,7 @@ package cn.ep.service.impl;
 
 import cn.ep.bean.EpRole;
 import cn.ep.bean.EpRoleExample;
+import cn.ep.bean.EpUserRole;
 import cn.ep.config.PageConfig;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
@@ -45,6 +46,20 @@ public class EpRoleServiceImpl implements EpRoleService {
         boolean success = epRoleMapper.insertSelective(role) > 0 ? true : false;
         if (!success) {
             throw new GlobalException(GlobalEnum.OPERATION_ERROR, "角色创建");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void insertUserRole(Long userId, Long roleId) {
+        long id = idWorker.nextId();
+        EpUserRole epUserRole = new EpUserRole();
+        epUserRole.setuRId(id);
+        epUserRole.setUserId(userId);
+        epUserRole.setRoleId(roleId);
+        boolean success = epUserRoleMapper.insertSelective(epUserRole) > 0 ? true : false;
+        if (!success) {
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "插入角色失败");
         }
     }
 

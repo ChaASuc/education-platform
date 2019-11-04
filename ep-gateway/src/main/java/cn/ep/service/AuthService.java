@@ -22,18 +22,18 @@ public class AuthService {
     StringRedisTemplate stringRedisTemplate;
 
     //从头取出jwt令牌
-    public Object getJwtFromHeader(HttpServletRequest request, HttpServletResponse response) {
+    public boolean getJwtFromHeader(HttpServletRequest request, HttpServletResponse response) {
         String token = request.getHeader("token");
         if (null == token) {
             access_denied(ResultVO.failure(10002, "token不存在"));
-            return null;
+            return false;
         }
         token = "user_token:" + token;
 
         String authorization = request.getHeader("Authorization");
         if (StringUtils.isEmpty(authorization) || !authorization.contains("Bearer")) {
             access_denied(ResultVO.failure(10002, "access_token不存在"));
-            return null;
+            return false;
         }
         //从Bearer 后边开始取出token
         String accessTokenFromRequest = authorization.substring(7);
@@ -41,14 +41,14 @@ public class AuthService {
         String authTokenFromRedis = stringRedisTemplate.opsForValue().get(token);
         if (null == authTokenFromRedis) {
             access_denied(ResultVO.failure(10001, "token失效"));
-            return null;
+            return false;
         }
 
         Long expire = stringRedisTemplate.getExpire(token, TimeUnit.SECONDS);
 
         if (expire == null || expire < 0) {
             access_denied(ResultVO.failure(10001, "token过期"));
-            return null;
+            return false;
         }
 
         //转成对象
@@ -57,10 +57,10 @@ public class AuthService {
 
         if (!accessTokenFromRequest.equals(accessToken)) {
             access_denied(ResultVO.failure(10001, "令牌不匹配"));
-            return null;
+            return false;
         }
 
-        return null;
+        return true;
 
     }
 

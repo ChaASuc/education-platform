@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    perm_id, perm_description, req_method, zuul_prefix, server_prefix, deleted, create_time, 
+    perm_id, perm_description, req_method, zuul_prefix, server_prefix, deleted, create_time,
     update_time, dept_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpPermissionExample" >
@@ -100,7 +100,7 @@
   </select>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from ep_permission
     where perm_id = #{permId,jdbcType=BIGINT}
@@ -116,12 +116,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="cn.ep.bean.EpPermission" >
-    insert into ep_permission (perm_id, perm_description, req_method, 
-      zuul_prefix, server_prefix, deleted, 
+    insert into ep_permission (perm_id, perm_description, req_method,
+      zuul_prefix, server_prefix, deleted,
       create_time, update_time, dept_id
       )
-    values (#{permId,jdbcType=BIGINT}, #{permDescription,jdbcType=VARCHAR}, #{reqMethod,jdbcType=TINYINT}, 
-      #{zuulPrefix,jdbcType=VARCHAR}, #{serverPrefix,jdbcType=VARCHAR}, #{deleted,jdbcType=BIT}, 
+    values (#{permId,jdbcType=BIGINT}, #{permDescription,jdbcType=VARCHAR}, #{reqMethod,jdbcType=TINYINT},
+      #{zuulPrefix,jdbcType=VARCHAR}, #{serverPrefix,jdbcType=VARCHAR}, #{deleted,jdbcType=BIT},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{deptId,jdbcType=BIGINT}
       )
   </insert>

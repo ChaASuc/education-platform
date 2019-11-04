@@ -14,17 +14,23 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)//激活方法上的PreAuthorize注解
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
-    @Autowired
-    private AjaxAccessDeniedHandler accessDeniedHandler;
+
 
     @Autowired
     private AuthExceptionEntryPoint authenticationEntryPoint;
 
+    @Autowired
+    private AjaxAccessDeniedHandler ajaxAccessDeniedHandler;
+
+    @Autowired
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
+
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
         resources.authenticationEntryPoint(authenticationEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler);
+                .accessDeniedHandler(customAccessDeniedHandler);
     }
+
     //Http安全配置，对每个到达系统的http请求链接进行校验
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -34,6 +40,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
                         "/swagger-resources","/swagger-resources/configuration/security",
                         "/swagger-ui.html","/webjars/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest()
+//                .access("@rbacauthorityservice.hasPermission(request,authentication)");
+                .authenticated();
     }
 }

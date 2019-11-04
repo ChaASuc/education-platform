@@ -5,11 +5,14 @@ import cn.ep.bean.EpUser;
 import cn.ep.bean.EpUserDetails;
 import cn.ep.bean.EpUserExample;
 import cn.ep.client.ProductClient;
+import cn.ep.config.EpUserConfig;
 import cn.ep.config.PageConfig;
 import cn.ep.constant.UserConstant;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpUserMapper;
+import cn.ep.properties.EpUserProperties;
+import cn.ep.service.EpRoleService;
 import cn.ep.service.EpUserService;
 import cn.ep.utils.IdWorker;
 import cn.ep.utils.ResultVO;
@@ -17,6 +20,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,16 +48,29 @@ public class EpUserServiceImpl implements EpUserService {
     @Autowired
     private PageConfig pageConfig;
 
+    @Autowired
+    private EpRoleService roleService;
+
+    @Autowired
+    private EpUserProperties epUserProperties;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     @Transactional
     public void insert(EpUser epUser) {
         long id = idWorker.nextId();
         epUser.setUserId(id);
+        epUser.setDeptId(epUserProperties.getDept().getStudentId());
+        epUser.setUserPwd(bCryptPasswordEncoder.encode(epUser.getUserPwd()));
         boolean success = epUserMapper.insertSelective(epUser) > 0 ? true : false;
         if (!success) {
             throw new GlobalException(GlobalEnum.OPERATION_ERROR, "创建用户失败");
         }
+
+        roleService.insertUserRole(id, epUserProperties.getRole().getStudentId());
+        roleService.insertUserRole(id, epUserProperties.getRole().getUserId());
     }
 
     @Override

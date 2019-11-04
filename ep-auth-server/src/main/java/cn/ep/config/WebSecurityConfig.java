@@ -1,5 +1,6 @@
 package cn.ep.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -15,12 +16,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 @Order(-1)
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+//    @Autowired
+//    private AjaxAccessDeniedHandler ajaxAccessDeniedHandler;
 
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/ep/auth/front/login", "/ep/auth/background/login","/ep/auth/userlogout","/ep/auth/user");
+        web.ignoring().antMatchers("/ep/auth/front/login",
+                "/ep/auth/background/login","/ep/auth/userlogout",
+                "/ep/auth/user");
 
     }
     @Bean
@@ -41,9 +45,12 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .and()
-                .authorizeRequests().anyRequest().authenticated();
-
-//        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler); // 无权访问 JSON 格式的数据
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated();
+//                .access("@rbacauthorityservice.hasPermission(request,authentication)");
+//
+//        http.exceptionHandling().accessDeniedHandler(ajaxAccessDeniedHandler); // 无权访问 JSON 格式的数据
     }
 
 

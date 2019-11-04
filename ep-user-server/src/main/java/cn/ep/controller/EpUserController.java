@@ -2,7 +2,9 @@ package cn.ep.controller;
 
 import cn.ep.bean.EpUser;
 import cn.ep.bean.EpUserDetails;
+import cn.ep.service.EpRoleService;
 import cn.ep.service.EpUserService;
+import cn.ep.utils.Oauth2Util;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.validate.groups.Insert;
@@ -13,9 +15,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -37,7 +41,15 @@ public class EpUserController {
     private EpUserService epUserService;
 
     @Autowired
+    private EpRoleService epRoleService;
+
+    @Autowired
     private RedisUtil redisUtil;
+
+    @Autowired
+    private Oauth2Util oauth2Util;
+
+
 
     /**
      * 内部类，专门用来管理每个get方法所对应缓存的名称。
@@ -62,13 +74,14 @@ public class EpUserController {
 
     /**
      * 新增用户
+     *
      * @param user
      * @return
      */
-    @ApiOperation(value="新增用户", notes="已测试")
+    @ApiOperation(value = "新增用户", notes = "已测试")
     @ApiImplicitParam(name = "user", value = "用户实体", required = true, dataType = "EpUser")
-    @PostMapping("")
-    public ResultVO insert(@RequestBody @Validated({Insert.class}) EpUser user){
+    @PostMapping("/register")
+    public ResultVO insert(@RequestBody @Validated({Insert.class}) EpUser user) {
         epUserService.insert(user);
         // 清空相关缓存
         redisUtil.delFuz(CacheNameHelper.EP_USER_PREFIX);
@@ -77,13 +90,18 @@ public class EpUserController {
 
     /**
      * 根据主键修改和逻辑删除用户
+     *
      * @param user
      * @return
      */
-    @ApiOperation(value="根据主键修改和逻辑删除用户",notes = "已测试")
-    @ApiImplicitParam(name="user", value = "用户实体类", dataType = "EpUser")
+    @ApiOperation(value = "根据主键修改和逻辑删除用户", notes = "已测试")
+    @ApiImplicitParam(name = "user", value = "用户实体类", dataType = "EpUser")
     @PutMapping("")
-    public ResultVO update(@RequestBody @Validated({Update.class}) EpUser user){
+    public ResultVO update(@RequestBody @Validated({Update.class}) EpUser user, HttpServletRequest request) {
+        EpUserDetails userDetails = oauth2Util.getUserByRequest(request);
+        user.setUserId(userDetails.getUserId());
+//        user.setUserPwd(bCryptPasswordEncoder.encode(user.getUserPwd()));
+
         epUserService.update(user);
         // 删除缓存
         redisUtil.delFuz(CacheNameHelper.EP_USER_PREFIX);
@@ -144,19 +162,19 @@ public class EpUserController {
     @GetMapping(value = "/userDetails")
     public ResultVO getUserDetailsByUserNickNameAndType(
             @RequestParam @NotNull String userNickname, @RequestParam @NotNull Integer type) {
-        // 获取reids的key
-        String key = String.format(
-                CacheNameHelper.EP_USER_PREFIX_GETUSERDETAILSBYUSERNICKNAMEANDTYPE, userNickname, type);
+//        // 获取reids的key
+//        String key = String.format(
+//                CacheNameHelper.EP_USER_PREFIX_GETUSERDETAILSBYUSERNICKNAMEANDTYPE, userNickname, type);
         // 统一返回值
         EpUserDetails user = null;
         // 查看是否有缓存
-        Object obj = redisUtil.get(key);
-        if (null == obj) {
+//        Object obj = redisUtil.get(key);
+//        if (null == obj) {
             user = epUserService.selectEpUserDetailByUserNickName(userNickname, type);
-            redisUtil.set(key, user);
-        }else {
-            user = (EpUserDetails) obj;
-        }
+//            redisUtil.set(key, user);
+//        }else {
+//            user = (EpUserDetails) obj;
+//        }
         // 删除缓存
         return ResultVO.success(user);
     }

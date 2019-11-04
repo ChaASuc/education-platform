@@ -1,6 +1,7 @@
 package cn.ep;
 
 import com.netflix.zuul.context.RequestContext;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -18,6 +19,7 @@ import java.io.IOException;
 @SpringBootApplication
 @EnableZuulProxy  // 开启Zuul的网关功能
 @EnableDiscoveryClient
+@MapperScan({"cn.ep.mapper"})
 public class EpGatewayApplication {
 
     public static void main(String[] args) {

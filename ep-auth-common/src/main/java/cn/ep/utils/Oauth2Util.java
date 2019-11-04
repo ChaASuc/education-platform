@@ -66,9 +66,9 @@ public class Oauth2Util {
 
     // 获取token
     public String getTokenByRequest(HttpServletRequest request) {
-        String token = request.getParameter("token");
-        if (null == token) {
-            throw new GlobalException(GlobalEnum.EXIST_ERROR, "token不存在");
+        String token = request.getHeader("token");
+        if (StringUtils.isEmpty(token)) {
+            throw new GlobalException(GlobalEnum.PARAMS_ERROR, "token不存在");
         }
 
         return token;

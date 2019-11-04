@@ -7,8 +7,10 @@ import cn.ep.constant.UserConstant;
 import cn.ep.service.AuthService;
 import cn.ep.utils.Oauth2Util;
 import cn.ep.utils.ResultVO;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +38,7 @@ public class AuthController {
     @Autowired
     AuthService authService;
 
+    @ApiOperation(value="前台登入", notes = "已测试")
     @PostMapping("/front/login")
     public ResultVO FrontLogin(@RequestParam @NotBlank String username,
                           @RequestParam @NotBlank String password) {
@@ -47,6 +50,7 @@ public class AuthController {
         return ResultVO.success(authToken);
     }
 
+    @ApiOperation(value="后台登入", notes = "已测试")
     @PostMapping("/background/login")
     public ResultVO backgroundLogin(@RequestParam @NotBlank String username,
                           @RequestParam @NotBlank String password) {
@@ -63,7 +67,8 @@ public class AuthController {
 
 
     //退出
-    @PostMapping("/userlogout")
+    @ApiOperation(value="登出", notes = "已测试")
+    @GetMapping("/userlogout")
     public ResultVO logout(HttpServletRequest request) {
         //取出cookie中的用户身份令牌
         String token = oauth2Util.getTokenByRequest(request);
@@ -84,13 +89,16 @@ public class AuthController {
 //        }
         return ResultVO.success(userJwt);
     }
-//
-//
-//    //从cookie删除token
-//    private void clearCookie(String token){
-//        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-//        //HttpServletResponse response,String domain,String path, String name, String value, int maxAge,boolean httpOnly
-//        CookieUtil.addCookie(response,cookieDomain,"/","uid",token,0,false);
-//
-//    }
+
+    @GetMapping("/hello")
+    public ResultVO hello() {
+
+        return ResultVO.success("你好");
+    }
+
+    public static void main(String[] args) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encode = bCryptPasswordEncoder.encode("nlfdzccq9;,.");
+        System.out.println(encode);
+    }
 }

@@ -61,6 +61,15 @@ ep:
   worker:
     workerId: 1
     datacenterId: 1
+  role:
+    userId: 1186798544305131520
+    studentId: 1181241956957818881
+    teacherId: 1186798544305131521
+    adminId: 1181241956957818880
+  dept:
+    studentId: 1181232023264694272
+    teacherId: 1181232023264694273
+    adminId: 1181232023264694274
 logging:
   level:
     cn.ep: debug

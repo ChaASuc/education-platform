@@ -17,6 +17,8 @@ public interface EpRoleService {
      */
     void insert(EpRole role);
 
+    void insertUserRole(Long userId, Long roleId);
+
     /**
      * 更新或逻辑删除角色
      * @param role
