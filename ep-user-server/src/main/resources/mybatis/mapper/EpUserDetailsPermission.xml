@@ -7,6 +7,26 @@
     <result column="uri" property="uri" jdbcType="VARCHAR" />
   </resultMap>
 
+  <resultMap id="EpUserPermissionDtoBaseResultMap" type="cn.ep.bean.EpPermissionDto" >
+    <id column="perm_id" property="permId" jdbcType="BIGINT" />
+    <result column="perm_description" property="permDescription" jdbcType="VARCHAR" />
+    <result column="req_method" property="reqMethod" jdbcType="TINYINT" />
+    <result column="zuul_prefix" property="zuulPrefix" jdbcType="VARCHAR" />
+    <result column="server_prefix" property="serverPrefix" jdbcType="VARCHAR" />
+    <result column="deleted" property="deleted" jdbcType="BIT" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="dept_id" property="deptId" jdbcType="BIGINT" />
+    <collection property="roles" javaType="ArrayList" ofType="cn.ep.bean.EpRole" >
+      <id column="role_id" property="roleId" jdbcType="BIGINT" />
+      <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+      <result column="deleted" property="deleted" jdbcType="BIT" />
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+      <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+      <result column="dept_id" property="deptId" jdbcType="BIGINT" />
+    </collection>
+  </resultMap>
+
   <select id="selectByRoleName" resultMap="EpUserDetailPermissionBaseResultMap" parameterType="java.lang.String">
     SELECT
       p.perm_id, p.req_method, CONCAT(p.zuul_prefix, p.server_prefix) AS uri
@@ -19,5 +39,18 @@
       AND p.deleted = FALSE
       AND rp.deleted = FALSE
       AND r.role_name = #{commonRoleName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectEpPermissionDto" resultMap="EpUserPermissionDtoBaseResultMap">
+    SELECT
+      p.*, r.*
+    FROM
+      ep_permission p
+        LEFT JOIN ep_role_permission rp ON p.perm_id = rp.perm_id
+        LEFT JOIN ep_role r ON rp.role_id = r.role_id
+    WHERE
+      r.deleted = FALSE
+      AND p.deleted = FALSE
+      AND rp.deleted = FALSE
   </select>
 </mapper>

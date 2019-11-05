@@ -32,4 +32,8 @@ public interface EpUserMapper {
     int updateByPrimaryKey(EpUser record);
 
     EpUserDetails selectByUsername(String username, Integer type);
+
+    List<EpUserDetails> selectUserDetails();
+
+    List<EpUserDetails> selectUserDetailsNotPwd();
 }

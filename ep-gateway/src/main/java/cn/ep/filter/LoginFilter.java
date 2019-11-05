@@ -99,6 +99,7 @@ public class LoginFilter extends ZuulFilter {
         if (!authService.getJwtFromHeader(request, response)) {
             return null;
         }
+        return null;
 
     }
 

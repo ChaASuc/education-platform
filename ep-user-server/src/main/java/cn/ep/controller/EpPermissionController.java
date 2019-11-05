@@ -1,6 +1,7 @@
 package cn.ep.controller;
 
 import cn.ep.bean.EpPermission;
+import cn.ep.bean.EpPermissionDto;
 import cn.ep.service.EpPermissionService;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
@@ -15,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @Author deschen
@@ -48,6 +51,8 @@ public class EpPermissionController {
                 "ep_permission_prefix_getByDeptId_%s_%s";
         public static final String EP_PERMISSION_PREFIX_GETLISTBYROLEIDANDNUM =
                 "ep_permission_prefix_getListByRoleIdAndNum_%s_%s";
+        public static final String EP_PERMISSION_PREFIX_GETLIST =
+                "ep_permission_prefix_getList";
     }
 
     /**
@@ -82,32 +87,60 @@ public class EpPermissionController {
     }
 
 
-
-    @ApiOperation(value="根据部门id获取权限信息", notes = "已测试")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name= "deptId",value = "部门id", required = true, paramType = "path"),
-            @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
-    })
-    @GetMapping(value = "/dept/{deptId}/{num}")
-    public ResultVO getPermByDeptIdAndNum(
-            @PathVariable @NotNull @Min(0) Long deptId,
-            @PathVariable @NotNull @Min(1)Integer num) {
-        // 获取reids的key
-        String key = String.format(
-                CacheNameHelper.EP_PERMISSION_PREFIX_GETBYDEPTIDANDNUM, deptId, num);
-        // 统一返回值
-        PageInfo<EpPermission> permissions = null;
-        // 查看是否有缓存
-        Object obj = redisUtil.get(key);
-        if (null == obj) {
-            permissions = epPermissionService.selectByDeptIdAndNum(deptId, num);
-            redisUtil.set(key, permissions);
+    /**
+     * 修改权限id和角色id集合修改
+     * @param permissionId
+     * @param roleId
+     * @param type
+     * @return
+     */
+    @ApiOperation(value="修改权限id和角色id集合修改,type=0 删除 1添加",notes = "已测试")
+    @PutMapping("/{permissionId}/{roleId}/{type}")
+    public ResultVO updateByPermissionIdAndRoleIdAndType(
+            @PathVariable @Min(0) Long permissionId,
+            @PathVariable @Min(0) Long roleId,
+            @PathVariable @Min(0) @Max(1) Integer type
+    ){
+        boolean success = false;
+        if (type == 0) {
+            success = false;
         }else {
-            permissions = (PageInfo<EpPermission>) obj;
+            success = success;
         }
+        epPermissionService.updateRolePerm(permissionId, roleId, success);
         // 删除缓存
-        return ResultVO.success(permissions);
+        redisUtil.delFuz(CacheNameHelper.EP_PERMISSION_PREFIX);
+        return ResultVO.success();
+
     }
+
+
+
+//    @ApiOperation(value="根据部门id获取权限信息", notes = "已测试")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name= "deptId",value = "部门id", required = true, paramType = "path"),
+//            @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
+//    })
+//    @GetMapping(value = "/dept/{deptId}/{num}")
+//    public ResultVO getPermByDeptIdAndNum(
+//            @PathVariable @NotNull @Min(0) Long deptId,
+//            @PathVariable @NotNull @Min(1)Integer num) {
+//        // 获取reids的key
+//        String key = String.format(
+//                CacheNameHelper.EP_PERMISSION_PREFIX_GETBYDEPTIDANDNUM, deptId, num);
+//        // 统一返回值
+//        PageInfo<EpPermission> permissions = null;
+//        // 查看是否有缓存
+//        Object obj = redisUtil.get(key);
+//        if (null == obj) {
+//            permissions = epPermissionService.selectByDeptIdAndNum(deptId, num);
+//            redisUtil.set(key, permissions);
+//        }else {
+//            permissions = (PageInfo<EpPermission>) obj;
+//        }
+//        // 删除缓存
+//        return ResultVO.success(permissions);
+//    }
 
 
     /**
@@ -138,6 +171,31 @@ public class EpPermissionController {
         }
         // 删除缓存
         return ResultVO.success(permissions);
+    }
+
+
+    /**
+     * 获取用户的所有权限
+     * @return
+     */
+    @ApiOperation(value="获取所有权限,及其对应角色", notes="已测试")
+    @GetMapping("/list")
+    public ResultVO getList(){
+        // 获取reids的key
+        String key =
+                CacheNameHelper.EP_PERMISSION_PREFIX_GETLIST;
+        // 统一返回值
+        List<EpPermissionDto> permissionDtos = null;
+        // 查看是否有缓存
+        Object obj = redisUtil.get(key);
+        if (null == obj) {
+            permissionDtos = epPermissionService.selectEpPermissonDto();
+            redisUtil.set(key, permissionDtos);
+        }else {
+            permissionDtos = (List<EpPermissionDto>) obj;
+        }
+        // 删除缓存
+        return ResultVO.success(permissionDtos);
     }
 
     /**

@@ -111,7 +111,7 @@ public class EpUserServiceImpl implements EpUserService {
     }
 
     @Override
-    public PageInfo<EpUser> selectByDeptId(Long deptId, Integer num) {
+    public PageInfo<EpUser> selectByDeptIdAndNum(Long deptId, Integer num) {
         PageHelper.startPage(num, pageConfig.getPageSize());
         EpUserExample epUserExample = new EpUserExample();
         epUserExample.createCriteria()
@@ -123,9 +123,20 @@ public class EpUserServiceImpl implements EpUserService {
     }
 
     @Override
+    public List<EpUserDetails> selectEpUserDetails() {
+        List<EpUserDetails> epUserDetails = epUserMapper.selectUserDetailsNotPwd();
+        return epUserDetails;
+    }
+
+    @Override
     public EpUserDetails selectEpUserDetailByUserNickName(String userNickname, Integer type) {
         EpUserDetails epUserDetails = epUserMapper.selectByUsername(userNickname, type);
         return epUserDetails;
+    }
+
+    @Override
+    public EpUserDetails selectDetailsByUserName(String username) {
+        return epUserMapper.selectByUsername(username, 1);
     }
 
 }

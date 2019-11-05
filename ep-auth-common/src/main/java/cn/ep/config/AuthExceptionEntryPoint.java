@@ -1,5 +1,6 @@
 package cn.ep.config;
 
+import cn.ep.enums.GlobalEnum;
 import cn.ep.utils.JsonUtil;
 import cn.ep.utils.ResultVO;
 import org.springframework.http.HttpStatus;
@@ -39,11 +40,11 @@ public class AuthExceptionEntryPoint implements AuthenticationEntryPoint {
             try {
                 if(cause instanceof InvalidTokenException) {
                     response.getWriter().write(
-                            JsonUtil.parseObject(ResultVO.failure(HttpServletResponse.SC_UNAUTHORIZED, "token失效"))
+                            JsonUtil.parseObject(ResultVO.failure(GlobalEnum.OPERATION_ERROR, "token失效"))
                     );
                 }else{
                     response.getWriter().write(
-                            JsonUtil.parseObject(ResultVO.failure(HttpServletResponse.SC_UNAUTHORIZED, "token不存在"))
+                            JsonUtil.parseObject(ResultVO.failure(GlobalEnum.OPERATION_ERROR, "token不存在"))
                     );
 
                 }

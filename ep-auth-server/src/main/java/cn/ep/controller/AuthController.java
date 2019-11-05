@@ -77,6 +77,7 @@ public class AuthController {
         return ResultVO.success();
     }
 //
+    @ApiOperation(value="获取用户信息", notes = "已测试")
     @GetMapping("/user")
     public ResultVO userJwt(HttpServletRequest request) {
 
@@ -96,9 +97,4 @@ public class AuthController {
         return ResultVO.success("你好");
     }
 
-    public static void main(String[] args) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String encode = bCryptPasswordEncoder.encode("nlfdzccq9;,.");
-        System.out.println(encode);
-    }
 }

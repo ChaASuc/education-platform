@@ -52,6 +52,42 @@
 
   </select>
 
+  <select id="selectUserDetails" resultMap="EpUserDetailsResultMap">
+    SELECT
+    u.*, r.*,
+    p.perm_id, p.req_method, CONCAT(p.zuul_prefix, p.server_prefix) AS uri
+    FROM
+    ep_user u, ep_user_role ur, ep_role r, ep_role_permission rp, ep_permission p
+    WHERE
+    u.user_id = ur.user_id
+    AND ur.role_id = r.role_id
+    AND r.role_id = rp.role_id
+    AND rp.perm_id = p.perm_id
+    AND u.deleted = FALSE
+    AND r.deleted = FALSE
+    AND p.deleted = FALSE
+    AND ur.deleted = FALSE
+    AND rp.deleted = FALSE
+  </select>
+
+  <select id="selectUserDetailsNotPwd" resultMap="EpUserDetailsResultMap">
+    SELECT
+    u.user_id, u.user_nickname, u.user_name, u.file_url, u.user_position, u.user_description,
+    u.user_phone, u.user_email, u.status, u.deleted, u.create_time, u.update_time, u.dept_id, r.*,
+    p.perm_id, p.req_method, CONCAT(p.zuul_prefix, p.server_prefix) AS uri
+    FROM
+    ep_user u, ep_user_role ur, ep_role r, ep_role_permission rp, ep_permission p
+    WHERE
+    u.user_id = ur.user_id
+    AND ur.role_id = r.role_id
+    AND r.role_id = rp.role_id
+    AND rp.perm_id = p.perm_id
+    AND u.deleted = FALSE
+    AND r.deleted = FALSE
+    AND p.deleted = FALSE
+    AND ur.deleted = FALSE
+    AND rp.deleted = FALSE
+  </select>
 
 
 </mapper>

@@ -1,16 +1,17 @@
 package cn.ep.service.impl;
 
-import cn.ep.bean.EpPermission;
-import cn.ep.bean.EpPermissionExample;
+import cn.ep.bean.*;
 import cn.ep.config.PageConfig;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.mapper.EpPermissionMapper;
+import cn.ep.mapper.EpRolePermissionMapper;
 import cn.ep.mapper.EpUserRoleMapper;
 import cn.ep.service.EpPermissionService;
 import cn.ep.utils.IdWorker;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,9 @@ public class EpPermissionServiceImpl implements EpPermissionService {
 
     @Autowired
     private IdWorker idWorker;
+
+    @Autowired
+    private EpRolePermissionMapper epRolePermissionMapper;
 
     @Override
     @Transactional
@@ -77,6 +81,27 @@ public class EpPermissionServiceImpl implements EpPermissionService {
         List<EpPermission> epPermissions = epPermissionMapper.selectByRoleId(roleId);
         PageInfo<EpPermission> epPermissionPageInfo = new PageInfo<>(epPermissions);
         return epPermissionPageInfo;
+    }
+
+    @Override
+    public List<EpPermissionDto> selectEpPermissonDto() {
+        List<EpPermissionDto> epPermissionDtos = epPermissionMapper.selectEpPermissionDto();
+        return epPermissionDtos;
+    }
+
+    @Override
+    @Transactional
+    public void updateRolePerm(Long permissionId, Long roleId, boolean b) {
+        EpRolePermission rolePermission = new EpRolePermission();
+        rolePermission.setDeleted(b);
+        EpRolePermissionExample epRolePermissionExample = new EpRolePermissionExample();
+        epRolePermissionExample.createCriteria()
+                .andRoleIdEqualTo(roleId)
+                .andPermIdEqualTo(permissionId);
+        boolean success = epRolePermissionMapper.updateByExampleSelective(rolePermission, epRolePermissionExample) > 0 ? true : false;
+        if (!success) {
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "权限角色配置失败");
+        }
     }
 
 }

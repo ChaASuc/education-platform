@@ -3,6 +3,8 @@ package cn.ep.service;
 import cn.ep.bean.EpRole;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 /**
  * @Author deschen
  * @Create 2019/10/22
@@ -40,4 +42,8 @@ public interface EpRoleService {
      * @return
      */
     PageInfo<EpRole> selectByUserIdAndNum(Long userId, Integer num);
+
+    void updateUserRole(Long userId, Long roleId);
+
+    List<EpRole> getList();
 }

@@ -1,6 +1,7 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpPermission;
+import cn.ep.bean.EpPermissionDto;
 import com.github.pagehelper.PageInfo;
 import org.hibernate.validator.constraints.EAN;
 
@@ -42,6 +43,10 @@ public interface EpPermissionService {
      * @return
      */
     PageInfo<EpPermission> selectByRoleIdAndNum(Long roleId, Integer num);
+
+    List<EpPermissionDto> selectEpPermissonDto();
+
+    void updateRolePerm(Long permissionId, Long roleId, boolean success);
 
 
 }

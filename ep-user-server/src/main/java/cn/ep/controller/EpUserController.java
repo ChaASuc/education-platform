@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 //import cn.ep.bean.EpUserDetails;
 
@@ -68,8 +69,12 @@ public class EpUserController {
                 "ep_user_prefix_getByUserNicknameAndType_%s_%s";
         public static final String EP_USER_PREFIX_GETBYDEPTIDANDNUM =
                 "ep_user_prefix_getByDeptId_%s_%s";
+        public static final String EP_USER_PREFIX_GETBYDEPTID =
+                "ep_user_prefix_getByDeptId_%s";
         public static final String EP_USER_PREFIX_GETUSERDETAILSBYUSERNICKNAMEANDTYPE =
                 "ep_user_prefix_getUserDetailsByUserNickNameAndType_%s_%s";
+        public static final String EP_USER_PREFIX_ListAll =
+                "ep_user_prefix_listAll";
     }
 
     /**
@@ -87,6 +92,7 @@ public class EpUserController {
         redisUtil.delFuz(CacheNameHelper.EP_USER_PREFIX);
         return ResultVO.success();
     }
+
 
     /**
      * 根据主键修改和逻辑删除用户
@@ -133,30 +139,51 @@ public class EpUserController {
     }
 
 
-    @ApiOperation(value="根据部门id获取用户信息", notes = "已测试")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name= "deptId",value = "部门id", required = true, paramType = "path")
-    })
-    @GetMapping(value = "/dept/{deptId}/{num}")
-    public ResultVO getByDeptIdAndNum(
-            @PathVariable @NotNull @Min(0) Long deptId,
-            @PathVariable @NotNull @Min(1)Integer num) {
-        // 获取reids的key
-        String key = String.format(
-                CacheNameHelper.EP_USER_PREFIX_GETBYDEPTIDANDNUM, deptId, num);
-        // 统一返回值
-        PageInfo<EpUser> users = null;
+//    @ApiOperation(value="根据部门id获取用户信息", notes = "已测试")
+////    @ApiImplicitParams({
+////            @ApiImplicitParam(name= "deptId",value = "部门id", required = true, paramType = "path")
+////    })
+//    @GetMapping(value = "/dept/{deptId}")
+//    public ResultVO getByDeptIdAndNum(
+//            @PathVariable @NotNull @Min(0) Long deptId,
+//            @PathVariable @NotNull @Min(1)Integer num) {
+//        // 获取reids的key
+//        String key = String.format(
+//                CacheNameHelper.EP_USER_PREFIX_GETBYDEPTIDANDNUM, deptId, num);
+//        // 统一返回值
+//        PageInfo<EpUser> users = null;
+//        // 查看是否有缓存
+//        Object obj = redisUtil.get(key);
+//        if (null == obj) {
+//            users = epUserService.selectByDeptId(deptId, num);
+//            redisUtil.set(key, users);
+//        }else {
+//            users = (PageInfo<EpUser>) obj;
+//        }
+//        // 删除缓存
+//        return ResultVO.success(users);
+//    }
+
+    @ApiOperation(value="获取全部用户信息", notes = "已测试")
+    @GetMapping(value = "/listAll")
+    public ResultVO getListAll() {
+//        // 统一返回值
+//        PageInfo<EpUser> users = null;
+        String key = CacheNameHelper.EP_USER_PREFIX_ListAll;
+        List<EpUserDetails> users = null;
         // 查看是否有缓存
         Object obj = redisUtil.get(key);
         if (null == obj) {
-            users = epUserService.selectByDeptId(deptId, num);
+//            users = epUserService.selectByDeptIdAndNum(deptId, num);
+            users = epUserService.selectEpUserDetails();
             redisUtil.set(key, users);
         }else {
-            users = (PageInfo<EpUser>) obj;
+            users = (List<EpUserDetails>) obj;
         }
         // 删除缓存
         return ResultVO.success(users);
     }
+
 
     @ApiOperation(value="根据部门id获取用户信息", notes = "已测试")
     @GetMapping(value = "/userDetails")
@@ -184,12 +211,24 @@ public class EpUserController {
      * 删除所有缓存
      * @return
      */
-    @ApiOperation(value="删除所有缓存", notes="已测试")
+    @ApiOperation(value="删除所有缓存，测试", notes="已测试")
     @GetMapping("/deleteAll")
     public ResultVO deleteAll(){
         // 清空相关缓存
         redisUtil.delFuz(CacheNameHelper.EP_USER_PREFIX);
         return ResultVO.success();
+    }
+
+    /**
+     * 获取用户详情
+     *
+     * @return
+     */
+    @ApiOperation(value = "获取用户详情,测试", notes = "已测试")
+    @GetMapping("/details/{username}")
+    public ResultVO detailsByUserId(@PathVariable String username) {
+
+        return ResultVO.success(epUserService.selectDetailsByUserName(username));
     }
 
 }

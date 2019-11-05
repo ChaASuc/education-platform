@@ -1,6 +1,7 @@
 package cn.ep.mapper;
 
 import cn.ep.bean.EpPermission;
+import cn.ep.bean.EpPermissionDto;
 import cn.ep.utils.JsonUtil;
 import cn.ep.utils.TestUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +20,9 @@ public class EpPermissionMapperTest extends TestUtil {
 
     @Test
     public void selectByRoleId() throws JsonProcessingException {
-        List<EpPermission> epPermissions = epPermissionMapper.selectByRoleId(1181241956957818880L);
-        System.out.println(JsonUtil.obj2String(epPermissions));
+//        List<EpPermission> epPermissions = epPermissionMapper.selectByRoleId(1181241956957818880L);
+//        System.out.println(JsonUtil.obj2String(epPermissions));
+        List<EpPermissionDto> epPermissionDtos = epPermissionMapper.selectEpPermissionDto();
+        System.out.println(JsonUtil.obj2String(epPermissionDtos));
     }
 }

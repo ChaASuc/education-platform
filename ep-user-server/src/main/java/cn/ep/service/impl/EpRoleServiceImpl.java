@@ -3,6 +3,7 @@ package cn.ep.service.impl;
 import cn.ep.bean.EpRole;
 import cn.ep.bean.EpRoleExample;
 import cn.ep.bean.EpUserRole;
+import cn.ep.bean.EpUserRoleExample;
 import cn.ep.config.PageConfig;
 import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
@@ -15,7 +16,9 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -52,15 +55,30 @@ public class EpRoleServiceImpl implements EpRoleService {
     @Transactional
     @Override
     public void insertUserRole(Long userId, Long roleId) {
-        long id = idWorker.nextId();
-        EpUserRole epUserRole = new EpUserRole();
-        epUserRole.setuRId(id);
-        epUserRole.setUserId(userId);
-        epUserRole.setRoleId(roleId);
-        boolean success = epUserRoleMapper.insertSelective(epUserRole) > 0 ? true : false;
-        if (!success) {
-            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "插入角色失败");
+        EpUserRoleExample epUserRoleExample = new EpUserRoleExample();
+        epUserRoleExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andRoleIdEqualTo(roleId);
+        List<EpUserRole> epUserRoles = epUserRoleMapper.selectByExample(epUserRoleExample);
+        if (CollectionUtils.isEmpty(epUserRoles) && epUserRoles.size() == 0) {
+            long id = idWorker.nextId();
+            EpUserRole epUserRole = new EpUserRole();
+            epUserRole.setuRId(id);
+            epUserRole.setUserId(userId);
+            epUserRole.setRoleId(roleId);
+            boolean success = epUserRoleMapper.insertSelective(epUserRole) > 0 ? true : false;
+            if (!success) {
+                throw new GlobalException(GlobalEnum.OPERATION_ERROR, "提升角色失败");
+            }
+        }else {
+            EpUserRole epUserRole = new EpUserRole();
+            epUserRole.setDeleted(false);
+            boolean success = epUserRoleMapper.updateByExampleSelective(epUserRole, epUserRoleExample) > 0 ? true : false;
+            if (!success) {
+                throw new GlobalException(GlobalEnum.OPERATION_ERROR, "提升角色失败");
+            }
         }
+
     }
 
     @Override
@@ -91,5 +109,29 @@ public class EpRoleServiceImpl implements EpRoleService {
         List<EpRole> epRoles = epRoleMapper.selectByUserId(userId);
         PageInfo<EpRole> epRolePageInfo = new PageInfo<>(epRoles);
         return epRolePageInfo;
+    }
+
+    @Override
+    @Transactional
+    public void updateUserRole(Long userId, Long roleId) {
+        EpUserRoleExample epUserRoleExample = new EpUserRoleExample();
+        epUserRoleExample.createCriteria()
+                .andUserIdEqualTo(userId)
+                .andRoleIdEqualTo(roleId);
+        EpUserRole epUserRole = new EpUserRole();
+        epUserRole.setDeleted(true);
+        boolean success = epUserRoleMapper.updateByExampleSelective(epUserRole, epUserRoleExample) > 0 ? true : false;
+        if (!success) {
+            throw new GlobalException(GlobalEnum.OPERATION_ERROR, "降级失败");
+        }
+    }
+
+    @Override
+    public List<EpRole> getList() {
+        EpRoleExample epRoleExample = new EpRoleExample();
+        epRoleExample.createCriteria()
+                .andDeletedEqualTo(false);
+        List<EpRole> epRoles = epRoleMapper.selectByExample(epRoleExample);
+        return epRoles;
     }
 }

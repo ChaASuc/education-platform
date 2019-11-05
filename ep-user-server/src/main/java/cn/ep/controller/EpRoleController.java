@@ -2,6 +2,8 @@ package cn.ep.controller;
 
 import cn.ep.bean.EpRole;
 import cn.ep.bean.EpUserDetails;
+import cn.ep.bean.EpUserRole;
+import cn.ep.properties.EpUserProperties;
 import cn.ep.service.EpRoleService;
 import cn.ep.utils.Oauth2Util;
 import cn.ep.utils.RedisUtil;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @Author deschen
@@ -41,6 +44,10 @@ public class EpRoleController {
 
     @Autowired
     private Oauth2Util oauth2Util;
+
+    @Autowired
+    private EpUserProperties epUserProperties;
+
     /**
      * 内部类，专门用来管理每个get方法所对应缓存的名称。
      */
@@ -60,6 +67,9 @@ public class EpRoleController {
                 "ep_role_prefix_getByDeptId_%s_%s";
         public static final String EP_ROLE_PREFIX_GETLISTBYUSERIDANDNUM =
                 "ep_role_prefix_getListByUserId_%s";
+
+        public static final String EP_ROLE_PREFIX_GETLIST =
+                "ep_role_prefix_getList";
     }
 
     /**
@@ -74,6 +84,39 @@ public class EpRoleController {
         epRoleService.insert(role);
         // 清空相关缓存
         redisUtil.delFuz(CacheNameHelper.EP_ROLE_PREFIX);
+        return ResultVO.success();
+    }
+
+
+    /**
+     * 提升角色
+     * @param userId
+     * @return
+     */
+    @ApiOperation(value="提升角色", notes="已测试")
+//    @ApiImplicitParam(name = "role", value = "角色实体", required = true, dataType = "EpRole")
+    @PostMapping("/teacher/{userId}")
+    public ResultVO insertUserRole(@PathVariable @Min(0) Long userId){
+        epRoleService.insertUserRole(userId, epUserProperties.getRole().getTeacherId());
+        // 清空相关缓存
+        redisUtil.delFuz(CacheNameHelper.EP_ROLE_PREFIX);
+        redisUtil.delFuz(EpUserController.CacheNameHelper.EP_USER_PREFIX);
+        return ResultVO.success();
+    }
+
+    /**
+     * 降级角色
+     * @param userId
+     * @return
+     */
+    @ApiOperation(value="降级角色", notes="已测试")
+    @PutMapping("/student/{userId}/{roleId}")
+    public ResultVO updateUserRole(@PathVariable @Min(0) Long userId,
+                                   @PathVariable @Min(0) Long roleId) {
+        epRoleService.updateUserRole(userId, roleId);
+        // 清空相关缓存
+        redisUtil.delFuz(CacheNameHelper.EP_ROLE_PREFIX);
+        redisUtil.delFuz(EpUserController.CacheNameHelper.EP_USER_PREFIX);
         return ResultVO.success();
     }
 
@@ -95,27 +138,43 @@ public class EpRoleController {
 
 
 
+//    @ApiOperation(value="根据部门id获取角色信息", notes = "已测试")
+//    @GetMapping(value = "/dept/{deptId}/{num}")
+//    public ResultVO getRoleByDeptIdAndNum(
+//            @PathVariable @NotNull @Min(0) Long deptId,
+//            @PathVariable @NotNull @Min(1)Integer num) {
+//        // 获取reids的key
+//        String key = String.format(
+//                CacheNameHelper.EP_ROLE_PREFIX_GETBYDEPTIDANDNUM, deptId, num);
+//        // 统一返回值
+//        PageInfo<EpRole> roles = null;
+//        // 查看是否有缓存
+//        Object obj = redisUtil.get(key);
+//        if (null == obj) {
+//            roles = epRoleService.selectByDeptIdAndNum(deptId, num);
+//            redisUtil.set(key, roles);
+//        }else {
+//            roles = (PageInfo<EpRole>) obj;
+//        }
+//        // 删除缓存
+//        return ResultVO.success(roles);
+//    }
+
     @ApiOperation(value="根据部门id获取角色信息", notes = "已测试")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name= "deptId",value = "部门id", required = true, paramType = "path"),
-            @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
-    })
-    @GetMapping(value = "/dept/{deptId}/{num}")
-    public ResultVO getRoleByDeptIdAndNum(
-            @PathVariable @NotNull @Min(0) Long deptId,
-            @PathVariable @NotNull @Min(1)Integer num) {
+    @GetMapping(value = "/listAll")
+    public ResultVO getListAll() {
         // 获取reids的key
-        String key = String.format(
-                CacheNameHelper.EP_ROLE_PREFIX_GETBYDEPTIDANDNUM, deptId, num);
+        String key =
+                CacheNameHelper.EP_ROLE_PREFIX_GETLIST;
         // 统一返回值
-        PageInfo<EpRole> roles = null;
+        List<EpRole> roles = null;
         // 查看是否有缓存
         Object obj = redisUtil.get(key);
         if (null == obj) {
-            roles = epRoleService.selectByDeptIdAndNum(deptId, num);
+            roles = epRoleService.getList();
             redisUtil.set(key, roles);
         }else {
-            roles = (PageInfo<EpRole>) obj;
+            roles = (List<EpRole>) obj;
         }
         // 删除缓存
         return ResultVO.success(roles);

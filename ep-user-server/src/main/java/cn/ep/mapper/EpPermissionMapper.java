@@ -1,6 +1,7 @@
 package cn.ep.mapper;
 
 import cn.ep.bean.EpPermission;
+import cn.ep.bean.EpPermissionDto;
 import cn.ep.bean.EpPermissionExample;
 //import cn.ep.bean.EpUserDetialsPermission;
 import cn.ep.bean.EpUserDetialsPermission;
@@ -35,4 +36,6 @@ public interface EpPermissionMapper {
     int updateByPrimaryKey(EpPermission record);
 
     Set<EpUserDetialsPermission> selectByRoleName(String commonRoleName);
+
+    List<EpPermissionDto> selectEpPermissionDto();
 }

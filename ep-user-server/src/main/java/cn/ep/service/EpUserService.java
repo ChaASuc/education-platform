@@ -5,6 +5,8 @@ import cn.ep.bean.EpUser;
 import cn.ep.bean.EpUserDetails;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 /**
  * @Author deschen
  * @Create 2019/10/7
@@ -39,7 +41,13 @@ public interface EpUserService {
      * @param num
      * @return
      */
-    PageInfo<EpUser> selectByDeptId(Long deptId, Integer num);
+    PageInfo<EpUser> selectByDeptIdAndNum(Long deptId, Integer num);
+
+    /**
+     * 获取所有有效的用户
+     * @return
+     */
+    List<EpUserDetails> selectEpUserDetails();
 
 
     /**
@@ -49,4 +57,6 @@ public interface EpUserService {
      * @return
      */
     EpUserDetails selectEpUserDetailByUserNickName(String userNickname, Integer type);
+
+    EpUserDetails selectDetailsByUserName(String username);
 }
