@@ -40,6 +40,10 @@ spring:
   sleuth:
     sampler:
       percentage: 1  # 接受百分之几的总请求，开发环境100%
+  security:
+    user:
+      password: 123456
+      name: deschen
 auth:
   tokenValiditySeconds: 3600  #token存储到redis的过期时间
   clientId: XcWebApp
