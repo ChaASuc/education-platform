@@ -55,36 +55,36 @@ public class EpPermissionController {
                 "ep_permission_prefix_getList";
     }
 
-    /**
-     * 新增权限
-     * @param permission
-     * @return
-     */
-    @ApiOperation(value="新增权限", notes="已测试")
-    @ApiImplicitParam(name = "permission", value = "权限实体", required = true, dataType = "EpPermission")
-    @PostMapping("")
-    public ResultVO insert(@RequestBody @NotNull @Validated({Insert.class}) EpPermission permission){
-        epPermissionService.insert(permission);
-        // 清空相关缓存
-        redisUtil.delFuz(CacheNameHelper.EP_PERMISSION_PREFIX);
-        return ResultVO.success();
-    }
+//    /**
+//     * 新增权限
+//     * @param permission
+//     * @return
+//     */
+//    @ApiOperation(value="新增权限", notes="已测试")
+//    @ApiImplicitParam(name = "permission", value = "权限实体", required = true, dataType = "EpPermission")
+//    @PostMapping("")
+//    public ResultVO insert(@RequestBody @NotNull @Validated({Insert.class}) EpPermission permission){
+//        epPermissionService.insert(permission);
+//        // 清空相关缓存
+//        redisUtil.delFuz(CacheNameHelper.EP_PERMISSION_PREFIX);
+//        return ResultVO.success();
+//    }
 
-    /**
-     * 根据主键修改和逻辑删除权限
-     * @param permission
-     * @return
-     */
-    @ApiOperation(value="根据主键修改和逻辑删除权限",notes = "已测试")
-    @ApiImplicitParam(name="permission", value = "权限实体类", dataType = "EpPermission")
-    @PutMapping("")
-    public ResultVO update(@RequestBody @NotNull @Validated({Update.class}) EpPermission permission){
-        epPermissionService.update(permission);
-        // 删除缓存
-        redisUtil.delFuz(CacheNameHelper.EP_PERMISSION_PREFIX);
-        return ResultVO.success();
-
-    }
+//    /**
+//     * 根据主键修改和逻辑删除权限
+//     * @param permission
+//     * @return
+//     */
+//    @ApiOperation(value="根据主键修改和逻辑删除权限",notes = "已测试")
+//    @ApiImplicitParam(name="permission", value = "权限实体类", dataType = "EpPermission")
+//    @PutMapping("")
+//    public ResultVO update(@RequestBody @NotNull @Validated({Update.class}) EpPermission permission){
+//        epPermissionService.update(permission);
+//        // 删除缓存
+//        redisUtil.delFuz(CacheNameHelper.EP_PERMISSION_PREFIX);
+//        return ResultVO.success();
+//
+//    }
 
 
     /**
@@ -143,35 +143,35 @@ public class EpPermissionController {
 //    }
 
 
-    /**
-     * 获取用户的所有权限
-     * @return
-     */
-    @ApiOperation(value="获取角色的所有权限", notes="已测试")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name= "roleId",value = "角色id", required = true, paramType = "path"),
-            @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
-    })
-    @GetMapping("/list/{roleId}/{num}")
-    public ResultVO getListByRoleIdAndNum(
-            @PathVariable @NotNull @Min(0) Long roleId,
-            @PathVariable @NotNull @Min(1) Integer num){
-        // 获取reids的key
-        String key = String.format(
-                CacheNameHelper.EP_PERMISSION_PREFIX_GETLISTBYROLEIDANDNUM, roleId, num);
-        // 统一返回值
-        PageInfo<EpPermission> permissions = null;
-        // 查看是否有缓存
-        Object obj = redisUtil.get(key);
-        if (null == obj) {
-            permissions = epPermissionService.selectByRoleIdAndNum(roleId, num);
-            redisUtil.set(key, permissions);
-        }else {
-            permissions = (PageInfo<EpPermission>) obj;
-        }
-        // 删除缓存
-        return ResultVO.success(permissions);
-    }
+//    /**
+//     * 获取用户的所有权限
+//     * @return
+//     */
+//    @ApiOperation(value="获取角色的所有权限", notes="已测试")
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name= "roleId",value = "角色id", required = true, paramType = "path"),
+//            @ApiImplicitParam(name= "num",value = "页码", required = true, paramType = "path")
+//    })
+//    @GetMapping("/list/{roleId}/{num}")
+//    public ResultVO getListByRoleIdAndNum(
+//            @PathVariable @NotNull @Min(0) Long roleId,
+//            @PathVariable @NotNull @Min(1) Integer num){
+//        // 获取reids的key
+//        String key = String.format(
+//                CacheNameHelper.EP_PERMISSION_PREFIX_GETLISTBYROLEIDANDNUM, roleId, num);
+//        // 统一返回值
+//        PageInfo<EpPermission> permissions = null;
+//        // 查看是否有缓存
+//        Object obj = redisUtil.get(key);
+//        if (null == obj) {
+//            permissions = epPermissionService.selectByRoleIdAndNum(roleId, num);
+//            redisUtil.set(key, permissions);
+//        }else {
+//            permissions = (PageInfo<EpPermission>) obj;
+//        }
+//        // 删除缓存
+//        return ResultVO.success(permissions);
+//    }
 
 
     /**

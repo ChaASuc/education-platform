@@ -1,6 +1,10 @@
 server:
-  port: 8082 # 1006XX 用户模块的端口
+  port: 80 # 1006XX 用户模块的端口
 spring:
+  security:
+    user:
+      password: nlfdzccq9;,.
+      name: deschen
   application:
     name: ep-auth
   rabbitmq:
@@ -47,15 +51,16 @@ eureka:
   client:
     registry-fetch-interval-seconds: 5
     service-url:
-      #      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
-      defaultZone: http://localhost:50101/eureka/
+      defaultZone: http://management.deschen.cn:10000/eureka/, http://www.deschen.cn:10001/eureka/, http://coding.deschen.cn:10002/eureka/
+#      defaultZone: http://localhost:50101/eureka/
   instance:
     lease-renewal-interval-in-seconds: 5
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
     prefer-ip-address: true # 当调用getHostname获取实例的hostname时，返回ip而不是host名称
-    ip-address: 127.0.0.1 # 指定自己的ip信息，不指定的话会自己寻找
+    ip-address: nz3by3.natappfree.cc # 指定自己的ip信息，不指定的话会自己寻找
     instance-id: ${spring.application.name}:${server.port} # DESKTOP-2MVEC12:user-service:8081：是示例的名称，instance-id是区分同一服务的不同实例的唯一标准，因此不能重复
+    status-page-url: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
 ep:
   pageSize: 12
   worker:
