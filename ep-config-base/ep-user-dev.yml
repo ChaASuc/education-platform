@@ -13,7 +13,7 @@ eureka:
     lease-renewal-interval-in-seconds: 5
     # 服务失效时间，默认值90秒
     lease-expiration-duration-in-seconds: 10
-    ip-address: rgtwde.natappfree.cc
+    ip-address: management.deschen.cn
     status-page-url: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
 # 设置全局Hystrix超时时间
 hystrix:
@@ -36,3 +36,23 @@ spring:
   sleuth:
     sampler:
       percentage: 1  # 接受百分之几的总请求，开发环境100%
+ep:
+  pageSize: 12
+  worker:
+    workerId: 1
+    datacenterId: 1
+  role:
+    userId: 1186798544305131520
+    studentId: 1181241956957818881
+    teacherId: 1186798544305131521
+    adminId: 1181241956957818880
+  dept:
+    studentId: 1181232023264694272
+    teacherId: 1181232023264694273
+    adminId: 1181232023264694274
+auth:
+  tokenValiditySeconds: 3600  #token存储到redis的过期时间
+  clientId: XcWebApp
+  clientSecret: XcWebApp
+  cookieDomain: xc.com
+  cookieMaxAge: -1

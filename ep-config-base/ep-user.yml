@@ -74,14 +74,14 @@ hystrix:
           enable: true
         isolation:
           thread:
-            timeoutInMilliseconds: 12000 # 设置hystrix的超时时间为6000ms，默认1000ms
+            timeoutInMilliseconds: 120000 # 设置hystrix的超时时间为6000ms，默认1000ms
 #      circuitBreaker:
 #        requestVolumeThreshold: 10 #  触发熔断的最小请求次数，默认20
 #        errorThresholdPercentage: 50  # 触发熔断的失败请求最小占比，默认50%
 #        sleepWindowInMilliseconds: 1000  # 休眠时长，默认是5000毫秒
 ribbon:
-  ConnectTimeout: 1000 # 连接超时时间(ms)
-  ReadTimeout: 2000 # 通信超时时间(ms)
+  ConnectTimeout: 10000 # 连接超时时间(ms)
+  ReadTimeout: 20000 # 通信超时时间(ms)
   MaxAutoRetriesNextServer: 1 # 同一服务不同实例的重试次数
   MaxAutoRetries: 1 # 同一实例的重试次数
 ep:
