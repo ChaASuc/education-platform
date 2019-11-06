@@ -65,7 +65,7 @@ zuul:
 #        ep/course_relate
     ep-course_relate:
       path: /ep/course_relate/**
-      serviceId: ep-course_relate
+      serviceId: ep-course-relate
       strip-prefix: false
       sensitiveHeaders:
 # `@FeignClient`注解修改的客户端在被代理时，都会创建一个新的Fegin.Logger实例。我们需要额外指定这个日志的级别才可以。
