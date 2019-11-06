@@ -17,7 +17,7 @@ eureka:
     # swagger2页面
     status-page-url.: http://${eureka.instance.ip-address}:${server.port}/swagger-ui.html
     # 上传服务器后显示域名
-    ip-address: c33jjp.natappfree.cc
+    ip-address: 3puiuj.natappfree.cc
 # 设置全局Hystrix超时时间
 hystrix:
   command: 
