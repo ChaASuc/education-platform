@@ -64,7 +64,7 @@ zuul:
       sensitiveHeaders:
 #        ep/course_relate
     ep-course_relate:
-      path: /ep/user/**
+      path: /ep/course_relate/**
       serviceId: ep-course_relate
       strip-prefix: false
       sensitiveHeaders:
