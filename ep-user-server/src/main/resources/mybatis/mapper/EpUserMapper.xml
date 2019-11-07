@@ -11,10 +11,11 @@
     <result column="user_description" property="userDescription" jdbcType="VARCHAR" />
     <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
     <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
-    <result column="user_status" property="userStatus" jdbcType="TINYINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
     <result column="deleted" property="deleted" jdbcType="BIT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="dept_id" property="deptId" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List" >
     user_id, user_nickname, user_name, user_pwd, file_url, user_position, user_description, 
-    user_phone, user_email, user_status, deleted, create_time, update_time
+    user_phone, user_email, status, deleted, create_time, update_time, dept_id
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.ep.bean.EpUserExample" >
     select
@@ -112,13 +113,13 @@
     insert into ep_user (user_id, user_nickname, user_name, 
       user_pwd, file_url, user_position, 
       user_description, user_phone, user_email, 
-      user_status, deleted, create_time, 
-      update_time)
+      status, deleted, create_time, 
+      update_time, dept_id)
     values (#{userId,jdbcType=BIGINT}, #{userNickname,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
       #{userPwd,jdbcType=VARCHAR}, #{fileUrl,jdbcType=VARCHAR}, #{userPosition,jdbcType=VARCHAR}, 
       #{userDescription,jdbcType=VARCHAR}, #{userPhone,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, 
-      #{userStatus,jdbcType=TINYINT}, #{deleted,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{status,jdbcType=TINYINT}, #{deleted,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{deptId,jdbcType=BIGINT})
   </insert>
   <insert id="insertSelective" parameterType="cn.ep.bean.EpUser" >
     insert into ep_user
@@ -150,8 +151,8 @@
       <if test="userEmail != null" >
         user_email,
       </if>
-      <if test="userStatus != null" >
-        user_status,
+      <if test="status != null" >
+        status,
       </if>
       <if test="deleted != null" >
         deleted,
@@ -161,6 +162,9 @@
       </if>
       <if test="updateTime != null" >
         update_time,
+      </if>
+      <if test="deptId != null" >
+        dept_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -191,8 +195,8 @@
       <if test="userEmail != null" >
         #{userEmail,jdbcType=VARCHAR},
       </if>
-      <if test="userStatus != null" >
-        #{userStatus,jdbcType=TINYINT},
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
       </if>
       <if test="deleted != null" >
         #{deleted,jdbcType=BIT},
@@ -202,6 +206,9 @@
       </if>
       <if test="updateTime != null" >
         #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deptId != null" >
+        #{deptId,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -241,8 +248,8 @@
       <if test="record.userEmail != null" >
         user_email = #{record.userEmail,jdbcType=VARCHAR},
       </if>
-      <if test="record.userStatus != null" >
-        user_status = #{record.userStatus,jdbcType=TINYINT},
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=TINYINT},
       </if>
       <if test="record.deleted != null" >
         deleted = #{record.deleted,jdbcType=BIT},
@@ -252,6 +259,9 @@
       </if>
       <if test="record.updateTime != null" >
         update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.deptId != null" >
+        dept_id = #{record.deptId,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -269,10 +279,11 @@
       user_description = #{record.userDescription,jdbcType=VARCHAR},
       user_phone = #{record.userPhone,jdbcType=VARCHAR},
       user_email = #{record.userEmail,jdbcType=VARCHAR},
-      user_status = #{record.userStatus,jdbcType=TINYINT},
+      status = #{record.status,jdbcType=TINYINT},
       deleted = #{record.deleted,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      dept_id = #{record.deptId,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -304,8 +315,8 @@
       <if test="userEmail != null" >
         user_email = #{userEmail,jdbcType=VARCHAR},
       </if>
-      <if test="userStatus != null" >
-        user_status = #{userStatus,jdbcType=TINYINT},
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
       </if>
       <if test="deleted != null" >
         deleted = #{deleted,jdbcType=BIT},
@@ -315,6 +326,9 @@
       </if>
       <if test="updateTime != null" >
         update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deptId != null" >
+        dept_id = #{deptId,jdbcType=BIGINT},
       </if>
     </set>
     where user_id = #{userId,jdbcType=BIGINT}
@@ -329,10 +343,11 @@
       user_description = #{userDescription,jdbcType=VARCHAR},
       user_phone = #{userPhone,jdbcType=VARCHAR},
       user_email = #{userEmail,jdbcType=VARCHAR},
-      user_status = #{userStatus,jdbcType=TINYINT},
+      status = #{status,jdbcType=TINYINT},
       deleted = #{deleted,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      dept_id = #{deptId,jdbcType=BIGINT}
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
 </mapper>

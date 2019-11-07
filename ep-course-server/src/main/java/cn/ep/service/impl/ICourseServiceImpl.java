@@ -122,7 +122,7 @@ public class ICourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public  List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(int userId, long courseId, int value, boolean isSubscription) {
+    public  List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(long userId, long courseId, int value, boolean isSubscription) {
         Map<EpChapter,List<EpChapter>> chapterListMap =
                 chapterService.getListByCourseIdAndStatus(courseId
                         , ChapterEnum.VALID_STATUS.getValue());
@@ -154,11 +154,11 @@ public class ICourseServiceImpl implements ICourseService {
                             verseVO.setRecord(r);
                     }
                    // System.out.println(verse.getUrl());
-                } else {  //因为没有订阅，records等于null，章节的url不可看
+                } //else {  //因为没有订阅，records等于null，章节的url不可看,全部发了，不管是否有订阅
                     //todo 当前系统是没有试看的功能的，如果要提供，将if语句去掉注释
                     //if (verse.getFree() == 1)
                         verse.setUrl(null);
-                }
+                //}
                // System.out.println(verse);
                 verseVO.setVerse(verse);
                 verseVOList.add(verseVO);
@@ -171,16 +171,16 @@ public class ICourseServiceImpl implements ICourseService {
 
     @Override
     @Transactional
-    public boolean insertAndSendCheck(EpCourse course) {
+    public boolean insertAndSendCheck(EpCourse course, long userId) {
         course.setId(idWorker.nextId());
-        // todo 获取当前登陆人的id
-        long userId = 1L;
+        // todo 获取当前登陆人的id,好了
+        //long userId = 1L;
         course.setUserId(userId);
         course.setStatus(CourseEnum.UNCHECKED_STATUS.getValue());
         if (!insert(course))
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"增加课程失败");
         EpCheck check = new EpCheck();
-        // todo 审核人id从汉槟随机获取管理员id
+        // todo 审核人id从汉槟随机获取管理员id,暂时写死
         long whoId = 1L;
         check.setWho(whoId);
         check.setStatus(CheckEnum.UNCHECKED_STATUS.getValue());
@@ -202,7 +202,7 @@ public class ICourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public List<VerseVO> getVerseList(int userId, long courseId) {
+    public List<VerseVO> getVerseList(long userId, long courseId) {
         Map<EpChapter,List<EpChapter>> chapterListMap =
                 chapterService.getListByCourseIdAndStatus(courseId
                         , ChapterEnum.VALID_STATUS.getValue());

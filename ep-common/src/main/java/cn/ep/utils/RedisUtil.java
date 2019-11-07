@@ -247,8 +247,7 @@ public class RedisUtil {
      * HashSet 并设置时间
      * @param key 键
      * @param map 对应多个键值
-     * @param time 时间(秒)，redis不支持设置单个item（list，set，hash里的元素）的过期时间，这里的过期时间是指key的过期时间，
-     *      *             如果你需要单独为item设置过期时间，勿用此方法
+     * @param time 时间(秒)
      * @return true成功 false失败
      */
     public boolean hmset(String key, Map<String,Object> map, long time){
@@ -286,9 +285,7 @@ public class RedisUtil {
      * @param key 键
      * @param item 项
      * @param value 值
-     * @param time 时间(秒)  注意:如果已存在的hash表有时间,这里将会替换原有的时间,
-     *             redis不支持设置单个item（list，set，hash里的元素）的过期时间，这里的过期时间是指key的过期时间，
-     *             如果你需要单独为item设置过期时间，勿用此方法
+     * @param time 时间(秒)  注意:如果已存在的hash表有时间,这里将会替换原有的时间
      * @return true 成功 false失败
      */
     public boolean hset(String key,String item,Object value,long time) {
@@ -393,8 +390,7 @@ public class RedisUtil {
     /**
      * 将set数据放入缓存
      * @param key 键
-     * @param time 时间(秒)，redis不支持设置单个item（list，set，hash里的元素）的过期时间，这里的过期时间是指key的过期时间，
-     *      *             如果你需要单独为item设置过期时间，勿用此方法
+     * @param time 时间(秒)
      * @param values 值 可以是多个
      * @return 成功个数
      */
@@ -505,8 +501,7 @@ public class RedisUtil {
      * 将list放入缓存
      * @param key 键
      * @param value 值
-     * @param time 时间(秒)，redis不支持设置单个item（list，set，hash里的元素）的过期时间，这里的过期时间是指key的过期时间，
-     *      *             如果你需要单独为item设置过期时间，勿用此方法
+     * @param time 时间(秒)
      * @return
      */
     public boolean lSet(String key, Object value, long time) {

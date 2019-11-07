@@ -184,6 +184,14 @@
     <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.36.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-resolver:4.1.36.Final" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.2.9.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter-openfeign:2.1.2.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-openfeign-core:2.1.2.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign.form:feign-form-spring:3.8.0" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign.form:feign-form:3.8.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-fileupload:commons-fileupload:1.4" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-core:10.2.3" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-slf4j:10.2.3" level="project" />
+    <orderEntry type="library" name="Maven: io.github.openfeign:feign-hystrix:10.2.3" level="project" />
     <orderEntry type="library" name="Maven: com.github.tobato:fastdfs-client:1.26.1-RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.26" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.26" level="project" />

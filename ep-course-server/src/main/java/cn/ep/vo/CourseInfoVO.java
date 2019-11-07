@@ -2,13 +2,14 @@ package cn.ep.vo;
 
 import cn.ep.bean.EpCourse;
 import cn.ep.bean.EpUser;
+import cn.ep.bean.EpUserDetails;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
 public class CourseInfoVO {
-    private EpUser author;
+    private EpUserDetails author;
     private EpCourse course;
     private float scope;
     private List<ChapterVO> chapters;

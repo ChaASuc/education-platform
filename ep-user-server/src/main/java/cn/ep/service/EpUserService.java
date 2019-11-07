@@ -1,6 +1,9 @@
 package cn.ep.service;
 
 import cn.ep.bean.EpUser;
+//import cn.ep.bean.EpUserDetails;
+import cn.ep.bean.EpUserDetails;
+import com.github.pagehelper.PageInfo;
 
 /**
  * @Author deschen
@@ -24,18 +27,26 @@ public interface EpUserService {
 
     /**
      * 根据type类型用户名和手机号是否被注册
-     * @param account
+     * @param userNickname
      * @param type
      * @return
      */
-    boolean checkUser(String account, Integer type);
+    EpUser getUserByUserNicknameAndType(String userNickname, Integer type);
 
     /**
-     * 根据用户名和密码查找用户
-     * @param username
-     * @param pwd
+     * 根据部门id获取所有有效的用户
+     * @param deptId
+     * @param num
      * @return
      */
-    EpUser get(String username, String pwd);
+    PageInfo<EpUser> selectByDeptId(Long deptId, Integer num);
 
+
+    /**
+     * 根据用户名获取用户信息，用于UserDetail
+     * @param userNickname
+     * @param type
+     * @return
+     */
+    EpUserDetails selectEpUserDetailByUserNickName(String userNickname, Integer type);
 }

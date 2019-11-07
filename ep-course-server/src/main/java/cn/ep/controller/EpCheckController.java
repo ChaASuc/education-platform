@@ -12,6 +12,7 @@ import cn.ep.service.IChapterService;
 import cn.ep.service.ICheckService;
 import cn.ep.service.ICourseService;
 import cn.ep.service.IKindService;
+import cn.ep.utils.Oauth2Util;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.vo.CheckVO;
@@ -20,6 +21,7 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
@@ -29,9 +31,8 @@ public class EpCheckController {
 
     @Autowired private RedisUtil redisUtil;
     @Autowired private ICheckService checkService;
-    @Autowired private IChapterService chapterService;
-    @Autowired private ICourseService courseService;
-    @Autowired private IKindService kindService;
+    @Autowired private Oauth2Util oauth2Util;
+
 
     static class CacheNameHelper{
         public static final String EP_COURSE_CHECK_PREFIX_UESR_ID_TYPE_PAGE_CHECKED = "ep_courseCheck_prefix_UserId_type_page_%s_%s_%s_%s";
@@ -49,10 +50,11 @@ public class EpCheckController {
     @PutMapping("")
     @IsLogin
     @CanModify(role = {RoleEnum.ADMIN})
-    ResultVO check(@RequestBody @ApiParam(value = "json格式，checkId:审核记录id，status：状态【1：未通过2：通过】")  Map<String,String> params){
+    ResultVO check(@RequestBody @ApiParam(value = "json格式，checkId:审核记录id，status：状态【1：未通过2：通过】")  Map<String,String> params, HttpServletRequest request){
         long checkId = Long.valueOf(params.get("checkId"));
         int status = Integer.valueOf(params.get("status"));
-        CheckEnum checkEnum = checkService.checkAndSetStatus(checkId,status);
+        long userId = oauth2Util.getUserByRequest(request).getUserId();
+        CheckEnum checkEnum = checkService.checkAndSetStatus(checkId,status,userId);
 
         if (checkEnum == CheckEnum.CHECK_VIDEO){
             //todo 清除有关章节缓存,可能还有其他
@@ -100,15 +102,16 @@ public class EpCheckController {
     @GetMapping("/current/list/{type}/{page}/{checked}")
     @IsLogin
     @CanLook(role = RoleEnum.ADMIN)
-    ResultVO getCurrentUserListByType(@PathVariable int type, @PathVariable int page, @PathVariable int checked){
+    ResultVO getCurrentUserListByType(@PathVariable int type, @PathVariable int page, @PathVariable int checked, HttpServletRequest request){
          if (type != 0 && type != 1 && type != 2){
              return ResultVO.failure(GlobalEnum.OPERATION_ERROR,"参数非法");
          }
         if (checked != 0 && checked != 1 && checked != 2){
             return ResultVO.failure(GlobalEnum.OPERATION_ERROR,"参数非法");
         }
-         //todo 从用户模块获取当前用户id；
-         long userId = 1L;
+         //todo 从用户模块获取当前用户id，好了
+
+         long userId = oauth2Util.getUserByRequest(request).getUserId();
         String redisKey = CacheNameHelper.EP_COURSE_CHECK_PREFIX_GET_CURRENT_USER_LIST;
         String redisItem = String.format(CacheNameHelper.EP_COURSE_CHECK_PREFIX_UESR_ID_TYPE_PAGE_CHECKED,userId,type,page,checked);
         Object object = redisUtil.hget(redisKey,redisItem);

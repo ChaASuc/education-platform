@@ -14,6 +14,7 @@ import cn.ep.service.ICheckService;
 import cn.ep.service.ICourseService;
 import cn.ep.service.IKindService;
 import cn.ep.utils.IdWorker;
+import cn.ep.utils.Oauth2Util;
 import cn.ep.vo.CheckVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -34,6 +35,7 @@ public class ICheckServiceImpl implements ICheckService {
     @Autowired private IChapterService chapterService;
     @Autowired private ICourseService courseService;
     @Autowired private IKindService kindService;
+
 
     @Override
     public List<EpCheck> getListByEpCheck(EpCheck epCheck) {
@@ -143,9 +145,9 @@ public class ICheckServiceImpl implements ICheckService {
 
     @Override
     @Transactional
-    public CheckEnum checkAndSetStatus(long checkId, int status) {
-        //todo 从汉槟获取用户id；
-        long userId = 1L;
+    public CheckEnum checkAndSetStatus(long checkId, int status,long userId) {
+        //todo 从汉槟获取用户id,好了；
+        //long userId = 1L;
         EpCheck epCheck = getById(checkId);
         if (userId != epCheck.getWho())
             throw  new GlobalException(GlobalEnum.OPERATION_ERROR,"你没有审批这条记录的权限");

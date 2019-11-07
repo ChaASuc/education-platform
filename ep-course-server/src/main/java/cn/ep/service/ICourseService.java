@@ -93,11 +93,11 @@ public interface ICourseService {
 
     EpCourse getByCourseId(long courseId);
 
-    List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(int i, long courseId, int value, boolean isSubscription);
+    List<ChapterVO> getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(long i, long courseId, int value, boolean isSubscription);
 
-    boolean insertAndSendCheck(EpCourse course);
+    boolean insertAndSendCheck(EpCourse course, long userId);
 
     List<EpCourse> getListByUserIdAndStatusNotEqualTo(long userId, int status);
 
-    List<VerseVO> getVerseList(int userId, long courseId);
+    List<VerseVO> getVerseList(long userId, long courseId);
 }

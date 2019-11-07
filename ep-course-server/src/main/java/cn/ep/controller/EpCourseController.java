@@ -11,6 +11,7 @@ import cn.ep.enums.GlobalEnum;
 import cn.ep.exception.GlobalException;
 import cn.ep.service.ICourseService;
 import cn.ep.service.ICourseUserService;
+import cn.ep.utils.Oauth2Util;
 import cn.ep.utils.RedisUtil;
 import cn.ep.utils.ResultVO;
 import cn.ep.vo.ChapterVO;
@@ -20,8 +21,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -64,6 +67,8 @@ public class EpCourseController {
     @Autowired
     private RedisUtil redisUtil;
 
+    @Autowired private Oauth2Util oauth2Util;
+
     @ApiOperation(value = "网站搜索栏接口,只支持对课程名称、课程目标、课程介绍全文搜索", notes = "开发人员已测试")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "key", value = "搜索关键字", dataType = "String", paramType = "path")
@@ -89,7 +94,7 @@ public class EpCourseController {
                 courses) {
             CourseInfoVO courseInfoVO = new CourseInfoVO();
             courseInfoVO.setCourse(c);
-            // todo  这里从其他模块获取
+            // todo  这里从其他模块获取.不需要了
             courseInfoVO.setAuthor(null);   //如果需要，跟用户模块获取
             courseInfoVO.setScope(0);   //如果需要，向评价模块获取
             courseInfoVO.setChapters(null);
@@ -185,10 +190,10 @@ public class EpCourseController {
     @ApiOperation(value = "通过课程id获取课程所有节信息【节&每个节的观看记录，如果未观看，则为null】", notes = "开发人员已测试")
     @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
     @GetMapping(value = "verse/{courseId}")
-    ResultVO getVerseInfoByCourseId(@PathVariable long courseId){
+    ResultVO getVerseInfoByCourseId(@PathVariable long courseId, HttpServletRequest request){
 
-        // todo  这里从其他模块获取
-        int userId = 1;  //从用户模块获取
+        // todo  这里从其他模块获取，好了
+        long userId = oauth2Util.getUserByRequest(request).getUserId();  //从用户模块获取
         EpCourse course = courseService.getByCourseId(courseId);
         if (course == null)
             return ResultVO.failure(GlobalEnum.PARAMS_ERROR,"课程不存在");
@@ -206,13 +211,20 @@ public class EpCourseController {
     @ApiOperation(value = "获取通过课程id获取课程相关信息，课程作者，该课程信息，评分，章节信息【章与节&每个节的观看记录（如果登陆了）】，是否已订阅，是否登陆", notes = "开发人员已测试")
     @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
     @GetMapping(value = "/{courseId}")
-    ResultVO getCourseInfoByCourseId(@PathVariable long courseId){
+    ResultVO getCourseInfoByCourseId(@PathVariable long courseId, HttpServletRequest request){
         /*
             判断是否登陆，由汉槟提供
          */
-        // todo  这里从其他模块获取
-        boolean isLogin = true; //登陆为真
-        int userId = 1;  //从用户模块获取
+        boolean isLogin;
+        long userId = -1 ;
+        // todo  这里从其他模块获取，好了
+        EpUserDetails userDetails = oauth2Util.getUserByRequest(request);
+        System.out.println(userDetails);
+        if (userDetails != null ){
+            isLogin = true; //登陆为真
+            userId = userDetails.getUserId();//从用户模块获取
+        } else
+            isLogin = false;
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_COURSEINFO;
         String redisItem = null;
         if (!isLogin){
@@ -238,13 +250,13 @@ public class EpCourseController {
             isSubscription = false;
         else {
             //一登陆，查看是否订阅
-            isSubscription = courseUserService.getByUserIdAndCourseId(userId,courseId)!=null;
+            isSubscription = courseUserService.getByUserIdAndCourseId(courseId,userId)!=null;
             //--------------------------------------------------
             //未订阅，查看是否为收费订阅，如果是，尝试订阅（为什么？因为我不知道此收费课程当前用户是否已购买，在订阅接口中有验证是否购买）
             //这一段代码可由支付模块，在支付成功后直接调用订阅接口来代替
             if (!isSubscription && course.getFree() == 1) {  //未订阅且为收费课程，尝试订阅，
                 try {
-                    ResultVO resultVO = subscription(courseId);  //尝试订阅
+                    ResultVO resultVO = subscription(courseId,request);  //尝试订阅
                     isSubscription = true;  //如果订阅不成功，程序直接抛出异常，如果未抛出，则表明已订阅
                 } catch (GlobalException ge){
                     //尝试订阅失败，报globalException可不处理
@@ -257,9 +269,10 @@ public class EpCourseController {
         }
         System.out.println(isSubscription);
         courseInfoVO.setSubscription(isSubscription);
-        // todo  这里从其他模块获取
+        // todo  这里从其他模块获取，评论没好
+
         courseInfoVO.setScope(0); //从评论模块获取
-        courseInfoVO.setAuthor(null); //从用户模块获取
+        courseInfoVO.setAuthor(userDetails); //从用户模块获取
 
         courseInfoVO.setChapters(
                 courseService.getCourseInfoVOByUserIdAndCourseIdAndStatusAndSubscription(
@@ -310,8 +323,9 @@ public class EpCourseController {
     @PostMapping("")
     @IsLogin
     @CanAdd(role = {RoleEnum.TEACHER})
-    ResultVO insert(@RequestBody EpCourse course){
-        if (!courseService.insertAndSendCheck(course))
+    ResultVO insert(@RequestBody EpCourse course,HttpServletRequest request){
+        long userId = oauth2Util.getUserByRequest(request).getUserId();
+        if (!courseService.insertAndSendCheck(course, userId))
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"添加课程失败");
         return ResultVO.success();
     }
@@ -320,9 +334,9 @@ public class EpCourseController {
     @GetMapping("/current/list")
     @IsLogin
     @CanLook(role = {RoleEnum.TEACHER})
-    ResultVO getListByCurrentUserId(){
-        //todo 从汉槟获取当前用户id
-        long userId = 1L;
+    ResultVO getListByCurrentUserId(HttpServletRequest request){
+        //todo 从汉槟获取当前用户id，好了
+        long userId = oauth2Util.getUserByRequest(request).getUserId();
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_GET_LIST_BY_CURRENT_USER_ID;
         String redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_USER_ID, userId);
         Object object = redisUtil.hget(redisKey,redisItem);
@@ -339,9 +353,9 @@ public class EpCourseController {
     @ApiImplicitParam(name = "courseId", value = "课程id", dataType = "long", paramType = "path")
     @PostMapping("/subscription/{courseId}")
     @IsLogin
-    ResultVO subscription(@PathVariable long courseId){
-        //todo 从汉槟获取当前用户id
-        long userId = 1L;
+    ResultVO subscription(@PathVariable long courseId, HttpServletRequest request){
+        //todo 从汉槟获取当前用户id，好了
+        long userId = oauth2Util.getUserByRequest(request).getUserId();
         courseUserService.subscription(courseId,userId);
         String redisKey = CacheNameHelper.EP_COURSE_PREFIX_getSubscriptionList;
         String redisItem = String.format(CacheNameHelper.EP_COURSE_PREFIX_USER_ID,userId);

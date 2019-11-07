@@ -103,7 +103,7 @@ public class IKindServiceImpl implements IKindService {
         if (!insert(epCourseKind))
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"插入失败");
         EpCheck check = new EpCheck();
-        // todo 审核人id从汉槟随机获取管理员id
+        // todo 审核人id从汉槟随机获取管理员id，暂时写死
         long userId = 1L;
         check.setWho(userId);
         check.setStatus(CheckEnum.UNCHECKED_STATUS.getValue());

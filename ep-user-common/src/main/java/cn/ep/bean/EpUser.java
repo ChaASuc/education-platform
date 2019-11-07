@@ -1,25 +1,24 @@
 package cn.ep.bean;
 
+import cn.ep.serializer.Date2LongSerializer;
 import cn.ep.serializer.Long2StringSerializer;
-import cn.ep.validate.groups.Insert;
 import cn.ep.validate.groups.Update;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 public class EpUser {
-
-    @NotNull(groups = {Update.class})
     @JsonSerialize(using = Long2StringSerializer.class)
+    @NotNull(groups = {Update.class})
     private Long userId;
 
-    @NotNull(groups = {Insert.class})
     private String userNickname;
 
     private String userName;
 
-    @NotNull(groups = {Insert.class})
+    @JsonIgnore
     private String userPwd;
 
     private String fileUrl;
@@ -32,13 +31,18 @@ public class EpUser {
 
     private String userEmail;
 
-    private Integer userStatus;
+    private Integer status;
 
     private Boolean deleted;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date createTime;
 
+    @JsonSerialize(using = Date2LongSerializer.class)
     private Date updateTime;
+
+    @JsonSerialize(using = Long2StringSerializer.class)
+    private Long deptId;
 
     public Long getUserId() {
         return userId;
@@ -112,12 +116,12 @@ public class EpUser {
         this.userEmail = userEmail == null ? null : userEmail.trim();
     }
 
-    public Integer getUserStatus() {
-        return userStatus;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setUserStatus(Integer userStatus) {
-        this.userStatus = userStatus;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Boolean getDeleted() {
@@ -142,5 +146,13 @@ public class EpUser {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
     }
 }

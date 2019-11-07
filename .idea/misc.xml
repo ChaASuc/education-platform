@@ -22,6 +22,9 @@
         <option value="$PROJECT_DIR$/ep-product-api/pom.xml" />
         <option value="$PROJECT_DIR$/ep-category-server/pom.xml" />
         <option value="$PROJECT_DIR$/ep-category-common/pom.xml" />
+        <option value="$PROJECT_DIR$/ep-auth-api/pom.xml" />
+        <option value="$PROJECT_DIR$/ep-auth-common/pom.xml" />
+        <option value="$PROJECT_DIR$/ep-auth-server/pom.xml" />
       </list>
     </option>
   </component>

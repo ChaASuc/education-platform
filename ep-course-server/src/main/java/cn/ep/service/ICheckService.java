@@ -92,5 +92,5 @@ public interface ICheckService {
 
     PageInfo<CheckVO> getAllCheckListByPageAndChecked(int page, int checked);
 
-    CheckEnum checkAndSetStatus(long checkId, int status);
+    CheckEnum checkAndSetStatus(long checkId, int status, long userId);
 }

@@ -1,7 +1,5 @@
 package cn.ep.enums;
 
-import cn.ep.utils.ResultVO;
-
 /**
  * @Author deschen
  * @Create 2019/7/14
@@ -30,10 +28,7 @@ public enum GlobalEnum implements IEnum{
 
     INVALID_PARAM(10005, "参数错误"),
 
-    //NO_PERMISSION(403, "无操作权限"),
-
-    //UNAUTHORIZED(401, "未登录"),
-
+    NO_AUTHORIZATION(401, "无权限"),
     ;
 
 

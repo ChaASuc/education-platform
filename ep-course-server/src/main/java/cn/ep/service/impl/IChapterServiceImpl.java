@@ -11,6 +11,7 @@ import cn.ep.mapper.EpChapterMapper;
 import cn.ep.service.IChapterService;
 import cn.ep.service.ICheckService;
 import cn.ep.utils.IdWorker;
+import cn.ep.utils.Oauth2Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +78,7 @@ public class IChapterServiceImpl implements IChapterService {
         }
         if (chapterMapper.multiplyInsertSelective(chapters)<=0)
             throw new GlobalException(GlobalEnum.OPERATION_ERROR,"批量添加失败");
-        // todo 审核人id从汉槟随机获取管理员id
+        // todo 审核人id从汉槟随机获取管理员id,暂时写死
         long whoId = 1L;
         for (EpChapter chapter :
                 chapters) {

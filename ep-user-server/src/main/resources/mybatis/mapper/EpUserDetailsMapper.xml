@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.ep.mapper.EpUserMapper">
+  <resultMap id="EpUserDetailsResultMap" type="cn.ep.bean.EpUserDetails">
+    <id column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="user_nickname" property="userNickname" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="user_pwd" property="userPwd" jdbcType="VARCHAR" />
+    <result column="file_url" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="user_position" property="userPosition" jdbcType="VARCHAR" />
+    <result column="user_description" property="userDescription" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <collection property="roles" javaType="java.util.HashSet" ofType="cn.ep.bean.EpRole">
+      <id column="role_id" property="roleId" jdbcType="BIGINT" />
+      <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+      <result column="deleted" property="deleted" jdbcType="BIT" />
+      <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+      <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+      <result column="dept_id" property="deptId" jdbcType="BIGINT" />
+    </collection>
+
+    <collection property="permissions" javaType="java.util.HashSet" ofType="cn.ep.bean.EpUserDetialsPermission">
+      <id column="perm_id" property="permId" jdbcType="BIGINT" />
+      <result column="req_method" property="reqMethod" jdbcType="TINYINT" />
+      <result column="uri" property="uri" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
+  <select id="selectByUsername" parameterType="map" resultMap="EpUserDetailsResultMap">
+    SELECT
+      u.*, r.*,
+      p.perm_id, p.req_method, CONCAT(p.zuul_prefix, p.server_prefix) AS uri
+    FROM
+      ep_user u, ep_user_role ur, ep_role r, ep_role_permission rp, ep_permission p
+    WHERE
+      u.user_id = ur.user_id
+      AND ur.role_id = r.role_id
+      AND r.role_id = rp.role_id
+      AND rp.perm_id = p.perm_id
+      AND u.deleted = FALSE
+      AND r.deleted = FALSE
+      AND p.deleted = FALSE
+      AND ur.deleted = FALSE
+      AND rp.deleted = FALSE
+      <if test="type == 1" >
+          AND u.user_nickname = #{username,jdbcType=VARCHAR}
+      </if>
+      <if test="type == 2" >
+          AND u.user_phone = #{username,jdbcType=VARCHAR}
+      </if>
+
+  </select>
+
+
+
+</mapper>

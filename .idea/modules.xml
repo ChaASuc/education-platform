@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/education-platform.iml" filepath="$PROJECT_DIR$/education-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ep-auth-api/ep-auth-api.iml" filepath="$PROJECT_DIR$/ep-auth-api/ep-auth-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ep-auth-common/ep-auth-common.iml" filepath="$PROJECT_DIR$/ep-auth-common/ep-auth-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ep-auth-server/ep-auth-server.iml" filepath="$PROJECT_DIR$/ep-auth-server/ep-auth-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/ep-category-api/ep-category-api.iml" filepath="$PROJECT_DIR$/ep-category-api/ep-category-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/ep-category-common/ep-category-common.iml" filepath="$PROJECT_DIR$/ep-category-common/ep-category-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/ep-category-server/ep-category-server.iml" filepath="$PROJECT_DIR$/ep-category-server/ep-category-server.iml" />

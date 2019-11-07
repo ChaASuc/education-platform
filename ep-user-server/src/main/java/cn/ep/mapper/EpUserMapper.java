@@ -1,6 +1,8 @@
 package cn.ep.mapper;
 
 import cn.ep.bean.EpUser;
+//import cn.ep.bean.EpUserDetails;
+import cn.ep.bean.EpUserDetails;
 import cn.ep.bean.EpUserExample;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,4 +30,6 @@ public interface EpUserMapper {
     int updateByPrimaryKeySelective(EpUser record);
 
     int updateByPrimaryKey(EpUser record);
+
+    EpUserDetails selectByUsername(String username, Integer type);
 }

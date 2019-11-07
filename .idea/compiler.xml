@@ -6,6 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="ep-auth-api" />
+        <module name="ep-auth-common" />
+        <module name="ep-auth-server" />
         <module name="ep-category-api" />
         <module name="ep-category-common" />
         <module name="ep-category-server" />
@@ -28,6 +31,9 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="education-platform" target="1.8" />
+      <module name="ep-auth-api" target="1.8" />
+      <module name="ep-auth-common" target="1.8" />
+      <module name="ep-auth-server" target="1.8" />
       <module name="ep-category-api" target="1.8" />
       <module name="ep-category-common" target="1.8" />
       <module name="ep-category-server" target="1.8" />
@@ -50,6 +56,9 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ep-auth-api" options="-parameters" />
+      <module name="ep-auth-common" options="-parameters" />
+      <module name="ep-auth-server" options="-parameters" />
       <module name="ep-category-api" options="-parameters" />
       <module name="ep-category-common" options="-parameters" />
       <module name="ep-category-server" options="-parameters" />
